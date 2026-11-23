@@ -1,9 +1,12 @@
 # ForgeRuntime — Sandboxed Coding & Governed Data-Lake Agent Platform
 
+[![Live Interactive Web App](https://img.shields.io/badge/Live%20Web%20App-GitHub%20Pages%20Interactive%20Studio-B8F200?style=flat&logo=github)](https://ritwikareddykancharla.github.io/forge-runtime/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![Zero External Dependencies](https://img.shields.io/badge/dependencies-zero%20(stdlib)-brightgreen.svg)](#quick-start)
 [![Sandbox Escape Containment](https://img.shields.io/badge/Sandbox%20Containment-100.0%25%20(10%2F10)-success.svg)](#3-cedar-policy-engine-aws-sts-on-behalf-of--warm-sandbox-pool)
 [![AST Context Compression](https://img.shields.io/badge/AST%20Compression-5.30x--5.97x%20(100%25%20Recall)-orange.svg)](#1-ast-repo-knowledge-graph--minimal-context-packer)
+
+> **Live Interactive Simulator**: [**`https://ritwikareddykancharla.github.io/forge-runtime/`**](https://ritwikareddykancharla.github.io/forge-runtime/) — Explore the 2-Hop AST Repo Knowledge Graph, SLA/Cost Multi-Model Router, Cedar + AWS STS `On-Behalf-Of` + Warm Sandbox Lab (`10/10` escape vectors), and Governed Apache Iceberg / SQLite MCP Studio directly in your browser.
 
 **`ForgeRuntime`** is a standalone, zero-external-dependency Python runtime for **IDE coding agents**, **isolated code-execution sandboxes**, **deterministic IAM/Cedar policy enforcement**, and **governed Apache Iceberg / SQLite data-lake analytics over MCP**.
 

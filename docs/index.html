@@ -1,0 +1,2704 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ForgeRuntime — Sandboxed Coding &amp; Governed Data-Lake Agent Platform</title>
+  <meta name="description" content="Interactive Sandboxed Coding &amp; Governed Data-Lake Agent Runtime: AST Repo Knowledge Graph (-83.2% tokens), Multi-Model SLA Router (-59.7% latency), Cedar + AWS STS On-Behalf-Of Gate &amp; Warm Sandbox (-98.4% latency), and Governed Apache Iceberg / SQLite MCP Studio." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-paper: #FAF7F2;
+      --bg-card: #FFFFFF;
+      --bg-subtle: #F2ECE1;
+      --bg-obsidian: #141413;
+      --bg-code: #121417;
+      --text-code: #F4F4F5;
+      --ink: #141413;
+      --ink-muted: #52514E;
+      --border: #18181B;
+      --shadow: 4px 4px 0px #18181B;
+      --shadow-sm: 2px 2px 0px #18181B;
+      --lime: #B8F200;
+      --lime-ink: #141413;
+      --lime-soft: #ECFCCB;
+      --lime-deep: #3F6212;
+      --accent: #18181B;
+      --blue: #1D4ED8;
+      --blue-soft: #DBEAFE;
+      --pass: #059669;
+      --pass-soft: #D1FAE5;
+      --fail: #DC2626;
+      --fail-soft: #FEE2E2;
+      --warn: #D97706;
+      --warn-soft: #FEF3C7;
+      --purple: #6D28D9;
+      --purple-soft: #EDE9FE;
+      --dot-color: rgba(24, 24, 27, 0.13);
+    }
+
+    [data-theme="dark"] {
+      --bg-paper: #0E1113;
+      --bg-card: #161A1E;
+      --bg-subtle: #1F252B;
+      --bg-obsidian: #090B0C;
+      --bg-code: #090B0D;
+      --text-code: #E4E4E7;
+      --ink: #F4F4F5;
+      --ink-muted: #A1A1AA;
+      --border: #52525B;
+      --shadow: 4px 4px 0px #000000;
+      --shadow-sm: 2px 2px 0px #000000;
+      --lime: #C4FF1A;
+      --lime-ink: #0E1113;
+      --lime-soft: #1E2912;
+      --lime-deep: #C4FF1A;
+      --accent: #C4FF1A;
+      --blue: #60A5FA;
+      --blue-soft: #1E293B;
+      --pass: #34D399;
+      --pass-soft: #064E3B;
+      --fail: #F87171;
+      --fail-soft: #450A0A;
+      --warn: #FBBF24;
+      --warn-soft: #451A03;
+      --purple: #C4B5FD;
+      --purple-soft: #2E1065;
+      --dot-color: rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-paper);
+      background-image: radial-gradient(var(--dot-color) 1.25px, transparent 1.25px);
+      background-size: 20px 20px;
+      color: var(--ink);
+      line-height: 1.55;
+      padding-bottom: 4rem;
+    }
+
+    .serif { font-family: 'Newsreader', Georgia, serif; }
+    .mono { font-family: 'Martian Mono', monospace; }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Sticky Top Navigation */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-paper);
+      border-bottom: 2px solid var(--border);
+      padding: 0.8rem 0;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .brand-badge {
+      background: var(--lime);
+      color: var(--lime-ink);
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.22rem 0.58rem;
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn, .nav-pill {
+      font-family: 'Schibsted Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.46rem 0.85rem;
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn:hover, .nav-pill:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn:active, .nav-pill:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--border);
+    }
+
+    .btn-lime {
+      background: var(--lime);
+      color: var(--lime-ink);
+    }
+
+    .btn-obsidian {
+      background: #18181B;
+      color: #FAF7F2;
+    }
+
+    [data-theme="dark"] .btn-obsidian {
+      background: var(--lime);
+      color: #0E1113;
+    }
+
+    .btn-secondary {
+      background: var(--bg-subtle);
+    }
+
+    .btn-danger {
+      background: var(--fail-soft);
+      color: var(--fail);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 2.4rem 0 2rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .hero-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.95rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.73rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.28rem 0.68rem;
+      background: var(--lime);
+      color: var(--lime-ink);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .runtime-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.28rem 0.68rem;
+      background: var(--bg-card);
+      color: var(--ink);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--pass);
+      display: inline-block;
+    }
+
+    h1 {
+      font-size: clamp(1.95rem, 3.7vw, 2.95rem);
+      font-weight: 800;
+      line-height: 1.09;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.85rem;
+    }
+
+    .hero-sub {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: clamp(1.12rem, 1.9vw, 1.34rem);
+      color: var(--ink-muted);
+      max-width: 980px;
+      margin-bottom: 1.25rem;
+    }
+
+    .headline-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-bottom: 1.35rem;
+    }
+
+    .headline-pill {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.32rem 0.65rem;
+      background: var(--bg-obsidian);
+      color: #FAF7F2;
+      border: 2px solid var(--border);
+    }
+
+    .headline-pill span {
+      color: #C4FF1A;
+      font-weight: 700;
+    }
+
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.25rem;
+    }
+
+    .kpi-card {
+      padding: 1rem 1.15rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--lime);
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .kpi-val {
+      font-family: 'Martian Mono', monospace;
+      font-size: 1.44rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 0.25rem;
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 0.2rem;
+    }
+
+    .kpi-sub {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.69rem;
+      color: var(--ink-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Pipeline Banner */
+    .pipeline-bar {
+      margin-top: 1.35rem;
+      background: var(--bg-obsidian);
+      color: #FAF7F2;
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 0.9rem 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .pipe-step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .pipe-num {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #C4FF1A;
+      color: #141413;
+      padding: 0.14rem 0.42rem;
+      border: 1.5px solid #141413;
+    }
+
+    .pipe-arrow {
+      color: #C4FF1A;
+      font-family: 'Martian Mono', monospace;
+      font-weight: 700;
+    }
+
+    /* Tab Switcher */
+    .tabs-wrapper {
+      padding: 1.9rem 0 0.5rem;
+    }
+
+    .tab-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.4rem;
+    }
+
+    @media (max-width: 960px) {
+      .tab-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 580px) {
+      .tab-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tab-btn {
+      text-align: left;
+      padding: 0.9rem 1rem;
+      background: var(--bg-card);
+      color: var(--ink);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.12s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.28rem;
+    }
+
+    .tab-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: var(--shadow);
+    }
+
+    .tab-btn.active {
+      background: var(--lime);
+      color: var(--lime-ink);
+      box-shadow: var(--shadow);
+      transform: translate(-1px, -1px);
+    }
+
+    .tab-btn-eyebrow {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .tab-btn-title {
+      font-size: 0.94rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .tab-btn-metric {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.69rem;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Layout Grids inside Simulators */
+    .sim-header {
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .sim-title {
+      font-size: 1.48rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .sim-desc {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.1rem;
+      color: var(--ink-muted);
+      max-width: 860px;
+      margin-top: 0.25rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .grid-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    @media (max-width: 940px) {
+      .grid-2, .grid-equal {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Tags & Status Pills */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.69rem;
+      font-weight: 700;
+      padding: 0.18rem 0.5rem;
+      border: 1.5px solid var(--border);
+      text-transform: uppercase;
+    }
+
+    .tag-pass { background: var(--pass-soft); color: var(--pass); }
+    .tag-fail { background: var(--fail-soft); color: var(--fail); }
+    .tag-warn { background: var(--warn-soft); color: var(--warn); }
+    .tag-blue { background: var(--blue-soft); color: var(--blue); }
+    .tag-lime { background: var(--lime); color: var(--lime-ink); }
+    .tag-purple { background: var(--purple-soft); color: var(--purple); }
+
+    /* Code & JSON Pre Blocks */
+    .code-box {
+      background: var(--bg-code);
+      color: var(--text-code);
+      border: 2px solid var(--border);
+      padding: 0.95rem 1.05rem;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.74rem;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre;
+      max-height: 410px;
+      overflow-y: auto;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-subtle);
+      border: 2px solid var(--border);
+      border-bottom: none;
+      padding: 0.45rem 0.8rem;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* Progress / Token Comparison Bars */
+    .bar-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin: 0.85rem 0;
+    }
+
+    .bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.24rem;
+    }
+
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.73rem;
+      font-weight: 600;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 18px;
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      transition: width 0.28s ease;
+    }
+
+    .bar-fill-lime { background: var(--lime); }
+    .bar-fill-pass { background: var(--pass); }
+    .bar-fill-warn { background: var(--warn); }
+    .bar-fill-fail { background: var(--fail); }
+    .bar-fill-blue { background: var(--blue); }
+
+    /* Interactive Controls */
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #18181B;
+      cursor: pointer;
+      height: 6px;
+      margin-bottom: 0.85rem;
+    }
+
+    [data-theme="dark"] input[type="range"] {
+      accent-color: #C4FF1A;
+    }
+
+    textarea, select, input[type="text"] {
+      width: 100%;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.76rem;
+      padding: 0.65rem 0.75rem;
+      background: var(--bg-paper);
+      color: var(--ink);
+      border: 2px solid var(--border);
+      line-height: 1.48;
+    }
+
+    textarea:focus, select:focus, input[type="text"]:focus {
+      outline: 2px solid var(--lime);
+      outline-offset: 1px;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    th {
+      background: var(--bg-subtle);
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* AST Graph Node Cards */
+    .hop-lane {
+      border: 1.5px solid var(--border);
+      background: var(--bg-paper);
+      padding: 0.7rem 0.85rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .hop-lane-title {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .node-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .node-chip {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.69rem;
+      padding: 0.24rem 0.52rem;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .node-chip.hop0 {
+      background: var(--lime);
+      color: var(--lime-ink);
+      font-weight: 700;
+    }
+
+    .node-chip.hop1 {
+      background: var(--blue-soft);
+      color: var(--ink);
+    }
+
+    .node-chip.hop2 {
+      background: var(--bg-subtle);
+      color: var(--ink-muted);
+    }
+
+    .node-chip.excluded {
+      opacity: 0.38;
+      text-decoration: line-through;
+    }
+
+    /* Vector Grid for Sandbox Escapes */
+    .vector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+      gap: 0.55rem;
+      margin-top: 0.75rem;
+    }
+
+    .vector-btn {
+      text-align: left;
+      padding: 0.55rem 0.7rem;
+      background: var(--bg-paper);
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.69rem;
+      transition: background 0.12s ease, transform 0.08s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .vector-btn:hover {
+      background: var(--bg-subtle);
+      transform: translate(-1px, -1px);
+    }
+
+    .vector-btn.active {
+      background: var(--lime);
+      color: var(--lime-ink);
+      border-width: 2px;
+      font-weight: 700;
+    }
+
+    /* Banner Callout */
+    .verdict-banner {
+      border: 2px solid var(--border);
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .verdict-allow { background: var(--pass-soft); }
+    .verdict-deny { background: var(--fail-soft); }
+    .verdict-warn { background: var(--warn-soft); }
+
+    /* Footer */
+    .footer {
+      margin-top: 3rem;
+      padding-top: 1.6rem;
+      border-top: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.83rem;
+      color: var(--ink-muted);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky Topbar -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#ast-graph" class="brand">
+        <span class="brand-badge">FORGE v0.1</span>
+        <span>ForgeRuntime</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-pill" href="https://agentden.dev" target="_blank" rel="noopener">AgentDen</a>
+        <a class="nav-pill" href="https://ritwikareddykancharla.github.io/aegis-ops/" target="_blank" rel="noopener">AegisOps</a>
+        <a class="nav-pill" href="https://ritwikareddykancharla.github.io/agent-guard-core/" target="_blank" rel="noopener">AgentGuard</a>
+        <a class="nav-pill" href="https://ritwikareddykancharla.github.io/veri-rag-harness/" target="_blank" rel="noopener">VeriRAG</a>
+        <a class="btn btn-obsidian" href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener">
+          <span>★ GitHub Repo</span>
+        </a>
+        <button type="button" class="btn btn-secondary" id="themeToggleBtn" aria-label="Toggle color theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Obsidian Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-top-row">
+        <div class="eyebrow">⚡ Flagship Systems Runtime · Python 3.10+ Stdlib · Zero External Dependencies</div>
+        <div class="runtime-pill" id="runtimeModeBadge">
+          <span class="pulse-dot"></span>
+          <span id="runtimeModeText">Deterministic In-Browser Engine · Verified Benchmark Telemetry</span>
+        </div>
+      </div>
+
+      <h1>ForgeRuntime — Sandboxed Coding &amp; Governed Data-Lake Agent Platform</h1>
+      <p class="hero-sub">
+        End-to-end execution substrate uniting <strong>2-Hop AST Repo Context Slicing</strong>,
+        <strong>SLA- &amp; Budget-Constrained Bedrock Model Routing</strong>,
+        <strong>Deterministic Cedar Policy + AWS STS On-Behalf-Of Session Minting</strong>,
+        <strong>Sub-Millisecond Pre-Warmed Process Sandboxes</strong>, and a
+        <strong>4-Gate Governed Apache Iceberg / SQLite MCP Server</strong>.
+      </p>
+
+      <div class="headline-pills">
+        <div class="headline-pill"><span>-83.2%</span> Prompt Tokens (5.97x AST Compression)</div>
+        <div class="headline-pill"><span>-98.4%</span> Sandbox Latency (0.63ms Warm vs 38.7ms Cold)</div>
+        <div class="headline-pill"><span>-59.7%</span> p50 Router Latency (-35.9% Cost vs Opus)</div>
+        <div class="headline-pill"><span>100%</span> Cedar/STS OBO &amp; Iceberg SQL Safety (10/10 Escapes Blocked)</div>
+      </div>
+
+      <div class="kpi-strip">
+        <div class="card kpi-card">
+          <div class="kpi-val">-83.2%</div>
+          <div class="kpi-label">AST Context Token Reduction</div>
+          <div class="kpi-sub">734 vs 4,382 tokens (5.97x) · 100.0% 2-hop recall</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="kpi-val">0.625 ms</div>
+          <div class="kpi-label">Warm Sandbox Pool Dispatch (p50)</div>
+          <div class="kpi-sub">-98.4% vs 38.694ms cold spawn (61.9x) · 10/10 blocked</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="kpi-val">-59.7%</div>
+          <div class="kpi-label">Multi-Model Router p50 Latency</div>
+          <div class="kpi-sub">-35.89% cost ($0.61 vs $0.95) · 12/12 tier accuracy</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="kpi-val">100.0%</div>
+          <div class="kpi-label">Cedar + STS OBO &amp; Iceberg ACL Gate</div>
+          <div class="kpi-sub">forbid &gt; permit · HMAC-SHA256 · EXPLAIN QUERY PLAN</div>
+        </div>
+      </div>
+
+      <div class="pipeline-bar" role="region" aria-label="Architecture execution flow">
+        <div class="pipe-step"><span class="pipe-num">01</span> AST Repo Graph Slice (hop=2)</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step"><span class="pipe-num">02</span> SLA &amp; Cost Bedrock Router</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step"><span class="pipe-num">03</span> Cedar Gate + AWS STS OBO Minter</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step"><span class="pipe-num">04A</span> Warm Sandbox Pool (0.63ms)</div>
+        <span class="pipe-arrow">/</span>
+        <div class="pipe-step"><span class="pipe-num">04B</span> Governed Iceberg SQLite MCP</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Interactive Simulator Tabs -->
+  <main class="container tabs-wrapper">
+    <div class="tab-bar" role="tablist" aria-label="ForgeRuntime Interactive Simulators">
+      <button type="button" class="tab-btn active" role="tab" aria-selected="true" data-tab="ast-graph" onclick="switchTab('ast-graph')">
+        <span class="tab-btn-eyebrow">Simulator 01 · Kiro Target</span>
+        <span class="tab-btn-title">1. AST Repo Knowledge Graph</span>
+        <span class="tab-btn-metric">734 vs 4,382 tok (-83.2% · 100% recall)</span>
+      </button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="model-router" onclick="switchTab('model-router')">
+        <span class="tab-btn-eyebrow">Simulator 02 · Bedrock Runtime</span>
+        <span class="tab-btn-title">2. Multi-Model SLA &amp; Cost Router</span>
+        <span class="tab-btn-metric">Nova Lite · Sonnet 4 · Opus (-59.7% p50)</span>
+      </button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="cedar-sandbox" onclick="switchTab('cedar-sandbox')">
+        <span class="tab-btn-eyebrow">Simulator 03 · AgentCore &amp; DevOps</span>
+        <span class="tab-btn-title">3. Cedar + STS OBO + Warm Sandbox</span>
+        <span class="tab-btn-metric">forbid &gt; permit · 10/10 Escapes · 0.63ms</span>
+      </button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="iceberg-mcp" onclick="switchTab('iceberg-mcp')">
+        <span class="tab-btn-eyebrow">Simulator 04 · Context &amp; Spektr</span>
+        <span class="tab-btn-title">4. Governed Iceberg / SQLite MCP</span>
+        <span class="tab-btn-metric">PII/PCI Column ACLs · EXPLAIN PLAN (8/8)</span>
+      </button>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- TAB 1: AST REPO KNOWLEDGE GRAPH EXPLORER                           -->
+    <!-- ================================================================== -->
+    <section id="panel-ast-graph" class="tab-panel active" role="tabpanel">
+      <div class="sim-header">
+        <div>
+          <h2 class="sim-title">AST Repo Knowledge Graph &amp; Minimal Context Packer</h2>
+          <p class="sim-desc">
+            Indexes Python modules into typed <code>Module</code>, <code>Class</code>, and <code>Function</code> nodes across directed
+            <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges. Emits full source for <code>Hop 0</code> plus signature &amp; docstring contracts for <code>Hop 1–2</code> collaborators.
+          </p>
+        </div>
+        <span class="tag tag-lime">100.0% Neighborhood Recall vs 20.5% Single-File</span>
+      </div>
+
+      <div class="grid-2">
+        <!-- Left Controls & Neighborhood Graph -->
+        <div class="card">
+          <div class="control-label">
+            <span>Select Target Codebase Symbol</span>
+            <span class="mono" style="font-size:0.7rem; color:var(--ink-muted);">pack_minimal_context()</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1.1rem;" id="astSymbolButtons"></div>
+
+          <div class="control-label">
+            <span>AST Traversal Hop Budget</span>
+            <span class="mono tag tag-lime" id="astHopBadge">hop_budget = 2</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-bottom:1.1rem;">
+            <button type="button" class="btn btn-secondary" id="hopBtn0" onclick="setAstHop(0)">Hop 0 (Focal Only)</button>
+            <button type="button" class="btn btn-secondary" id="hopBtn1" onclick="setAstHop(1)">Hop 1 (Direct Deps)</button>
+            <button type="button" class="btn btn-lime" id="hopBtn2" onclick="setAstHop(2)">Hop 2 (Full Contracts ★)</button>
+          </div>
+
+          <div class="bar-group" id="astTokenBars"></div>
+
+          <div style="margin-top:1rem;">
+            <div class="control-label">
+              <span>Live Directed AST Call / Import / Inherit Graph</span>
+              <span class="mono" style="font-size:0.7rem;" id="astGraphStatsLabel"></span>
+            </div>
+            <div id="astHopLanes"></div>
+          </div>
+        </div>
+
+        <!-- Right Sliced Code Output -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.8rem;">
+            <div>
+              <div style="font-weight:800; font-size:1.02rem;" id="astRightTitle">Packed Minimal Context Slice</div>
+              <div class="mono" style="font-size:0.71rem; color:var(--ink-muted);" id="astRightMeta"></div>
+            </div>
+            <span class="tag tag-pass" id="astRecallTag">Recall: 100.0%</span>
+          </div>
+
+          <div class="code-header">
+            <span id="astSliceFilename">workflows/settlement_engine.py + 4 collaborator contracts</span>
+            <span id="astCompressionBadge" style="color:var(--pass);">-83.2% mean benchmark tokens</span>
+          </div>
+          <pre class="code-box" id="astCodePreview"></pre>
+
+          <div style="margin-top:1rem; background:var(--bg-subtle); border:1.5px solid var(--border); padding:0.8rem 0.95rem; font-size:0.83rem;">
+            <strong>Verified Benchmark Suite Summary (<code>benchmarks/latest_results.json</code>):</strong>
+            Across the 6-module enterprise billing codebase (<code>56</code> AST nodes, <code>38</code> directed edges, <code>4,382</code> total tokens),
+            <code>pack_minimal_context(hop_budget=2)</code> packs an average of <strong><code>734 tokens</code></strong> (<code>733.7</code> mean) vs
+            <strong><code>3,887</code></strong> touched-file tokens (<strong><code>5.30x</code></strong>) and <strong><code>4,382</code></strong> full-repo tokens
+            (<strong><code>5.97x</code> / <code>-83.2%</code></strong>) while maintaining <strong><code>100.0%</code></strong> call-neighborhood recall (vs <code>20.48%</code> single-file stuffing).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- TAB 2: MULTI-MODEL SLA & BUDGET ROUTER                             -->
+    <!-- ================================================================== -->
+    <section id="panel-model-router" class="tab-panel" role="tabpanel">
+      <div class="sim-header">
+        <div>
+          <h2 class="sim-title">Complexity-, Token-, &amp; SLA-Aware Multi-Model Bedrock Router</h2>
+          <p class="sim-desc">
+            Scores structural task complexity across AST hop depth, cyclomatic complexity, files touched, token volume, and lexical intent—then enforces hard latency SLAs and USD cost caps across <code>amazon.nova-lite-v1</code>, <code>claude-sonnet-4</code>, and <code>claude-opus</code>.
+          </p>
+        </div>
+        <span class="tag tag-lime">12/12 Benchmark Accuracy · -59.7% p50 Latency · -35.9% Cost</span>
+      </div>
+
+      <div class="grid-2">
+        <!-- Left Interactive Sliders & Presets -->
+        <div class="card">
+          <div class="control-label">
+            <span>Workload Preset Scenarios</span>
+            <span class="mono" style="font-size:0.7rem; color:var(--ink-muted);">Click to populate</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.45rem; margin-bottom:1rem;">
+            <button type="button" class="btn btn-secondary" onclick="loadRouterPreset(0)">⚡ IDE Symbol Lookup (&lt;350ms)</button>
+            <button type="button" class="btn btn-secondary" onclick="loadRouterPreset(1)">🛠️ Governed Iceberg SQL Patch</button>
+            <button type="button" class="btn btn-secondary" onclick="loadRouterPreset(2)">🏛️ Cross-Module Security Refactor</button>
+            <button type="button" class="btn btn-lime" onclick="loadRouterPreset(3)">⏱️ Opus Task + Strict 350ms SLA Cap</button>
+          </div>
+
+          <div class="control-label">
+            <label for="routerPromptInput">Agent Task Prompt</label>
+            <span class="mono" style="font-size:0.69rem; color:var(--ink-muted);">Lexical + structural scorer</span>
+          </div>
+          <textarea id="routerPromptInput" rows="3" oninput="evaluateRouterLive()">Redesign cross-module distributed lock &amp; zero-downtime security boundary across settlement_engine and ledger_store</textarea>
+
+          <div style="margin-top:0.9rem;">
+            <div class="control-label">
+              <span>Hard Latency SLA Ceiling (<code>p50</code> / <code>p95</code> Guardrail)</span>
+              <span class="mono tag tag-blue" id="slaSliderLabel">p50 &lt;= 350 ms (p95 &lt;= 550 ms)</span>
+            </div>
+            <input type="range" id="slaSlider" min="220" max="3200" step="10" value="350" oninput="evaluateRouterLive()" />
+
+            <div class="control-label">
+              <span>Max Request Budget Ceiling (<code>max_cost_usd</code>)</span>
+              <span class="mono tag tag-warn" id="budgetSliderLabel">$0.0500 max</span>
+            </div>
+            <input type="range" id="budgetSlider" min="1" max="250" step="1" value="50" oninput="evaluateRouterLive()" />
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+              <div>
+                <div class="control-label">
+                  <span>Files Touched</span>
+                  <span class="mono" id="filesSliderLabel">5 files</span>
+                </div>
+                <input type="range" id="filesSlider" min="1" max="10" step="1" value="5" oninput="evaluateRouterLive()" />
+              </div>
+              <div>
+                <div class="control-label">
+                  <span>Cyclomatic Complexity</span>
+                  <span class="mono" id="cycloSliderLabel">18 branches</span>
+                </div>
+                <input type="range" id="cycloSlider" min="1" max="30" step="1" value="18" oninput="evaluateRouterLive()" />
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+              <div>
+                <div class="control-label">
+                  <span>Packed Input Tokens</span>
+                  <span class="mono" id="inTokSliderLabel">3,800 tok</span>
+                </div>
+                <input type="range" id="inTokSlider" min="250" max="12000" step="250" value="3800" oninput="evaluateRouterLive()" />
+              </div>
+              <div>
+                <div class="control-label">
+                  <span>AST Hop Depth</span>
+                  <span class="mono" id="hopDepthSliderLabel">3 hops</span>
+                </div>
+                <input type="range" id="hopDepthSlider" min="0" max="4" step="1" value="3" oninput="evaluateRouterLive()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Live Routing Decision + 12-Task Table -->
+        <div class="card">
+          <div id="routerDecisionBanner" class="verdict-banner verdict-allow"></div>
+
+          <div class="bar-group" id="routerComparisonBars"></div>
+
+          <div class="code-header">
+            <span>RoutingDecision JSON Telemetry</span>
+            <span id="routerDowngradeFlag"></span>
+          </div>
+          <pre class="code-box" style="max-height:210px;" id="routerDecisionJson"></pre>
+
+          <div style="margin-top:1.05rem;">
+            <div class="control-label">
+              <span>Verified 12-Task Benchmark Distribution ($0.607 vs $0.947 Opus = -35.9% Cost, -59.7% Latency)</span>
+            </div>
+            <div class="table-wrap" style="max-height:215px; overflow-y:auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Complexity</th>
+                    <th>Routed Model</th>
+                    <th>p50 Latency</th>
+                    <th>Cost USD</th>
+                    <th>Guardrail</th>
+                  </tr>
+                </thead>
+                <tbody id="routerBenchTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- TAB 3: CEDAR + AWS STS ON-BEHALF-OF + WARM SANDBOX LAB             -->
+    <!-- ================================================================== -->
+    <section id="panel-cedar-sandbox" class="tab-panel" role="tabpanel">
+      <div class="sim-header">
+        <div>
+          <h2 class="sim-title">Cedar Policy Gate + AWS STS <code>On-Behalf-Of</code> + Warm Sandbox Pool</h2>
+          <p class="sim-desc">
+            Enforces deterministic Cedar authorization (default <code>DENY</code>, unconditional <code>forbid</code>-overrides-<code>permit</code>), mints <code>HMAC-SHA256</code> signed STS session credentials with <code>sts:TransitiveTagKeys</code>, and isolates untrusted Python inside pre-warmed <code>python3 -I</code> worker pipes (<code>0.625ms</code> p50).
+          </p>
+        </div>
+        <span class="tag tag-lime">4/4 Cedar Invariants · 10/10 Escapes Blocked · 61.9x Faster Warm Pool</span>
+      </div>
+
+      <div class="grid-equal" style="margin-bottom:1.25rem;">
+        <!-- Part A: Cedar + STS On-Behalf-Of Simulator -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.8rem;">
+            <h3 style="font-size:1.1rem; font-weight:800;">A. Cedar Policy + AWS STS OBO Gate</h3>
+            <span class="tag tag-purple">forbid &gt; permit</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.9rem;">
+            <button type="button" class="btn btn-secondary" id="cedarBtn0" onclick="selectCedarScenario(0)">✅ Safe Governed Read</button>
+            <button type="button" class="btn btn-danger" id="cedarBtn1" onclick="selectCedarScenario(1)">🛑 DropTable (Forbid Override)</button>
+            <button type="button" class="btn btn-danger" id="cedarBtn2" onclick="selectCedarScenario(2)">🛑 Prod Mutation (No JIT Approval)</button>
+            <button type="button" class="btn btn-lime" id="cedarBtn3" onclick="selectCedarScenario(3)">🔐 Approved Prod Patch (+ STS OBO)</button>
+          </div>
+
+          <div id="cedarVerdictBanner" class="verdict-banner verdict-allow"></div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+            <span class="mono" style="font-size:0.72rem; font-weight:700;">STS On-Behalf-Of Claims &amp; TransitiveTagKeys</span>
+            <button type="button" class="btn btn-secondary" style="padding:0.28rem 0.6rem; font-size:0.73rem;" id="tamperStsBtn" onclick="toggleStsTamper()">
+              🧪 Simulate RiskRung Tag Tamper
+            </button>
+          </div>
+
+          <div class="code-header">
+            <span id="cedarCodeHeaderLeft">Cedar Evaluation + STS Session Bundle</span>
+            <span id="cedarLatencyLabel">68.17 µs</span>
+          </div>
+          <pre class="code-box" style="max-height:290px;" id="cedarOutputBox"></pre>
+
+          <div style="margin-top:0.85rem;">
+            <div class="code-header">
+              <span>Active Cedar Policy Ruleset (<code>forge_runtime/cedar_sts_gate.py</code>)</span>
+              <span>Zero eval() AST Guard Parser</span>
+            </div>
+            <pre class="code-box" style="max-height:175px;" id="cedarPolicySourceBox">@id("permit-governed-read-and-sandbox")
+permit(
+  principal,
+  action in [Action::"QueryGovernedLake", Action::"ExecuteSandboxCode"],
+  resource
+) when { context.environment != "restricted-pci-vault" };
+
+@id("permit-prod-mutation-for-ops-agents")
+permit(
+  principal,
+  action in [Action::"ApplyProdPatch", Action::"MutateProdConfig", Action::"DropTable"],
+  resource in Environment::"prod"
+) when { principal.role == "ops-remediator" || principal.role == "admin" };
+
+@id("forbid-destructive-ddl-unconditionally")
+forbid(
+  principal,
+  action in [Action::"DropTable", Action::"TruncateLedger", Action::"DisableCloudTrail"],
+  resource
+);
+
+@id("forbid-prod-mutation-without-human-approval")
+forbid(
+  principal,
+  action in [Action::"ApplyProdPatch", Action::"MutateProdConfig"],
+  resource in Environment::"prod"
+) unless { context.human_approved == true &amp;&amp; context.ticket_verified == true };</pre>
+          </div>
+        </div>
+
+        <!-- Part B: Warm Sandbox Pool & 10 Adversarial Escape Vectors -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.8rem;">
+            <h3 style="font-size:1.1rem; font-weight:800;">B. Warm Sandbox Pool vs. 10 Escape Vectors</h3>
+            <button type="button" class="btn btn-lime" style="padding:0.32rem 0.7rem; font-size:0.75rem;" onclick="runAllSandboxEscapes()">
+              🛡️ Run All 10 Escape Vectors
+            </button>
+          </div>
+
+          <div class="bar-group">
+            <div class="bar-row">
+              <div class="bar-meta">
+                <span>⚡ Warm Sandbox Pool (Persistent <code>python3 -I</code> Pipes)</span>
+                <span style="color:var(--pass);">0.625 ms p50 · 1.077 ms p95 (-98.4% / 61.9x faster)</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill bar-fill-lime" style="width: 3%;"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-meta">
+                <span>🐢 Cold Subprocess Spawn (<code>subprocess.run</code> per call)</span>
+                <span style="color:var(--fail);">38.694 ms p50 · 46.020 ms p95 (1.0x baseline)</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill bar-fill-fail" style="width: 100%;"></div></div>
+            </div>
+          </div>
+
+          <div class="control-label" style="margin-top:0.75rem;">
+            <span>Click Any Adversarial Escape Vector (or Safe Execution)</span>
+            <span class="tag tag-pass">10 / 10 Contained (100%)</span>
+          </div>
+          <div class="vector-grid" id="sandboxVectorButtons"></div>
+
+          <div style="margin-top:0.9rem;">
+            <div class="code-header">
+              <span id="sandboxActiveTitle">ESC-01-OS-SYSTEM · Payload &amp; Containment Verdict</span>
+              <span id="sandboxActiveLatency" style="color:var(--pass);">0.101 ms</span>
+            </div>
+            <pre class="code-box" style="max-height:245px;" id="sandboxOutputBox"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- TAB 4: GOVERNED APACHE ICEBERG / SQLITE MCP STUDIO                 -->
+    <!-- ================================================================== -->
+    <section id="panel-iceberg-mcp" class="tab-panel" role="tabpanel">
+      <div class="sim-header">
+        <div>
+          <h2 class="sim-title">Governed Apache Iceberg / SQLite Data-Lake MCP Studio</h2>
+          <p class="sim-desc">
+            Enforces 4 pre-execution governance gates across <code>ads_campaigns</code>, <code>customer_billing</code>, and <code>agent_telemetry</code>:
+            <strong>Read-Only Lexical/Multi-Statement Filter</strong>, <strong>SQLite C-Engine <code>set_authorizer</code> Column PII/PCI ACLs</strong>,
+            <strong>Row-Level Sovereign Region CTEs</strong>, and <strong><code>EXPLAIN QUERY PLAN</code> Schema Validation</strong>.
+          </p>
+        </div>
+        <span class="tag tag-lime">8/8 Governance Gates · 100.0% Schema Contract Validated</span>
+      </div>
+
+      <div class="grid-2">
+        <!-- Left Catalog Explorer & SQL Presets -->
+        <div class="card">
+          <div class="control-label">
+            <span>1. Caller Governance Principal &amp; Clearance Entitlements</span>
+          </div>
+          <select id="mcpCallerSelect" onchange="runMcpSqlLive()" style="margin-bottom:1rem;">
+            <option value="analyst">agent:spektr-partner-analyst — Clearance: {PUBLIC, INTERNAL} · Region: NA Only</option>
+            <option value="telemetry">agent:unprivileged-telemetry-reader — Clearance: {PUBLIC, INTERNAL} · Region: NA, EMEA</option>
+            <option value="auditor">auditor:sox-finops-lead — Clearance: {PUBLIC, INTERNAL, PII_CONFIDENTIAL} · PCI Still Blocked</option>
+          </select>
+
+          <div class="control-label">
+            <span>2. Preset Governance &amp; Adversarial SQL Test Cases</span>
+            <span class="mono" style="font-size:0.69rem; color:var(--ink-muted);">Click to test</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.45rem; margin-bottom:1rem;">
+            <button type="button" class="btn btn-lime" onclick="loadSqlPreset(0)">✅ ROAS Aggregation (NA RLS)</button>
+            <button type="button" class="btn btn-danger" onclick="loadSqlPreset(1)">🛑 SELECT * PII Leak (set_authorizer)</button>
+            <button type="button" class="btn btn-danger" onclick="loadSqlPreset(2)">🛑 raw_card_token PCI Theft</button>
+            <button type="button" class="btn btn-danger" onclick="loadSqlPreset(3)">🛑 DROP TABLE Multi-Stmt Injection</button>
+            <button type="button" class="btn btn-danger" onclick="loadSqlPreset(4)">🛑 Hallucinated Column Pre-Check</button>
+            <button type="button" class="btn btn-secondary" onclick="loadSqlPreset(5)">🔍 SOX Auditor PII Email Query</button>
+          </div>
+
+          <div class="control-label">
+            <label for="mcpSqlEditor">3. Interactive SQL Query Runner (Edit &amp; Execute)</label>
+            <button type="button" class="btn btn-obsidian" style="padding:0.28rem 0.65rem; font-size:0.74rem;" onclick="runMcpSqlLive()">▶ Validate &amp; Execute SQL</button>
+          </div>
+          <textarea id="mcpSqlEditor" rows="4">SELECT region, partner_tier, COUNT(*) AS campaigns, ROUND(SUM(spend_usd), 2) AS spend, ROUND(SUM(attributed_revenue_usd) / SUM(spend_usd), 2) AS roas
+FROM ads_campaigns
+WHERE partner_tier = 'ENTERPRISE'
+GROUP BY region, partner_tier
+ORDER BY spend DESC;</textarea>
+
+          <div style="margin-top:1.05rem;">
+            <div class="control-label">
+              <span>Seeded Apache Iceberg Catalog &amp; Column Sensitivity Contracts</span>
+            </div>
+            <div style="display:flex; gap:0.45rem; margin-bottom:0.6rem;">
+              <button type="button" class="btn btn-secondary" id="catTab0" onclick="selectCatalogTable(0)">ads_campaigns (180)</button>
+              <button type="button" class="btn btn-secondary" id="catTab1" onclick="selectCatalogTable(1)">customer_billing (72)</button>
+              <button type="button" class="btn btn-secondary" id="catTab2" onclick="selectCatalogTable(2)">agent_telemetry (120)</button>
+            </div>
+            <div id="catalogMetadataBox" style="background:var(--bg-paper); border:1.5px solid var(--border); padding:0.75rem; font-size:0.77rem;"></div>
+          </div>
+        </div>
+
+        <!-- Right 4-Gate Verdict, EXPLAIN QUERY PLAN & Result Rows -->
+        <div class="card">
+          <div id="mcpVerdictBanner" class="verdict-banner verdict-allow"></div>
+
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:0.55rem; margin-bottom:0.95rem;" id="mcpFourGatesGrid"></div>
+
+          <div class="code-header">
+            <span>EXPLAIN QUERY PLAN + Row-Level CTE Rewrite + Result Payload</span>
+            <span id="mcpExecLatencyLabel" style="color:var(--pass);">0.421 ms</span>
+          </div>
+          <pre class="code-box" style="max-height:250px;" id="mcpOutputJsonBox"></pre>
+
+          <div style="margin-top:0.95rem;" id="mcpResultsTableSection">
+            <div class="control-label">
+              <span>Returned Governed Rows</span>
+              <span class="mono" style="font-size:0.7rem;" id="mcpRowCountBadge">1 row</span>
+            </div>
+            <div class="table-wrap" id="mcpResultTableWrap"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>
+        <strong>ForgeRuntime</strong> — Zero-Dependency Sandboxed Coding &amp; Governed Data-Lake Agent Runtime · Built by Ritwika Reddy Kancharla
+      </div>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <a href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">GitHub Repository</a>
+        <span>·</span>
+        <a href="https://agentden.dev" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AgentDen</a>
+        <span>·</span>
+        <a href="https://ritwikareddykancharla.github.io/aegis-ops/" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AegisOps</a>
+        <span>·</span>
+        <a href="https://ritwikareddykancharla.github.io/agent-guard-core/" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AgentGuard</a>
+        <span>·</span>
+        <a href="https://ritwikareddykancharla.github.io/veri-rag-harness/" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">VeriRAG</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // =========================================================================
+    // URL HASH STATE & THEME MANAGEMENT (Zero localStorage for sandbox safety)
+    // =========================================================================
+    const VALID_TABS = ['ast-graph', 'model-router', 'cedar-sandbox', 'iceberg-mcp'];
+    let activeTab = 'ast-graph';
+    let activeTheme = 'light';
+    let liveLambdaAvailable = false;
+
+    function parseHashState() {
+      const raw = (window.location.hash || '').replace(/^#/, '');
+      if (!raw) return;
+      const parts = raw.split('&');
+      for (const part of parts) {
+        if (VALID_TABS.includes(part)) {
+          activeTab = part;
+        } else if (part === 'theme=dark' || part === 'dark') {
+          activeTheme = 'dark';
+        } else if (part === 'theme=light') {
+          activeTheme = 'light';
+        }
+      }
+    }
+
+    function syncHashState() {
+      const hash = activeTheme === 'dark' ? `${activeTab}&theme=dark` : activeTab;
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', '#' + hash);
+      } else {
+        window.location.hash = hash;
+      }
+    }
+
+    function applyTheme(theme) {
+      activeTheme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀️' : '🌙';
+      document.getElementById('themeLabel').textContent = theme === 'dark' ? 'Sunlit Porcelain' : 'Obsidian Dark';
+      syncHashState();
+    }
+
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      applyTheme(activeTheme === 'dark' ? 'light' : 'dark');
+    });
+
+    window.switchTab = function(tabId) {
+      if (!VALID_TABS.includes(tabId)) return;
+      activeTab = tabId;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        const isMatch = btn.getAttribute('data-tab') === tabId;
+        btn.classList.toggle('active', isMatch);
+        btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === 'panel-' + tabId);
+      });
+      syncHashState();
+    };
+
+    // Optional AWS Lambda Function URL / Local Backend Detection
+    async function probeLiveBackend() {
+      try {
+        const res = await fetch('/api/health', { method: 'GET' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.platform === 'ForgeRuntime') {
+            liveLambdaAvailable = true;
+            document.getElementById('runtimeModeText').textContent =
+              'AWS Lambda Live Python ' + (data.python_version || '3.12') + ' Runtime Connected (/api/run)';
+          }
+        }
+      } catch (_) {
+        // Running statically on GitHub Pages — deterministic engine active
+      }
+    }
+
+    // =========================================================================
+    // TAB 1 DATA & LOGIC: AST REPO KNOWLEDGE GRAPH EXPLORER
+    // =========================================================================
+    const AST_SYMBOLS = [
+      {
+        id: 'OrderSettlementEngine',
+        label: 'OrderSettlementEngine (Benchmark Suite Mean: 734 vs 4,382 tok)',
+        fqn: 'workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice',
+        fileSummary: 'workflows/settlement_engine.py + 4 collaborator modules (Benchmark Suite)',
+        repoTokens: 4382,
+        touchedTokens: 3887,
+        tokensByHop: { 0: 312, 1: 584, 2: 734 },
+        recallByHop: { 0: 21.4, 1: 64.3, 2: 100.0 },
+        statsText: '56 nodes · 38 edges (25 CALLS, 12 IMPORTS, 1 INHERITS)',
+        hops: {
+          0: [
+            { sym: 'InvoiceSettlementEngine.settle_tenant_invoice', edge: 'FOCAL' }
+          ],
+          1: [
+            { sym: 'PartnerBillingGateway.handle_partner_charge', edge: 'CALLER' },
+            { sym: 'BaseTelemetryService', edge: 'INHERITS' },
+            { sym: 'BaseTelemetryService.emit_audit_span', edge: 'CALLS' },
+            { sym: 'TenantQuotaGuard.validate_region_residency', edge: 'CALLS' },
+            { sym: 'TenantQuotaGuard.verify_spend_ceiling', edge: 'CALLS' },
+            { sym: 'TenantQuotaGuard.sign_settlement_digest', edge: 'CALLS' },
+            { sym: 'ImmutableLedgerStore.get_tenant_balance_cents', edge: 'CALLS' },
+            { sym: 'ImmutableLedgerStore.append_posting', edge: 'CALLS' }
+          ],
+          2: [
+            { sym: 'core.base_service::AuditEnvelope', edge: 'RETURN_TYPE' },
+            { sym: 'storage.ledger_store::LedgerPosting', edge: 'RETURN_TYPE' },
+            { sym: 'TenantQuotaGuard.verify_settlement_digest', edge: 'SIBLING_CONTRACT' },
+            { sym: 'InvoiceSettlementEngine.preview_settlement_headroom', edge: 'CALLS_SHARED' }
+          ]
+        },
+        slicesByHop: {
+          0: `# [HOP 0 | FOCAL SYMBOL] workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice (L22-L48)
+class InvoiceSettlementEngine(BaseTelemetryService):
+    def settle_tenant_invoice(
+        self,
+        actor_id: str,
+        correlation_id: str,
+        tenant_id: str,
+        invoice_id: str,
+        amount_cents: int,
+    ) -> Dict[str, object]:
+        """Executes end-to-end governed settlement across quota, KMS seal, and ledger."""
+        if not self.quota_guard.validate_region_residency(self.region):
+            self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "BLOCKED_REGION")
+            raise PermissionError(f"Region {self.region} is residency-restricted.")
+
+        prior_spend = self.ledger_store.get_tenant_balance_cents(tenant_id)
+        if not self.quota_guard.verify_spend_ceiling(tenant_id, prior_spend + amount_cents):
+            self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "QUOTA_EXCEEDED")
+            raise ValueError(f"Projected spend exceeds ceiling for {tenant_id}.")
+
+        seal = self.quota_guard.sign_settlement_digest(tenant_id, invoice_id, amount_cents)
+        posting = self.ledger_store.append_posting(tenant_id, invoice_id, amount_cents, seal)
+        audit = self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "COMMITTED")
+        return {"posting_id": posting.posting_id, "integrity_seal": seal, "audit_status": audit.status}`,
+          1: `# [HOP 0 | FOCAL SYMBOL] workflows/settlement_engine.py:L22-L48
+class InvoiceSettlementEngine(BaseTelemetryService):
+    def settle_tenant_invoice(
+        self, actor_id: str, correlation_id: str, tenant_id: str, invoice_id: str, amount_cents: int
+    ) -> Dict[str, object]:
+        """Executes end-to-end governed settlement across quota, KMS seal, and ledger."""
+        if not self.quota_guard.validate_region_residency(self.region):
+            self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "BLOCKED_REGION")
+            raise PermissionError(f"Region {self.region} is residency-restricted.")
+        prior_spend = self.ledger_store.get_tenant_balance_cents(tenant_id)
+        if not self.quota_guard.verify_spend_ceiling(tenant_id, prior_spend + amount_cents):
+            raise ValueError(f"Projected spend exceeds ceiling for {tenant_id}.")
+        seal = self.quota_guard.sign_settlement_digest(tenant_id, invoice_id, amount_cents)
+        posting = self.ledger_store.append_posting(tenant_id, invoice_id, amount_cents, seal)
+        audit = self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "COMMITTED")
+        return {"posting_id": posting.posting_id, "integrity_seal": seal, "audit_status": audit.status}
+
+# [HOP 1 | DEPENDENCY & CALLER CONTRACTS — Signatures + Docstrings Only]
+class PartnerBillingGateway:  # api/partner_gateway.py:L35
+    def handle_partner_charge(self, partner_actor: str, trace_id: str, tenant_id: str, invoice_id: str, amount_cents: int) -> Dict[str, object]: ...
+
+class TenantQuotaGuard:  # security/quota_guard.py:L18
+    def validate_region_residency(self, region: str) -> bool: ...
+    def verify_spend_ceiling(self, tenant_id: str, projected_cents: int) -> bool: ...
+    def sign_settlement_digest(self, tenant_id: str, invoice_id: str, amount_cents: int) -> str: ...
+
+class ImmutableLedgerStore:  # storage/ledger_store.py:L24
+    def get_tenant_balance_cents(self, tenant_id: str) -> int: ...
+    def append_posting(self, tenant_id: str, invoice_id: str, amount_cents: int, seal: str) -> LedgerPosting: ...`,
+          2: `# [HOP 0 | FOCAL SYMBOL] workflows/settlement_engine.py:L22-L48
+class InvoiceSettlementEngine(BaseTelemetryService):
+    def settle_tenant_invoice(
+        self, actor_id: str, correlation_id: str, tenant_id: str, invoice_id: str, amount_cents: int
+    ) -> Dict[str, object]:
+        """Executes end-to-end governed settlement across quota, KMS seal, and ledger."""
+        if not self.quota_guard.validate_region_residency(self.region):
+            self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "BLOCKED_REGION")
+            raise PermissionError(f"Region {self.region} is residency-restricted.")
+        prior_spend = self.ledger_store.get_tenant_balance_cents(tenant_id)
+        if not self.quota_guard.verify_spend_ceiling(tenant_id, prior_spend + amount_cents):
+            self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "QUOTA_EXCEEDED")
+            raise ValueError(f"Projected spend exceeds ceiling for {tenant_id}.")
+        seal = self.quota_guard.sign_settlement_digest(tenant_id, invoice_id, amount_cents)
+        posting = self.ledger_store.append_posting(tenant_id, invoice_id, amount_cents, seal)
+        audit = self.emit_audit_span(actor_id, correlation_id, "settle_invoice", "COMMITTED")
+        return {"posting_id": posting.posting_id, "integrity_seal": seal, "audit_status": audit.status}
+
+# [HOP 1 | DEPENDENCY & CALLER CONTRACTS]
+class PartnerBillingGateway:  # api/partner_gateway.py:L35
+    def handle_partner_charge(self, partner_actor: str, trace_id: str, tenant_id: str, invoice_id: str, amount_cents: int) -> Dict[str, object]:
+        """Validates partner payload and delegates to InvoiceSettlementEngine.""" ...
+
+class BaseTelemetryService:  # core/base_service.py:L39
+    def emit_audit_span(self, actor_id: str, correlation_id: str, operation: str, status: str) -> AuditEnvelope: ...
+
+class TenantQuotaGuard:  # security/quota_guard.py:L18
+    def validate_region_residency(self, region: str) -> bool: ...
+    def verify_spend_ceiling(self, tenant_id: str, projected_cents: int) -> bool: ...
+    def sign_settlement_digest(self, tenant_id: str, invoice_id: str, amount_cents: int) -> str: ...
+
+class ImmutableLedgerStore:  # storage/ledger_store.py:L24
+    def get_tenant_balance_cents(self, tenant_id: str) -> int: ...
+    def append_posting(self, tenant_id: str, invoice_id: str, amount_cents: int, seal: str) -> LedgerPosting: ...
+
+# [HOP 2 | TRANSITIVE TYPE & SIBLING CONTRACTS]
+@dataclass(frozen=True)
+class AuditEnvelope:  # core/base_service.py:L14
+    actor_id: str; correlation_id: str; operation: str; status: str
+
+@dataclass(frozen=True)
+class LedgerPosting:  # storage/ledger_store.py:L12
+    posting_id: str; tenant_id: str; invoice_id: str; amount_cents: int; integrity_seal: str`
+        }
+      },
+      {
+        id: 'CedarPolicyGate',
+        label: 'CedarPolicyGate (Self-Hosted ForgeRuntime: 705 vs 39,979 tok)',
+        fqn: 'cedar_sts_gate::CedarSTSGate.authorize_and_mint',
+        fileSummary: 'forge_runtime/cedar_sts_gate.py + cli.py (Self-Hosted Runtime Graph)',
+        repoTokens: 39979,
+        touchedTokens: 13859,
+        tokensByHop: { 0: 265, 1: 510, 2: 705 },
+        recallByHop: { 0: 20.0, 1: 60.0, 2: 100.0 },
+        statsText: '133 nodes · 167 edges (119 CALLS, 48 IMPORTS)',
+        hops: {
+          0: [
+            { sym: 'CedarSTSGate.authorize_and_mint', edge: 'FOCAL' }
+          ],
+          1: [
+            { sym: 'CedarPolicyEngine.evaluate', edge: 'CALLS' },
+            { sym: 'STSOnBehalfOfMinter.mint_session_token', edge: 'CALLS' },
+            { sym: 'cedar_sts_gate::run_cedar_sts_demo', edge: 'CALLER' }
+          ],
+          2: [
+            { sym: 'CedarAuthorizationDecision', edge: 'RETURN_TYPE' },
+            { sym: 'CedarRequest', edge: 'PARAM_TYPE' },
+            { sym: 'CedarPolicyEngine._matches_policy', edge: 'CALLS' },
+            { sym: 'STSOnBehalfOfMinter._sign_claims', edge: 'CALLS' },
+            { sym: 'cli::execute_cli_mode', edge: 'CALLER' }
+          ]
+        },
+        slicesByHop: {
+          0: `# [HOP 0 | FOCAL SYMBOL] cedar_sts_gate::CedarSTSGate.authorize_and_mint (L599-L628)
+class CedarSTSGate:
+    def authorize_and_mint(
+        self,
+        req: CedarRequest,
+        *,
+        role_name: str,
+        approved_by: str,
+        risk_rung: str,
+        correlation_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        decision = self.engine.evaluate(req)
+        if decision.decision != "ALLOW":
+            return {"authorized": False, "cedar_decision": decision.to_dict(), "sts_obo_bundle": None}
+
+        agent_id = req.principal.split('::"')[-1].rstrip('"')
+        sts_bundle = self.minter.mint_session_token(
+            role_name=role_name, agent_id=agent_id, approved_by=approved_by,
+            risk_rung=risk_rung, correlation_id=correlation_id,
+        )
+        return {"authorized": True, "cedar_decision": decision.to_dict(), "sts_obo_bundle": sts_bundle}`,
+          1: `# [HOP 0 | FOCAL SYMBOL] cedar_sts_gate::CedarSTSGate.authorize_and_mint (L599-L628)
+class CedarSTSGate:
+    def authorize_and_mint(self, req: CedarRequest, *, role_name: str, approved_by: str, risk_rung: str, correlation_id: Optional[str] = None) -> Dict[str, Any]:
+        decision = self.engine.evaluate(req)
+        if decision.decision != "ALLOW":
+            return {"authorized": False, "cedar_decision": decision.to_dict(), "sts_obo_bundle": None}
+        agent_id = req.principal.split('::"')[-1].rstrip('"')
+        sts_bundle = self.minter.mint_session_token(
+            role_name=role_name, agent_id=agent_id, approved_by=approved_by, risk_rung=risk_rung, correlation_id=correlation_id
+        )
+        return {"authorized": True, "cedar_decision": decision.to_dict(), "sts_obo_bundle": sts_bundle}
+
+# [HOP 1 | DEPENDENCY & CALLER CONTRACTS]
+class CedarPolicyEngine:  # cedar_sts_gate.py:L391
+    def evaluate(self, req: CedarRequest) -> CedarAuthorizationDecision:
+        """Evaluates all policies; default DENY, explicit forbid unconditionally overrides permit.""" ...
+
+class STSOnBehalfOfMinter:  # cedar_sts_gate.py:L514
+    def mint_session_token(self, *, role_name: str, agent_id: str, approved_by: str, risk_rung: str, correlation_id: Optional[str] = None) -> Dict[str, Any]: ...`,
+          2: `# [HOP 0 | FOCAL SYMBOL] cedar_sts_gate::CedarSTSGate.authorize_and_mint (L599-L628)
+class CedarSTSGate:
+    def authorize_and_mint(self, req: CedarRequest, *, role_name: str, approved_by: str, risk_rung: str, correlation_id: Optional[str] = None) -> Dict[str, Any]:
+        decision = self.engine.evaluate(req)
+        if decision.decision != "ALLOW":
+            return {"authorized": False, "cedar_decision": decision.to_dict(), "sts_obo_bundle": None}
+        agent_id = req.principal.split('::"')[-1].rstrip('"')
+        sts_bundle = self.minter.mint_session_token(
+            role_name=role_name, agent_id=agent_id, approved_by=approved_by, risk_rung=risk_rung, correlation_id=correlation_id
+        )
+        return {"authorized": True, "cedar_decision": decision.to_dict(), "sts_obo_bundle": sts_bundle}
+
+# [HOP 1 | DEPENDENCY & CALLER CONTRACTS]
+class CedarPolicyEngine:  # cedar_sts_gate.py:L391
+    def evaluate(self, req: CedarRequest) -> CedarAuthorizationDecision: ...
+
+class STSOnBehalfOfMinter:  # cedar_sts_gate.py:L514
+    def mint_session_token(self, *, role_name: str, agent_id: str, approved_by: str, risk_rung: str, correlation_id: Optional[str] = None) -> Dict[str, Any]: ...
+
+# [HOP 2 | TRANSITIVE CONTRACTS]
+@dataclass(frozen=True)
+class CedarRequest:  # cedar_sts_gate.py:L65
+    principal: str; action: str; resource: str; context: Dict[str, Any]
+
+@dataclass(frozen=True)
+class CedarAuthorizationDecision:  # cedar_sts_gate.py:L122
+    decision: str; reason_code: str; matched_permits: List[str]; matched_forbids: List[str]; evaluation_latency_us: float`
+        }
+      },
+      {
+        id: 'IcebergQueryPlanner',
+        label: 'IcebergQueryPlanner (Self-Hosted ForgeRuntime: 1,390 vs 39,979 tok)',
+        fqn: 'governed_lake_mcp::GovernedLakeMCPServer.validate_and_query_sql',
+        fileSummary: 'forge_runtime/governed_lake_mcp.py + cli.py (Self-Hosted Runtime Graph)',
+        repoTokens: 39979,
+        touchedTokens: 9234,
+        tokensByHop: { 0: 540, 1: 1020, 2: 1390 },
+        recallByHop: { 0: 22.2, 1: 66.7, 2: 100.0 },
+        statsText: '133 nodes · 167 edges (4-Gate SQLite C-Authorizer + RLS)',
+        hops: {
+          0: [
+            { sym: 'GovernedLakeMCPServer.validate_and_query_sql', edge: 'FOCAL' }
+          ],
+          1: [
+            { sym: 'GovernedLakeMCPServer._validate_lexical_readonly_sql', edge: 'CALLS' },
+            { sym: 'GovernedLakeMCPServer._apply_row_level_cte_scoping', edge: 'CALLS' },
+            { sym: 'CallerGovernanceContext', edge: 'PARAM_TYPE' },
+            { sym: 'GovernedLakeMCPServer.call_tool', edge: 'CALLER' }
+          ],
+          2: [
+            { sym: 'GovernedLakeMCPServer.list_tables', edge: 'SIBLING_MCP' },
+            { sym: 'GovernedLakeMCPServer.describe_lineage', edge: 'SIBLING_MCP' },
+            { sym: 'cli::execute_cli_mode', edge: 'CALLER' }
+          ]
+        },
+        slicesByHop: {
+          0: `# [HOP 0 | FOCAL SYMBOL] governed_lake_mcp::GovernedLakeMCPServer.validate_and_query_sql (L563-L657)
+class GovernedLakeMCPServer:
+    def validate_and_query_sql(self, sql: str, caller_context: Optional[CallerGovernanceContext] = None, max_rows: int = 50) -> Dict[str, Any]:
+        ctx = caller_context or CallerGovernanceContext()
+        ok_lex, lex_err, clean_sql = self._validate_lexical_readonly_sql(sql)
+        if not ok_lex:
+            return {"ok": False, "error_code": "READ_ONLY_SQL_VIOLATION", "message": lex_err}
+        scoped_sql, rls_params, rls_applied = self._apply_row_level_cte_scoping(clean_sql, ctx)
+        # Attaches SQLite C-engine conn.set_authorizer + runs EXPLAIN QUERY PLAN before cursor.execute`,
+          1: `# [HOP 0 | FOCAL SYMBOL] governed_lake_mcp::GovernedLakeMCPServer.validate_and_query_sql (L563-L657)
+class GovernedLakeMCPServer:
+    def validate_and_query_sql(self, sql: str, caller_context: Optional[CallerGovernanceContext] = None, max_rows: int = 50) -> Dict[str, Any]:
+        ctx = caller_context or CallerGovernanceContext()
+        ok_lex, lex_err, clean_sql = self._validate_lexical_readonly_sql(sql)
+        if not ok_lex:
+            return {"ok": False, "error_code": "READ_ONLY_SQL_VIOLATION", "message": lex_err}
+        scoped_sql, rls_params, rls_applied = self._apply_row_level_cte_scoping(clean_sql, ctx)
+        # Gate 2: conn.set_authorizer blocks PII/PCI columns even inside SELECT *
+        # Gate 4: EXPLAIN QUERY PLAN pre-validates schema contracts prior to execution
+
+# [HOP 1 | DEPENDENCY & CALLER CONTRACTS]
+    def _validate_lexical_readonly_sql(self, sql: str) -> Tuple[bool, Optional[str], str]: ...
+    def _apply_row_level_cte_scoping(self, clean_sql: str, ctx: CallerGovernanceContext) -> Tuple[str, List[Any], List[str]]: ...`,
+          2: `# [HOP 0 | FOCAL SYMBOL] governed_lake_mcp::GovernedLakeMCPServer.validate_and_query_sql (L563-L657)
+class GovernedLakeMCPServer:
+    def validate_and_query_sql(self, sql: str, caller_context: Optional[CallerGovernanceContext] = None, max_rows: int = 50) -> Dict[str, Any]:
+        ctx = caller_context or CallerGovernanceContext()
+        ok_lex, lex_err, clean_sql = self._validate_lexical_readonly_sql(sql)
+        if not ok_lex:
+            return {"ok": False, "error_code": "READ_ONLY_SQL_VIOLATION", "message": lex_err}
+        scoped_sql, rls_params, rls_applied = self._apply_row_level_cte_scoping(clean_sql, ctx)
+        # Gate 2: SQLite C-engine conn.set_authorizer intercepts SQLITE_READ per column
+        # Gate 4: EXPLAIN QUERY PLAN catches hallucinated columns before execution
+
+# [HOP 1 | DEPENDENCY & CALLER CONTRACTS]
+    def _validate_lexical_readonly_sql(self, sql: str) -> Tuple[bool, Optional[str], str]: ...
+    def _apply_row_level_cte_scoping(self, clean_sql: str, ctx: CallerGovernanceContext) -> Tuple[str, List[Any], List[str]]: ...
+
+# [HOP 2 | TRANSITIVE MCP CONTRACTS]
+@dataclass(frozen=True)
+class CallerGovernanceContext:
+    principal_id: str = "agent:partner-insights-bot"
+    allowed_classifications: Set[str] = field(default_factory=lambda: {"PUBLIC", "INTERNAL"})
+    allowed_regions: Optional[Set[str]] = None`
+        }
+      }
+    ];
+
+    let curAstIdx = 0;
+    let curAstHop = 2;
+
+    function renderAstExplorer() {
+      const item = AST_SYMBOLS[curAstIdx];
+      const packedTok = item.tokensByHop[curAstHop];
+      const recall = item.recallByHop[curAstHop];
+      const reductionFullPct = ((1 - packedTok / item.repoTokens) * 100).toFixed(1);
+      const ratioFull = (item.repoTokens / packedTok).toFixed(2);
+      const ratioTouched = (item.touchedTokens / packedTok).toFixed(2);
+
+      document.getElementById('astSymbolButtons').innerHTML = AST_SYMBOLS.map((s, idx) => `
+        <button type="button" class="btn ${idx === curAstIdx ? 'btn-obsidian' : 'btn-secondary'}" style="justify-content:space-between;" onclick="selectAstSymbol(${idx})">
+          <span>${s.label}</span>
+          <span class="mono" style="font-size:0.69rem;">${idx === curAstIdx ? 'ACTIVE' : 'Inspect →'}</span>
+        </button>
+      `).join('');
+
+      [0, 1, 2].forEach(h => {
+        const b = document.getElementById('hopBtn' + h);
+        b.className = 'btn ' + (h === curAstHop ? 'btn-lime' : 'btn-secondary');
+      });
+      document.getElementById('astHopBadge').textContent = `hop_budget = ${curAstHop}`;
+      document.getElementById('astGraphStatsLabel').textContent = item.statsText;
+
+      const packedWidth = Math.max(3, Math.round((packedTok / item.repoTokens) * 100));
+      const touchedWidth = Math.max(8, Math.round((item.touchedTokens / item.repoTokens) * 100));
+
+      document.getElementById('astTokenBars').innerHTML = `
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span>✨ AST Packed Slice (hop=${curAstHop})</span>
+            <span style="color:var(--pass);">${packedTok.toLocaleString()} tokens (-${reductionFullPct}% · ${ratioFull}x smaller)</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-fill-lime" style="width:${packedWidth}%;"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span>📄 Naive Touched Files Stuffing</span>
+            <span>${item.touchedTokens.toLocaleString()} tokens (${ratioTouched}x larger)</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-fill-warn" style="width:${touchedWidth}%;"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span>📦 Full Repository Dump</span>
+            <span style="color:var(--fail);">${item.repoTokens.toLocaleString()} tokens (1.00x baseline)</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-fill-fail" style="width:100%;"></div></div>
+        </div>
+      `;
+
+      const hopTitles = {
+        0: 'HOP 0 · Focal Implementation Body (Full AST Statements)',
+        1: 'HOP 1 · Direct Callers, Callees & Base Classes (Typed Signatures)',
+        2: 'HOP 2 · Transitive Return/Param Dataclasses & Sibling Contracts'
+      };
+      document.getElementById('astHopLanes').innerHTML = [0, 1, 2].map(h => {
+        const included = h <= curAstHop;
+        const nodes = item.hops[h];
+        return `
+          <div class="hop-lane">
+            <div class="hop-lane-title">
+              <span>${hopTitles[h]}</span>
+              <span class="tag ${included ? 'tag-pass' : 'tag-warn'}">${included ? 'INCLUDED' : 'PRUNED BY HOP BUDGET'}</span>
+            </div>
+            <div class="node-chips">
+              ${nodes.map(n => `
+                <span class="node-chip hop${h} ${included ? '' : 'excluded'}">
+                  <strong>[${n.edge}]</strong> ${n.sym}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('astRightTitle').textContent = `Packed Minimal Context: ${item.id}`;
+      document.getElementById('astRightMeta').textContent = item.fqn;
+      const recallEl = document.getElementById('astRecallTag');
+      recallEl.textContent = `Neighborhood Recall: ${recall.toFixed(1)}%`;
+      recallEl.className = 'tag ' + (recall >= 99.9 ? 'tag-pass' : 'tag-warn');
+      document.getElementById('astSliceFilename').textContent = item.fileSummary;
+      document.getElementById('astCompressionBadge').textContent =
+        `${packedTok.toLocaleString()} vs ${item.repoTokens.toLocaleString()} tok (-${reductionFullPct}% / ${ratioFull}x)`;
+      document.getElementById('astCodePreview').textContent = item.slicesByHop[curAstHop];
+    }
+
+    window.selectAstSymbol = function(idx) {
+      curAstIdx = idx;
+      renderAstExplorer();
+    };
+    window.setAstHop = function(hop) {
+      curAstHop = hop;
+      renderAstExplorer();
+    };
+
+    // =========================================================================
+    // TAB 2 DATA & LOGIC: MULTI-MODEL SLA & BUDGET ROUTER
+    // =========================================================================
+    const MODEL_SPECS = [
+      {
+        id: 'bedrock/amazon.nova-lite-v1',
+        short: 'amazon.nova-lite-v1',
+        tier: 'FAST_SEARCH_LINT',
+        inRate: 0.06,
+        outRate: 0.24,
+        p50: 195.0,
+        p95: 320.0
+      },
+      {
+        id: 'bedrock/anthropic.claude-sonnet-4',
+        short: 'claude-sonnet-4',
+        tier: 'STANDARD_PATCH_SQL',
+        inRate: 3.00,
+        outRate: 15.00,
+        p50: 890.0,
+        p95: 1420.0
+      },
+      {
+        id: 'bedrock/anthropic.claude-opus',
+        short: 'claude-opus',
+        tier: 'ARCHITECTURAL_REFACTOR',
+        inRate: 15.00,
+        outRate: 75.00,
+        p50: 2850.0,
+        p95: 4500.0
+      }
+    ];
+
+    const ROUTER_PRESETS = [
+      {
+        prompt: 'Quick symbol lookup and lint docstring check on validate_region_residency autocomplete',
+        slaP50: 350,
+        budgetCentsX10: 20, // $0.020
+        files: 1,
+        cyclo: 2,
+        inTok: 500,
+        hops: 1
+      },
+      {
+        prompt: 'Write governed Iceberg SQL patch and unit test for customer_billing regional ROAS endpoint',
+        slaP50: 1200,
+        budgetCentsX10: 50, // $0.050
+        files: 2,
+        cyclo: 8,
+        inTok: 1500,
+        hops: 2
+      },
+      {
+        prompt: 'Architectural multi-file refactor of distributed lock & security boundary across ledger modules',
+        slaP50: 3000,
+        budgetCentsX10: 220, // $0.220
+        files: 6,
+        cyclo: 22,
+        inTok: 4500,
+        hops: 3
+      },
+      {
+        prompt: 'Redesign cross-module distributed lock & zero-downtime security boundary across settlement_engine',
+        slaP50: 350,
+        budgetCentsX10: 50, // $0.050 -> triggers strict p50 <= 350ms SLA step-down to Nova Lite!
+        files: 5,
+        cyclo: 18,
+        inTok: 3800,
+        hops: 3
+      }
+    ];
+
+    const ROUTER_BENCH_12 = [
+      { id: 'TASK-01', score: '0.04', model: 'amazon.nova-lite-v1', p50: '195 ms', cost: '$0.00006', guard: 'Optimal' },
+      { id: 'TASK-02', score: '0.03', model: 'amazon.nova-lite-v1', p50: '195 ms', cost: '$0.00005', guard: 'Optimal' },
+      { id: 'TASK-03', score: '0.09', model: 'amazon.nova-lite-v1', p50: '195 ms', cost: '$0.00007', guard: 'Optimal' },
+      { id: 'TASK-04', score: '0.24', model: 'amazon.nova-lite-v1', p50: '195 ms', cost: '$0.00006', guard: 'Optimal' },
+      { id: 'TASK-05', score: '0.39', model: 'claude-sonnet-4', p50: '890 ms', cost: '$0.00915', guard: 'Optimal' },
+      { id: 'TASK-06', score: '0.41', model: 'claude-sonnet-4', p50: '890 ms', cost: '$0.01200', guard: 'Optimal' },
+      { id: 'TASK-07', score: '0.35', model: 'claude-sonnet-4', p50: '890 ms', cost: '$0.00774', guard: 'Optimal' },
+      { id: 'TASK-08', score: '0.42', model: 'claude-sonnet-4', p50: '890 ms', cost: '$0.01410', guard: 'Optimal' },
+      { id: 'TASK-09', score: '0.93', model: 'claude-opus', p50: '2,850 ms', cost: '$0.19200', guard: 'Optimal' },
+      { id: 'TASK-10', score: '0.84', model: 'claude-opus', p50: '2,850 ms', cost: '$0.17175', guard: 'Optimal' },
+      { id: 'TASK-11', score: '0.95', model: 'claude-opus', p50: '2,850 ms', cost: '$0.17400', guard: 'Optimal' },
+      { id: 'TASK-12', score: '0.83', model: 'claude-sonnet-4', p50: '890 ms', cost: '$0.02595', guard: 'SLA Cap Downgrade' }
+    ];
+
+    function estimateCost(spec, inTok, outTok) {
+      return (inTok / 1e6) * spec.inRate + (outTok / 1e6) * spec.outRate;
+    }
+
+    window.loadRouterPreset = function(idx) {
+      const p = ROUTER_PRESETS[idx];
+      document.getElementById('routerPromptInput').value = p.prompt;
+      document.getElementById('slaSlider').value = p.slaP50;
+      document.getElementById('budgetSlider').value = p.budgetCentsX10;
+      document.getElementById('filesSlider').value = p.files;
+      document.getElementById('cycloSlider').value = p.cyclo;
+      document.getElementById('inTokSlider').value = p.inTok;
+      document.getElementById('hopDepthSlider').value = p.hops;
+      evaluateRouterLive();
+    };
+
+    window.evaluateRouterLive = function() {
+      const prompt = (document.getElementById('routerPromptInput').value || '').toLowerCase();
+      const slaP50 = Number(document.getElementById('slaSlider').value);
+      const maxCostUsd = Number(document.getElementById('budgetSlider').value) / 1000.0;
+      const files = Number(document.getElementById('filesSlider').value);
+      const cyclo = Number(document.getElementById('cycloSlider').value);
+      const inTok = Number(document.getElementById('inTokSlider').value);
+      const hops = Number(document.getElementById('hopDepthSlider').value);
+      const outTok = Math.round(Math.max(180, inTok * 0.35));
+
+      document.getElementById('slaSliderLabel').textContent = `p50 <= ${slaP50} ms`;
+      document.getElementById('budgetSliderLabel').textContent = `$${maxCostUsd.toFixed(4)} max`;
+      document.getElementById('filesSliderLabel').textContent = `${files} file${files > 1 ? 's' : ''}`;
+      document.getElementById('cycloSliderLabel').textContent = `${cyclo} branches`;
+      document.getElementById('inTokSliderLabel').textContent = `${inTok.toLocaleString()} tok`;
+      document.getElementById('hopDepthSliderLabel').textContent = `${hops} hop${hops === 1 ? '' : 's'}`;
+
+      // Deterministic structural + lexical complexity formula matching forge_runtime/model_router.py
+      let score =
+        0.24 * Math.min(1, (files - 1) / 5) +
+        0.24 * Math.min(1, cyclo / 20) +
+        0.20 * Math.min(1, inTok / 6000) +
+        0.16 * Math.min(1, hops / 3);
+
+      const heavyHits = ['architectural', 'multi-file', 'cross-module', 'distributed lock', 'race condition', 'security boundary', 'zero-downtime', 'redesign']
+        .filter(k => prompt.includes(k)).length;
+      const medHits = ['patch', 'bugfix', 'unit test', 'sql', 'iceberg', 'cedar', 'endpoint', 'validation']
+        .filter(k => prompt.includes(k)).length;
+      const lightHits = ['lint', 'format', 'docstring', 'symbol lookup', 'autocomplete', 'typo', 'quick explain']
+        .filter(k => prompt.includes(k)).length;
+
+      score += heavyHits * 0.14 + medHits * 0.06 - lightHits * 0.12;
+      score = Math.max(0.02, Math.min(0.99, score));
+
+      let idealIdx = score < 0.34 ? 0 : (score < 0.70 ? 1 : 2);
+      let chosenIdx = idealIdx;
+      let slaConstrained = false;
+      let budgetConstrained = false;
+      const reasons = [
+        score < 0.34
+          ? `low complexity (${score.toFixed(2)} < 0.34)`
+          : score < 0.70
+            ? `moderate complexity (${score.toFixed(2)} in [0.34, 0.70))`
+            : `high complexity (${score.toFixed(2)} >= 0.70)`
+      ];
+
+      while (chosenIdx > 0 && MODEL_SPECS[chosenIdx].p50 > slaP50) {
+        chosenIdx--;
+        slaConstrained = true;
+      }
+      if (slaConstrained) {
+        reasons.push(`SLA cap (p50 <= ${slaP50}ms) stepped down tier`);
+      }
+
+      while (chosenIdx > 0 && estimateCost(MODEL_SPECS[chosenIdx], inTok, outTok) > maxCostUsd) {
+        chosenIdx--;
+        budgetConstrained = true;
+      }
+      if (budgetConstrained) {
+        reasons.push(`budget cap ($${maxCostUsd.toFixed(4)}) stepped down tier`);
+      }
+
+      const chosen = MODEL_SPECS[chosenIdx];
+      const ideal = MODEL_SPECS[idealIdx];
+      const chosenCost = estimateCost(chosen, inTok, outTok);
+      const opusCost = estimateCost(MODEL_SPECS[2], inTok, outTok);
+      const savingsPct = opusCost > 0 ? ((1 - chosenCost / opusCost) * 100).toFixed(1) : '0.0';
+      const latRedPct = ((1 - chosen.p50 / MODEL_SPECS[2].p50) * 100).toFixed(1);
+
+      const banner = document.getElementById('routerDecisionBanner');
+      banner.className = 'verdict-banner ' + ((slaConstrained || budgetConstrained) ? 'verdict-warn' : 'verdict-allow');
+      banner.innerHTML = `
+        <div>
+          <div style="font-weight:800; font-size:1.05rem;">Routed Model: <code>${chosen.id}</code></div>
+          <div style="font-size:0.83rem; margin-top:0.2rem;">Rationale: <strong>${reasons.join(' · ')}</strong></div>
+        </div>
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+          <span class="tag tag-lime">${chosen.tier}</span>
+          <span class="tag tag-pass">p50: ${chosen.p50}ms (-${latRedPct}% vs Opus)</span>
+        </div>
+      `;
+
+      document.getElementById('routerComparisonBars').innerHTML = MODEL_SPECS.map((m, idx) => {
+        const c = estimateCost(m, inTok, outTok);
+        const w = Math.max(7, Math.round((m.p50 / 2850) * 100));
+        const isSel = idx === chosenIdx;
+        return `
+          <div class="bar-row">
+            <div class="bar-meta">
+              <span>${isSel ? '👉 ' : ''}${m.short} ${isSel ? '(SELECTED)' : ''}</span>
+              <span>p50: ${m.p50}ms · p95: ${m.p95}ms · Est: $${c.toFixed(5)}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill ${isSel ? 'bar-fill-lime' : 'bar-fill-blue'}" style="width:${w}%; opacity:${isSel ? 1 : 0.42};"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('routerDowngradeFlag').textContent =
+        slaConstrained ? '⏱️ SLA_GUARDRAIL_ACTIVE' : (budgetConstrained ? '💰 BUDGET_GUARDRAIL_ACTIVE' : '✅ UNCONSTRAINED_OPTIMAL');
+
+      document.getElementById('routerDecisionJson').textContent = JSON.stringify({
+        selected_model: chosen.id,
+        ideal_unconstrained_model: ideal.id,
+        tier_label: chosen.tier,
+        complexity_score: Number(score.toFixed(4)),
+        predicted_p50_latency_ms: chosen.p50,
+        predicted_p95_latency_ms: chosen.p95,
+        estimated_cost_usd: Number(chosenCost.toFixed(6)),
+        opus_baseline_cost_usd: Number(opusCost.toFixed(6)),
+        savings_vs_opus_pct: Number(savingsPct),
+        sla_constrained: slaConstrained,
+        budget_constrained: budgetConstrained,
+        rationale: reasons.join('; ')
+      }, null, 2);
+    };
+
+    function renderRouterBenchTable() {
+      document.getElementById('routerBenchTableBody').innerHTML = ROUTER_BENCH_12.map(r => `
+        <tr>
+          <td class="mono">${r.id}</td>
+          <td class="mono">${r.score}</td>
+          <td class="mono"><strong>${r.model}</strong></td>
+          <td class="mono">${r.p50}</td>
+          <td class="mono">${r.cost}</td>
+          <td><span class="tag ${r.guard.includes('SLA') ? 'tag-warn' : 'tag-pass'}">${r.guard}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // =========================================================================
+    // TAB 3 DATA & LOGIC: CEDAR + AWS STS OBO + WARM SANDBOX LAB
+    // =========================================================================
+    const CEDAR_SCENARIOS = [
+      {
+        id: 'SCENARIO-1-SAFE-READ',
+        title: 'Safe Governed Read (QueryGovernedLake)',
+        authorized: true,
+        decision: 'ALLOW',
+        reason_code: 'PERMITTED',
+        latency_us: 145.5,
+        matched_permits: ['permit-governed-read-and-sandbox'],
+        matched_forbids: [],
+        request: {
+          principal: 'Agent::"kiro-coder-01"',
+          action: 'Action::"QueryGovernedLake"',
+          resource: 'Table::"spektr_prod.ads_campaigns"',
+          context: { environment: 'prod', region: 'NA' }
+        },
+        sts_claims: {
+          RoleArn: 'arn:aws:iam::491082736451:role/ForgeLakeReadOnlyRole',
+          SourceIdentity: 'obo:policy:cedar-auto-tier-1=>kiro-coder-01',
+          PrincipalTags: {
+            'PrincipalTag:ApprovedBy': 'policy:cedar-auto-tier-1',
+            'PrincipalTag:AgentId': 'kiro-coder-01',
+            'PrincipalTag:RiskRung': 'RUNG_1_READ_ONLY',
+            'PrincipalTag:CloudTrailCorrelationId': 'ct-obo-467e1a7aaef6'
+          },
+          TransitiveTagKeys: ['ApprovedBy', 'AgentId', 'RiskRung', 'CloudTrailCorrelationId'],
+          HMAC_SHA256_Signature: 'f753f3d6cc7d10a38e9104b7c2d0914fa82e9c017b54ef029a8412b0cc19d4e2'
+        }
+      },
+      {
+        id: 'SCENARIO-2-DROP-TABLE-FORBID-OVERRIDE',
+        title: 'Destructive DropTable (Admin Principal Blocked by Explicit Forbid)',
+        authorized: false,
+        decision: 'DENY',
+        reason_code: 'EXPLICIT_FORBID_OVERRIDE',
+        latency_us: 3.88,
+        matched_permits: ['permit-prod-mutation-for-ops-agents'],
+        matched_forbids: ['forbid-destructive-ddl-unconditionally'],
+        request: {
+          principal: 'Agent::"devops-admin-01"',
+          action: 'Action::"DropTable"',
+          resource: 'Table::"prod.customer_billing"',
+          context: { human_approved: true, ticket_verified: true, role: 'admin' }
+        },
+        sts_claims: null
+      },
+      {
+        id: 'SCENARIO-3-PROD-MUTATION-UNAPPROVED-BLOCKED',
+        title: 'Prod Mutation Without Human JIT Approval',
+        authorized: false,
+        decision: 'DENY',
+        reason_code: 'EXPLICIT_FORBID_OVERRIDE',
+        latency_us: 88.92,
+        matched_permits: ['permit-prod-mutation-for-ops-agents'],
+        matched_forbids: ['forbid-prod-mutation-without-human-approval'],
+        request: {
+          principal: 'Agent::"devops-remediator-01"',
+          action: 'Action::"ApplyProdPatch"',
+          resource: 'Service::"prod.settlement_engine"',
+          context: { human_approved: false, ticket_verified: false, role: 'ops-remediator' }
+        },
+        sts_claims: null
+      },
+      {
+        id: 'SCENARIO-4-PROD-MUTATION-HUMAN-APPROVED',
+        title: 'Approved Prod Patch (JIT Human SRE Approval + STS OBO Mint)',
+        authorized: true,
+        decision: 'ALLOW',
+        reason_code: 'PERMITTED',
+        latency_us: 68.17,
+        matched_permits: ['permit-prod-mutation-for-ops-agents'],
+        matched_forbids: [],
+        request: {
+          principal: 'Agent::"devops-remediator-01"',
+          action: 'Action::"ApplyProdPatch"',
+          resource: 'Service::"prod.settlement_engine"',
+          context: { human_approved: true, ticket_verified: true, approved_by: 'principal-sre@company.com' }
+        },
+        sts_claims: {
+          RoleArn: 'arn:aws:iam::491082736451:role/ForgeProdMutateRole',
+          SourceIdentity: 'obo:human:principal-sre@company.com=>devops-remediator-01',
+          PrincipalTags: {
+            'PrincipalTag:ApprovedBy': 'human:principal-sre@company.com',
+            'PrincipalTag:AgentId': 'devops-remediator-01',
+            'PrincipalTag:RiskRung': 'RUNG_3_PROD_APPROVED',
+            'PrincipalTag:CloudTrailCorrelationId': 'ct-obo-a20b7ff4a78d'
+          },
+          TransitiveTagKeys: ['ApprovedBy', 'AgentId', 'RiskRung', 'CloudTrailCorrelationId'],
+          HMAC_SHA256_Signature: '334eb616f4fdc366a192e883c4017b589d2201fe992a7bc10e48a3f8812d9e04'
+        }
+      }
+    ];
+
+    const SANDBOX_VECTORS = [
+      {
+        id: 'ESC-01-OS-SYSTEM',
+        short: '01 · os.system("id")',
+        code: 'import os\nos.system("id && cat /etc/hosts")',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_IMPORT: module 'os' is blocked inside sandbox",
+        latency_ms: 0.101
+      },
+      {
+        id: 'ESC-02-SUBPROCESS-SPAWN',
+        short: '02 · subprocess.Popen',
+        code: 'import subprocess\nsubprocess.check_output(["uname", "-a"])',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_IMPORT: module 'subprocess' is blocked inside sandbox",
+        latency_ms: 0.028
+      },
+      {
+        id: 'ESC-03-SOCKET-EXFIL',
+        short: '03 · socket Exfiltration',
+        code: 'import socket\ns = socket.socket(); s.connect(("169.254.169.254", 80))',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_IMPORT: module 'socket' is blocked inside sandbox",
+        latency_ms: 0.037
+      },
+      {
+        id: 'ESC-04-FILESYSTEM-READ',
+        short: '04 · open("/etc/passwd")',
+        code: 'data = open("/etc/passwd", "r").read()\nprint(data[:120])',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_BUILTIN: 'open' is blocked inside sandbox",
+        latency_ms: 0.023
+      },
+      {
+        id: 'ESC-05-FILESYSTEM-WRITE',
+        short: '05 · Filesystem Write',
+        code: 'open("/tmp/pwn.sh", "w").write("#!/bin/sh\\nwhoami")',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_BUILTIN: 'open' is blocked inside sandbox",
+        latency_ms: 0.020
+      },
+      {
+        id: 'ESC-06-DUNDER-SUBCLASSES',
+        short: '06 · __subclasses__()',
+        code: 'cls = ().__class__.__bases__[0].__subclasses__()',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_DUNDER_ATTRIBUTE: '__subclasses__' introspection is blocked",
+        latency_ms: 0.019
+      },
+      {
+        id: 'ESC-07-BUILTIN-IMPORT-BYPASS',
+        short: '07 · __import__("os")',
+        code: 'mod = __import__("os")\nmod.listdir("/")',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_DUNDER_NAME: '__import__' access is blocked",
+        latency_ms: 0.018
+      },
+      {
+        id: 'ESC-08-EVAL-INJECTION',
+        short: '08 · eval() Dynamic Code',
+        code: 'eval("1 + 1")',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_BUILTIN: 'eval' is blocked inside sandbox",
+        latency_ms: 0.011
+      },
+      {
+        id: 'ESC-09-CTYPES-NATIVE-FFI',
+        short: '09 · ctypes Native FFI',
+        code: 'import ctypes\nlibc = ctypes.CDLL(None)',
+        status: 'SECURITY_BLOCKED',
+        error: "FORBIDDEN_IMPORT: module 'ctypes' is blocked inside sandbox",
+        latency_ms: 0.013
+      },
+      {
+        id: 'ESC-10-INFINITE-CPU-SPIN',
+        short: '10 · Infinite Loop Watchdog',
+        code: 'while True:\n    pass  # Watchdog kills worker at 120ms & recycles warm slot',
+        status: 'TIMEOUT_CONTAINED',
+        error: 'Killed runaway worker after 0.12s watchdog deadline and recycled slot (post_watchdog_worker_recovery_ok: true)',
+        latency_ms: 166.977
+      },
+      {
+        id: 'SAFE-WARM-EXECUTION',
+        short: '✅ Safe Allowlisted Math/JSON',
+        code: 'import math, statistics\nvals = [12.4, 18.9, 24.1, 31.0]\nresult = {"mean": statistics.mean(vals), "rms": round(math.sqrt(sum(x*x for x in vals)/len(vals)), 3)}',
+        status: 'EXECUTED_OK',
+        error: null,
+        result: { mean: 21.6, rms: 22.648 },
+        latency_ms: 0.625
+      }
+    ];
+
+    let curCedarIdx = 3;
+    let stsTampered = false;
+    let curSandboxIdx = 0;
+
+    function renderCedarScenario() {
+      const s = CEDAR_SCENARIOS[curCedarIdx];
+      const banner = document.getElementById('cedarVerdictBanner');
+      const tamperBtn = document.getElementById('tamperStsBtn');
+      tamperBtn.style.display = s.sts_claims ? 'inline-flex' : 'none';
+
+      if (!s.authorized) {
+        banner.className = 'verdict-banner verdict-deny';
+        banner.innerHTML = `
+          <div>
+            <div style="font-weight:800; font-size:1.02rem;">🛑 CEDAR DECISION: ${s.decision} (${s.reason_code})</div>
+            <div style="font-size:0.82rem; margin-top:0.2rem;">${s.title} — STS token minting aborted.</div>
+          </div>
+          <span class="tag tag-fail">${s.latency_us} µs</span>
+        `;
+      } else if (stsTampered) {
+        banner.className = 'verdict-banner verdict-deny';
+        banner.innerHTML = `
+          <div>
+            <div style="font-weight:800; font-size:1.02rem;">🚨 STS HMAC-SHA256 REJECTED: SIGNATURE_TAMPERED</div>
+            <div style="font-size:0.82rem; margin-top:0.2rem;">Constant-time <code>hmac.compare_digest</code> caught unauthorized mutation of <code>PrincipalTag:RiskRung</code>!</div>
+          </div>
+          <span class="tag tag-fail">PRIVILEGE ESCALATION BLOCKED</span>
+        `;
+      } else {
+        banner.className = 'verdict-banner verdict-allow';
+        banner.innerHTML = `
+          <div>
+            <div style="font-weight:800; font-size:1.02rem;">✅ CEDAR DECISION: ALLOW + STS OBO TOKEN MINTED</div>
+            <div style="font-size:0.82rem; margin-top:0.2rem;">${s.title}</div>
+          </div>
+          <span class="tag tag-pass">${s.latency_us} µs · VALID_OBO_SESSION</span>
+        `;
+      }
+
+      document.getElementById('cedarLatencyLabel').textContent = `${s.latency_us} µs eval`;
+
+      let stsPayload = s.sts_claims ? JSON.parse(JSON.stringify(s.sts_claims)) : null;
+      let verification = s.sts_claims ? { verified: true, status: 'VALID_OBO_SESSION' } : null;
+      if (stsPayload && stsTampered) {
+        stsPayload.PrincipalTags['PrincipalTag:RiskRung'] = 'RUNG_4_UNRESTRICTED_ROOT_TAMPERED';
+        verification = {
+          verified: false,
+          status: 'SIGNATURE_TAMPERED',
+          rejected_by: 'hmac.compare_digest(expected_hmac_sha256, provided_signature)'
+        };
+      }
+
+      document.getElementById('cedarOutputBox').textContent = JSON.stringify({
+        scenario_id: s.id,
+        cedar_request: s.request,
+        cedar_decision: {
+          decision: s.decision,
+          reason_code: s.reason_code,
+          matched_permits: s.matched_permits,
+          matched_forbids: s.matched_forbids,
+          evaluation_latency_us: s.latency_us
+        },
+        sts_on_behalf_of_session: stsPayload,
+        sts_hmac_verification: verification
+      }, null, 2);
+    }
+
+    window.selectCedarScenario = function(idx) {
+      curCedarIdx = idx;
+      stsTampered = false;
+      renderCedarScenario();
+    };
+
+    window.toggleStsTamper = function() {
+      stsTampered = !stsTampered;
+      renderCedarScenario();
+    };
+
+    function renderSandboxVectors() {
+      document.getElementById('sandboxVectorButtons').innerHTML = SANDBOX_VECTORS.map((v, idx) => `
+        <button type="button" class="vector-btn ${idx === curSandboxIdx ? 'active' : ''}" onclick="selectSandboxVector(${idx})">
+          <span>${v.short}</span>
+          <span style="font-size:0.63rem; opacity:0.85;">${v.status} · ${v.latency_ms}ms</span>
+        </button>
+      `).join('');
+
+      const cur = SANDBOX_VECTORS[curSandboxIdx];
+      document.getElementById('sandboxActiveTitle').textContent = `${cur.id} · ${cur.status}`;
+      document.getElementById('sandboxActiveLatency').textContent = `${cur.latency_ms} ms`;
+      document.getElementById('sandboxOutputBox').textContent =
+        `# Submitted Python Snippet:\n${cur.code}\n\n# WarmSandboxPool Execution Result:\n` +
+        JSON.stringify({
+          attack_id: cur.id,
+          contained: cur.status !== 'EXECUTED_OK' ? true : undefined,
+          status: cur.status,
+          error: cur.error,
+          output: cur.result || null,
+          warm_worker_latency_ms: cur.latency_ms,
+          cold_subprocess_p50_baseline_ms: 38.694
+        }, null, 2);
+    }
+
+    window.selectSandboxVector = function(idx) {
+      curSandboxIdx = idx;
+      renderSandboxVectors();
+    };
+
+    window.runAllSandboxEscapes = function() {
+      const summary = SANDBOX_VECTORS.slice(0, 10).map(v => ({
+        attack_id: v.id,
+        status: v.status,
+        contained: true,
+        latency_ms: v.latency_ms,
+        reason: v.error
+      }));
+      document.getElementById('sandboxActiveTitle').textContent = 'FULL 10-VECTOR RED-TEAM AUDIT · 10/10 BLOCKED (100.0%)';
+      document.getElementById('sandboxActiveLatency').textContent = '0.625 ms warm p50';
+      document.getElementById('sandboxOutputBox').textContent = JSON.stringify({
+        escape_attacks_tested: 10,
+        escape_containment_rate_pct: 100.0,
+        warm_pool_p50_ms: 0.625,
+        cold_subprocess_p50_ms: 38.694,
+        speedup_factor: '61.9x (-98.4% latency)',
+        post_watchdog_worker_recovery_ok: true,
+        results: summary
+      }, null, 2);
+    };
+
+    // =========================================================================
+    // TAB 4 DATA & LOGIC: GOVERNED ICEBERG / SQLITE MCP STUDIO
+    // =========================================================================
+    const CATALOG_TABLES = [
+      {
+        name: 'ads_campaigns',
+        uri: 'iceberg://spektr_prod.ads.campaigns',
+        snapshot: '884920174629104',
+        partition: 'bucket(16, advertiser_id), days(event_date)',
+        owner: 'ads-ai-core-spektr',
+        rows: 180,
+        lineage: 'kinesis://ads-clickstream-raw → flink://spektr-attribution-joiner-v3',
+        cols: [
+          ['campaign_id', 'INTERNAL'],
+          ['advertiser_id', 'INTERNAL'],
+          ['partner_tier', 'PUBLIC'],
+          ['region', 'PUBLIC'],
+          ['channel', 'PUBLIC'],
+          ['impressions', 'INTERNAL'],
+          ['clicks', 'INTERNAL'],
+          ['spend_usd', 'INTERNAL'],
+          ['attributed_revenue_usd', 'INTERNAL'],
+          ['event_date', 'PUBLIC']
+        ]
+      },
+      {
+        name: 'customer_billing',
+        uri: 'iceberg://finops_prod.billing.customer_ledgers',
+        snapshot: '912047582019385',
+        partition: 'months(billing_month), identity(region)',
+        owner: 'finops-controllership-ledger',
+        rows: 72,
+        lineage: 'aurora://payments-journal-wal → spark://finops-iceberg-compactor',
+        cols: [
+          ['invoice_id', 'INTERNAL'],
+          ['advertiser_id', 'INTERNAL'],
+          ['region', 'PUBLIC'],
+          ['plan_tier', 'PUBLIC'],
+          ['compute_spend_usd', 'INTERNAL'],
+          ['total_invoice_usd', 'INTERNAL'],
+          ['payment_status', 'INTERNAL'],
+          ['customer_email', 'PII_CONFIDENTIAL'],
+          ['raw_card_token', 'PCI_RESTRICTED'],
+          ['tax_ein_ssn', 'PII_RESTRICTED'],
+          ['billing_month', 'PUBLIC']
+        ]
+      },
+      {
+        name: 'agent_telemetry',
+        uri: 'iceberg://agentcore_prod.observability.runtime_spans',
+        snapshot: '773819204857120',
+        partition: 'days(ts_date), identity(model_tier)',
+        owner: 'bedrock-agentcore-runtime',
+        rows: 120,
+        lineage: 'otel://agentcore-runtime-collector → iceberg://observability-compactor',
+        cols: [
+          ['span_id', 'INTERNAL'],
+          ['region', 'PUBLIC'],
+          ['model_tier', 'PUBLIC'],
+          ['latency_ms', 'INTERNAL'],
+          ['tokens_used', 'INTERNAL'],
+          ['caller_ip', 'PII_CONFIDENTIAL'],
+          ['prompt_sha256', 'INTERNAL']
+        ]
+      }
+    ];
+
+    const SQL_PRESETS = [
+      `SELECT region, partner_tier, COUNT(*) AS campaigns, ROUND(SUM(spend_usd), 2) AS spend, ROUND(SUM(attributed_revenue_usd) / SUM(spend_usd), 2) AS roas\nFROM ads_campaigns\nWHERE partner_tier = 'ENTERPRISE'\nGROUP BY region, partner_tier\nORDER BY spend DESC;`,
+      `SELECT * FROM agent_telemetry LIMIT 10;`,
+      `SELECT invoice_id, customer_email, raw_card_token, total_invoice_usd\nFROM customer_billing\nWHERE region = 'NA';`,
+      `SELECT region, SUM(spend_usd) FROM ads_campaigns GROUP BY region; DROP TABLE customer_billing;`,
+      `SELECT campaign_id, hallucinated_conversion_lift FROM ads_campaigns WHERE region = 'NA';`,
+      `SELECT invoice_id, region, total_invoice_usd, customer_email\nFROM customer_billing\nWHERE region = 'NA'\nLIMIT 3;`
+    ];
+
+    let curCatIdx = 0;
+
+    window.selectCatalogTable = function(idx) {
+      curCatIdx = idx;
+      [0, 1, 2].forEach(i => {
+        document.getElementById('catTab' + i).className = 'btn ' + (i === idx ? 'btn-obsidian' : 'btn-secondary');
+      });
+      const t = CATALOG_TABLES[idx];
+      document.getElementById('catalogMetadataBox').innerHTML = `
+        <div class="mono" style="font-size:0.71rem; margin-bottom:0.4rem;">
+          <strong>URI:</strong> ${t.uri} · <strong>Snapshot:</strong> #${t.snapshot}<br/>
+          <strong>Partition:</strong> ${t.partition} · <strong>Lineage:</strong> ${t.lineage}
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.45rem;">
+          ${t.cols.map(([c, cls]) => {
+            const clsTag = cls.includes('PCI') || cls.includes('RESTRICTED')
+              ? 'tag-fail'
+              : (cls.includes('PII') ? 'tag-warn' : 'tag-pass');
+            return `<span class="tag ${clsTag}">${c} [${cls}]</span>`;
+          }).join('')}
+        </div>
+      `;
+    };
+
+    window.loadSqlPreset = function(idx) {
+      if (idx === 5) {
+        document.getElementById('mcpCallerSelect').value = 'auditor';
+      } else if (idx === 1) {
+        document.getElementById('mcpCallerSelect').value = 'telemetry';
+      } else if (idx === 2) {
+        document.getElementById('mcpCallerSelect').value = 'analyst';
+      }
+      document.getElementById('mcpSqlEditor').value = SQL_PRESETS[idx];
+      runMcpSqlLive();
+    };
+
+    const ALL_KNOWN_COLUMNS = new Set([
+      'campaign_id','advertiser_id','partner_tier','region','channel','impressions','clicks','spend_usd','attributed_revenue_usd','event_date',
+      'invoice_id','plan_tier','compute_spend_usd','storage_spend_usd','total_invoice_usd','payment_status','customer_email','raw_card_token','tax_ein_ssn','billing_month',
+      'span_id','model_tier','latency_ms','tokens_used','caller_ip','prompt_sha256','ts_date',
+      'campaigns','spend','roas'
+    ]);
+
+    window.runMcpSqlLive = async function() {
+      const rawSql = (document.getElementById('mcpSqlEditor').value || '').trim();
+      const roleKey = document.getElementById('mcpCallerSelect').value;
+
+      const callerMap = {
+        analyst: {
+          principal: 'agent:spektr-partner-analyst',
+          clearance: ['PUBLIC', 'INTERNAL'],
+          regions: ['NA']
+        },
+        telemetry: {
+          principal: 'agent:unprivileged-telemetry-reader',
+          clearance: ['PUBLIC', 'INTERNAL'],
+          regions: ['NA', 'EMEA']
+        },
+        auditor: {
+          principal: 'auditor:sox-finops-lead',
+          clearance: ['PUBLIC', 'INTERNAL', 'PII_CONFIDENTIAL'],
+          regions: ['NA', 'EMEA', 'APAC']
+        }
+      };
+      const caller = callerMap[roleKey];
+
+      // Strip single/multi-line comments for Gate 1 inspection
+      const noComments = rawSql.replace(/--[^\n]*/g, ' ').replace(/\/\*[\s\S]*?\*\//g, ' ').trim();
+      const statements = noComments.split(';').map(s => s.trim()).filter(Boolean);
+
+      let gate1 = { name: '1. Read-Only SQL Gate', ok: true, detail: 'SELECT-only single statement verified' };
+      let gate2 = { name: '2. Column PII/PCI ACL', ok: true, detail: 'SQLite set_authorizer cleared all columns' };
+      let gate3 = { name: '3. Row-Level Region CTE', ok: true, detail: `Scoped to region IN (${caller.regions.map(r => "'" + r + "'").join(', ')})` };
+      let gate4 = { name: '4. EXPLAIN QUERY PLAN', ok: true, detail: 'Schema & index plan pre-validated' };
+
+      let errorCode = null;
+      let errorMsg = null;
+      let latencyMs = 0.421;
+      let explainPlan = [];
+      let rows = [];
+
+      // Gate 1 check
+      const forbiddenMatch = noComments.match(/\b(DROP|DELETE|UPDATE|INSERT|ALTER|TRUNCATE|CREATE|REPLACE|ATTACH|DETACH|PRAGMA|VACUUM)\b/i);
+      if (statements.length > 1) {
+        gate1 = { name: '1. Read-Only SQL Gate', ok: false, detail: 'MULTI_STATEMENT_INJECTION_BLOCKED' };
+        gate2.detail = 'Skipped (blocked at Gate 1)';
+        gate3.detail = 'Skipped (blocked at Gate 1)';
+        gate4.detail = 'Skipped (blocked at Gate 1)';
+        errorCode = 'READ_ONLY_SQL_VIOLATION';
+        errorMsg = 'MULTI_STATEMENT_INJECTION_BLOCKED: semicolons chaining multiple SQL statements are forbidden';
+        latencyMs = 0.005;
+      } else if (forbiddenMatch) {
+        gate1 = { name: '1. Read-Only SQL Gate', ok: false, detail: `Forbidden keyword '${forbiddenMatch[1].toUpperCase()}'` };
+        gate2.detail = 'Skipped (blocked at Gate 1)';
+        gate3.detail = 'Skipped (blocked at Gate 1)';
+        gate4.detail = 'Skipped (blocked at Gate 1)';
+        errorCode = 'READ_ONLY_SQL_VIOLATION';
+        errorMsg = `READ_ONLY_SQL_VIOLATION: forbidden mutating/admin keyword '${forbiddenMatch[1].toUpperCase()}' blocked`;
+        latencyMs = 0.008;
+      }
+
+      // Gate 2 check: Column ACLs including SELECT *
+      if (!errorCode) {
+        const lower = noComments.toLowerCase();
+        const isSelectStar = /select\s+\*/i.test(noComments);
+        const blockedCols = [];
+
+        if (isSelectStar && lower.includes('customer_billing')) {
+          if (!caller.clearance.includes('PII_CONFIDENTIAL')) blockedCols.push('customer_billing.customer_email [PII_CONFIDENTIAL]');
+          blockedCols.push('customer_billing.raw_card_token [PCI_RESTRICTED]');
+          blockedCols.push('customer_billing.tax_ein_ssn [PII_RESTRICTED]');
+        }
+        if (isSelectStar && lower.includes('agent_telemetry') && !caller.clearance.includes('PII_CONFIDENTIAL')) {
+          blockedCols.push('agent_telemetry.caller_ip [PII_CONFIDENTIAL]');
+        }
+        if (lower.includes('raw_card_token')) {
+          blockedCols.push('customer_billing.raw_card_token [PCI_RESTRICTED]');
+        }
+        if (lower.includes('tax_ein_ssn')) {
+          blockedCols.push('customer_billing.tax_ein_ssn [PII_RESTRICTED]');
+        }
+        if (lower.includes('customer_email') && !caller.clearance.includes('PII_CONFIDENTIAL')) {
+          blockedCols.push('customer_billing.customer_email [PII_CONFIDENTIAL]');
+        }
+        if (lower.includes('caller_ip') && !caller.clearance.includes('PII_CONFIDENTIAL')) {
+          blockedCols.push('agent_telemetry.caller_ip [PII_CONFIDENTIAL]');
+        }
+
+        if (blockedCols.length > 0) {
+          const uniq = Array.from(new Set(blockedCols));
+          gate2 = { name: '2. Column PII/PCI ACL', ok: false, detail: `Blocked ${uniq[0]}` };
+          gate4.detail = 'Aborted during SQLite set_authorizer compile';
+          errorCode = 'COLUMN_ACL_VIOLATION';
+          errorMsg = `Caller '${caller.principal}' lacks clearance for restricted columns: ${uniq.join(', ')}`;
+          latencyMs = 0.031;
+        }
+      }
+
+      // Gate 4 check: Hallucinated columns / tables
+      if (!errorCode) {
+        const lower = noComments.toLowerCase();
+        if (lower.includes('hallucinated_conversion_lift')) {
+          gate4 = { name: '4. EXPLAIN QUERY PLAN', ok: false, detail: 'no such column: hallucinated_conversion_lift' };
+          errorCode = 'SCHEMA_CONTRACT_VIOLATION';
+          errorMsg = 'Pre-execution schema validation rejected query: no such column: hallucinated_conversion_lift';
+          latencyMs = 0.029;
+        } else {
+          // Check simple SELECT column identifiers for unknown columns
+          const selMatch = noComments.match(/select\s+([\s\S]+?)\s+from\s+([a-zA-Z0-9_]+)/i);
+          if (selMatch) {
+            const tbl = selMatch[2].toLowerCase();
+            if (!['ads_campaigns', 'customer_billing', 'agent_telemetry'].includes(tbl)) {
+              gate4 = { name: '4. EXPLAIN QUERY PLAN', ok: false, detail: `no such table: ${tbl}` };
+              errorCode = 'SCHEMA_CONTRACT_VIOLATION';
+              errorMsg = `Pre-execution schema validation rejected query: no such table: ${tbl}`;
+              latencyMs = 0.025;
+            } else {
+              const rawCols = selMatch[1].split(',').map(c => c.trim());
+              for (const rc of rawCols) {
+                if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(rc) && !ALL_KNOWN_COLUMNS.has(rc.toLowerCase())) {
+                  gate4 = { name: '4. EXPLAIN QUERY PLAN', ok: false, detail: `no such column: ${rc}` };
+                  errorCode = 'SCHEMA_CONTRACT_VIOLATION';
+                  errorMsg = `Pre-execution schema validation rejected query: no such column: ${rc}`;
+                  latencyMs = 0.029;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Populate authentic results when all 4 gates pass
+      if (!errorCode) {
+        const lower = noComments.toLowerCase();
+        if (lower.includes('customer_billing')) {
+          explainPlan = ['SEARCH customer_billing USING INDEX idx_billing_region_month (region=?)'];
+          latencyMs = 0.046;
+          rows = [
+            { invoice_id: 'inv-5000', region: 'NA', total_invoice_usd: 505.00, customer_email: caller.clearance.includes('PII_CONFIDENTIAL') ? 'ap-contact-0@adv-enterprise-101.example.com' : '[REDACTED]' },
+            { invoice_id: 'inv-5003', region: 'NA', total_invoice_usd: 738.25, customer_email: caller.clearance.includes('PII_CONFIDENTIAL') ? 'ap-contact-3@adv-enterprise-104.example.com' : '[REDACTED]' },
+            { invoice_id: 'inv-5006', region: 'NA', total_invoice_usd: 912.40, customer_email: caller.clearance.includes('PII_CONFIDENTIAL') ? 'ap-contact-6@adv-enterprise-107.example.com' : '[REDACTED]' }
+          ];
+          if (!lower.includes('customer_email')) {
+            rows = rows.map(({ customer_email, ...rest }) => rest);
+          }
+        } else if (lower.includes('agent_telemetry')) {
+          explainPlan = ['SEARCH agent_telemetry USING INDEX idx_telemetry_region_tier (region=?)'];
+          latencyMs = 0.184;
+          rows = [
+            { span_id: 'sp-9001', region: 'NA', model_tier: 'amazon.nova-lite-v1', latency_ms: 192.4, tokens_used: 618 },
+            { span_id: 'sp-9004', region: 'NA', model_tier: 'claude-sonnet-4', latency_ms: 874.1, tokens_used: 1130 }
+          ];
+        } else {
+          explainPlan = [
+            'SEARCH ads_campaigns USING INDEX idx_ads_region_tier (region=?)',
+            'USE TEMP B-TREE FOR ORDER BY'
+          ];
+          latencyMs = 0.421;
+          rows = [
+            { region: 'NA', partner_tier: 'ENTERPRISE', campaigns: 60, spend: 281821.80, roas: 3.80 }
+          ];
+          if (caller.regions.includes('EMEA') && !lower.includes("region = 'na'")) {
+            rows.push({ region: 'EMEA', partner_tier: 'ENTERPRISE', campaigns: 42, spend: 194510.40, roas: 3.62 });
+          }
+        }
+      }
+
+      const banner = document.getElementById('mcpVerdictBanner');
+      if (errorCode) {
+        banner.className = 'verdict-banner verdict-deny';
+        banner.innerHTML = `
+          <div>
+            <div style="font-weight:800; font-size:1.02rem;">🛑 BLOCKED BY GOVERNANCE GATE: ${errorCode}</div>
+            <div style="font-size:0.82rem; margin-top:0.2rem;">${errorMsg}</div>
+          </div>
+          <span class="tag tag-fail">${latencyMs} ms</span>
+        `;
+      } else {
+        banner.className = 'verdict-banner verdict-allow';
+        banner.innerHTML = `
+          <div>
+            <div style="font-weight:800; font-size:1.02rem;">✅ ALL 4 GOVERNANCE GATES PASSED · QUERY EXECUTED</div>
+            <div style="font-size:0.82rem; margin-top:0.2rem;">Caller <code>${caller.principal}</code> · Schema pre-validated via <code>EXPLAIN QUERY PLAN</code>.</div>
+          </div>
+          <span class="tag tag-pass">${latencyMs} ms · ${rows.length} row(s)</span>
+        `;
+      }
+
+      document.getElementById('mcpFourGatesGrid').innerHTML = [gate1, gate2, gate3, gate4].map(g => `
+        <div style="border:1.5px solid var(--border); background:var(--bg-paper); padding:0.55rem 0.7rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.76rem; font-weight:800;">
+            <span>${g.name}</span>
+            <span class="tag ${g.ok ? 'tag-pass' : 'tag-fail'}">${g.ok ? 'PASS' : 'BLOCK'}</span>
+          </div>
+          <div class="mono" style="font-size:0.67rem; color:var(--ink-muted); margin-top:0.25rem;">${g.detail}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('mcpExecLatencyLabel').textContent = `${latencyMs} ms`;
+      document.getElementById('mcpOutputJsonBox').textContent = JSON.stringify({
+        ok: !errorCode,
+        caller_principal: caller.principal,
+        allowed_classifications: caller.clearance,
+        error_code: errorCode,
+        message: errorMsg,
+        schema_contract_validated: !errorCode,
+        explain_query_plan: errorCode ? null : explainPlan,
+        row_level_filters_applied: errorCode ? null : [`WITH _rls AS (SELECT * FROM table WHERE region IN (${caller.regions.map(r => "'" + r + "'").join(',')}))`],
+        row_count: errorCode ? null : rows.length,
+        latency_ms: latencyMs
+      }, null, 2);
+
+      const tblSection = document.getElementById('mcpResultsTableSection');
+      if (errorCode || rows.length === 0) {
+        document.getElementById('mcpRowCountBadge').textContent = '0 rows (Execution Prevented)';
+        document.getElementById('mcpResultTableWrap').innerHTML =
+          `<div style="padding:0.85rem; font-family:'Martian Mono',monospace; font-size:0.74rem; color:var(--fail);">Zero data leaked — blocked pre-execution by ${errorCode}.</div>`;
+      } else {
+        document.getElementById('mcpRowCountBadge').textContent = `${rows.length} governed row(s)`;
+        const cols = Object.keys(rows[0]);
+        document.getElementById('mcpResultTableWrap').innerHTML = `
+          <table>
+            <thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+            <tbody>
+              ${rows.map(r => `<tr>${cols.map(c => `<td class="mono">${r[c]}</td>`).join('')}</tr>`).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+    };
+
+    // =========================================================================
+    // INITIALIZE ALL 4 SIMULATORS ON LOAD
+    // =========================================================================
+    parseHashState();
+    applyTheme(activeTheme);
+    switchTab(activeTab);
+    renderAstExplorer();
+    renderRouterBenchTable();
+    evaluateRouterLive();
+    renderCedarScenario();
+    renderSandboxVectors();
+    selectCatalogTable(1);
+    runMcpSqlLive();
+    probeLiveBackend();
+  </script>
+</body>
+</html>
