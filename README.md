@@ -1,5 +1,8 @@
 # ForgeRuntime — Sandboxed Coding & Governed Data-Lake Agent Platform
 
+> **☁️ Live AWS Deployment (`us-west-2` Lambda Function URL):** [https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/](https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/)  
+> **Health Check:** `https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/api/health` · **Live Execution API:** `curl -s -X POST https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`
+
 [![Live Interactive Web App](https://img.shields.io/badge/Live%20Web%20App-GitHub%20Pages%20Interactive%20Studio-B8F200?style=flat&logo=github)](https://ritwikareddykancharla.github.io/forge-runtime/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![Zero External Dependencies](https://img.shields.io/badge/dependencies-zero%20(stdlib)-brightgreen.svg)](#quick-start)
