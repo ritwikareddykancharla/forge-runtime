@@ -1,0 +1,845 @@
+{
+  "benchmark_suite": "ForgeRuntime End-to-End Verification Suite",
+  "generated_at_utc": "2026-11-23T22:16:42Z",
+  "environment": {
+    "python_version": "3.14.6",
+    "platform": "Darwin-arm64",
+    "external_dependencies": 0
+  },
+  "total_benchmark_wall_time_ms": 1203.72,
+  "headline_metrics": {
+    "ast_token_compression_vs_touched_files": 5.3,
+    "ast_token_compression_vs_full_repo": 5.97,
+    "ast_call_neighborhood_recall_pct": 100.0,
+    "router_tier_accuracy_pct": 100.0,
+    "router_cost_savings_vs_opus_pct": 35.89,
+    "router_latency_reduction_vs_opus_pct": 59.71,
+    "cedar_policy_invariant_accuracy_pct": 100.0,
+    "sts_obo_hmac_tamper_detection": true,
+    "warm_sandbox_p50_ms": 0.625,
+    "warm_sandbox_p95_ms": 1.077,
+    "cold_subprocess_p50_ms": 38.694,
+    "warm_vs_cold_p50_speedup": 61.9,
+    "sandbox_escape_containment_pct": 100.0,
+    "lake_governance_gate_accuracy_pct": 100.0,
+    "lake_schema_contract_valid_execution_pct": 100.0
+  },
+  "pillars": {
+    "ast_repo_graph": {
+      "reference_repo_graph": {
+        "files_indexed": 6,
+        "total_repo_tokens": 4382,
+        "total_nodes": 56,
+        "node_counts_by_kind": {
+          "Module": 6,
+          "Class": 12,
+          "Function": 38
+        },
+        "total_edges": 38,
+        "edge_counts_by_type": {
+          "CALLS": 25,
+          "IMPORTS": 12,
+          "INHERITS": 1
+        }
+      },
+      "benchmark_queries": [
+        {
+          "focal_symbol_id": "workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice",
+          "hop_budget": 2,
+          "included_symbol_ids": [
+            "workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice",
+            "api.partner_gateway::PartnerBillingGateway.handle_partner_charge",
+            "core.base_service::BaseTelemetryService",
+            "core.base_service::BaseTelemetryService.emit_audit_span",
+            "security.quota_guard::TenantQuotaGuard.sign_settlement_digest",
+            "security.quota_guard::TenantQuotaGuard.validate_region_residency",
+            "security.quota_guard::TenantQuotaGuard.verify_spend_ceiling",
+            "storage.ledger_store::ImmutableLedgerStore.append_posting",
+            "storage.ledger_store::ImmutableLedgerStore.get_tenant_balance_cents",
+            "core.base_service::AuditEnvelope",
+            "security.quota_guard::TenantQuotaGuard.verify_settlement_digest",
+            "storage.ledger_store::LedgerPosting",
+            "workflows.settlement_engine::InvoiceSettlementEngine",
+            "workflows.settlement_engine::InvoiceSettlementEngine.preview_settlement_headroom",
+            "workflows.settlement_engine::InvoiceSettlementEngine.summarize_regional_posture"
+          ],
+          "hop_breakdown": {
+            "0": [
+              "workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice"
+            ],
+            "1": [
+              "api.partner_gateway::PartnerBillingGateway.handle_partner_charge",
+              "core.base_service::BaseTelemetryService",
+              "core.base_service::BaseTelemetryService.emit_audit_span",
+              "security.quota_guard::TenantQuotaGuard.sign_settlement_digest",
+              "security.quota_guard::TenantQuotaGuard.validate_region_residency",
+              "security.quota_guard::TenantQuotaGuard.verify_spend_ceiling",
+              "storage.ledger_store::ImmutableLedgerStore.append_posting",
+              "storage.ledger_store::ImmutableLedgerStore.get_tenant_balance_cents"
+            ],
+            "2": [
+              "core.base_service::AuditEnvelope",
+              "security.quota_guard::TenantQuotaGuard.verify_settlement_digest",
+              "storage.ledger_store::LedgerPosting",
+              "workflows.settlement_engine::InvoiceSettlementEngine",
+              "workflows.settlement_engine::InvoiceSettlementEngine.preview_settlement_headroom",
+              "workflows.settlement_engine::InvoiceSettlementEngine.summarize_regional_posture"
+            ]
+          },
+          "packed_tokens": 1130,
+          "naive_touched_files_tokens": 4076,
+          "naive_full_repo_tokens": 4382,
+          "compression_ratio_vs_touched_files": 3.61,
+          "compression_ratio_vs_full_repo": 3.88,
+          "touched_files": [
+            "api/partner_gateway.py",
+            "core/base_service.py",
+            "security/quota_guard.py",
+            "storage/ledger_store.py",
+            "workflows/settlement_engine.py"
+          ],
+          "ground_truth_neighborhood_count": 14,
+          "neighborhood_recall": 1.0,
+          "single_file_naive_recall": 0.2143,
+          "packed_context_preview": "# [HOP 0 | FOCAL SYMBOL] workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice (workflows/settlement_engine.py:L22-L48)\nclass InvoiceSettlementEngine(BaseTelemetryService):\n        def settle_tenant_invoice(\n            self,\n            actor_id: str,\n            correlation_id: str,\n            tenant_id: str,\n            invoice_id: str,\n            amount_cents: int,\n        ) -> Dict[str, object]:\n            \"\"\"Executes end-to-end governed settlement across quota, KMS seal, and ledger.\"\"\"\n            if not self.quota_guard.validate_region_residency(self.region):\n                self.emit_audit_span(actor_id, correlation_id, \"settle_invoice\", \"BLOCKED_REGION\")\n                raise PermissionError(f\"Region {self.region} is residency-restricted.\")\n\n            prior_spend = self.ledger_store.get_tenant_balance_cents(tenant_id)\n            if not self.quota_guard\n... [truncated preview]"
+        },
+        {
+          "focal_symbol_id": "api.partner_gateway::PartnerBillingGateway.handle_partner_charge",
+          "hop_budget": 2,
+          "included_symbol_ids": [
+            "api.partner_gateway::PartnerBillingGateway.handle_partner_charge",
+            "workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice",
+            "core.base_service::BaseTelemetryService",
+            "core.base_service::BaseTelemetryService.emit_audit_span",
+            "security.quota_guard::TenantQuotaGuard.sign_settlement_digest",
+            "security.quota_guard::TenantQuotaGuard.validate_region_residency",
+            "security.quota_guard::TenantQuotaGuard.verify_spend_ceiling",
+            "storage.ledger_store::ImmutableLedgerStore.append_posting",
+            "storage.ledger_store::ImmutableLedgerStore.get_tenant_balance_cents"
+          ],
+          "hop_breakdown": {
+            "0": [
+              "api.partner_gateway::PartnerBillingGateway.handle_partner_charge"
+            ],
+            "1": [
+              "workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice"
+            ],
+            "2": [
+              "core.base_service::BaseTelemetryService",
+              "core.base_service::BaseTelemetryService.emit_audit_span",
+              "security.quota_guard::TenantQuotaGuard.sign_settlement_digest",
+              "security.quota_guard::TenantQuotaGuard.validate_region_residency",
+              "security.quota_guard::TenantQuotaGuard.verify_spend_ceiling",
+              "storage.ledger_store::ImmutableLedgerStore.append_posting",
+              "storage.ledger_store::ImmutableLedgerStore.get_tenant_balance_cents"
+            ]
+          },
+          "packed_tokens": 616,
+          "naive_touched_files_tokens": 4076,
+          "naive_full_repo_tokens": 4382,
+          "compression_ratio_vs_touched_files": 6.62,
+          "compression_ratio_vs_full_repo": 7.11,
+          "touched_files": [
+            "api/partner_gateway.py",
+            "core/base_service.py",
+            "security/quota_guard.py",
+            "storage/ledger_store.py",
+            "workflows/settlement_engine.py"
+          ],
+          "ground_truth_neighborhood_count": 8,
+          "neighborhood_recall": 1.0,
+          "single_file_naive_recall": 0.0,
+          "packed_context_preview": "# [HOP 0 | FOCAL SYMBOL] api.partner_gateway::PartnerBillingGateway.handle_partner_charge (api/partner_gateway.py:L35-L50)\nclass PartnerBillingGateway:\n        def handle_partner_charge(\n            self,\n            partner_actor: str,\n            trace_id: str,\n            tenant_id: str,\n            invoice_id: str,\n            amount_cents: int,\n        ) -> Dict[str, object]:\n            \"\"\"Validates partner payload and delegates to InvoiceSettlementEngine.\"\"\"\n            return self.engine.settle_tenant_invoice(\n                actor_id=partner_actor,\n                correlation_id=trace_id,\n                tenant_id=tenant_id,\n                invoice_id=invoice_id,\n                amount_cents=amount_cents,\n            )\n\n# [HOP 1 | DEPENDENCY & CALLER CONTRACTS]\nclass InvoiceSettlementEngine(BaseTelemetryService):  # workflows/settlement_engine.py:L22\n    def settle_tenant_invoic\n... [truncated preview]"
+        },
+        {
+          "focal_symbol_id": "workflows.settlement_engine::InvoiceSettlementEngine.preview_settlement_headroom",
+          "hop_budget": 2,
+          "included_symbol_ids": [
+            "workflows.settlement_engine::InvoiceSettlementEngine.preview_settlement_headroom",
+            "core.base_service::BaseTelemetryService",
+            "security.quota_guard::TenantQuotaGuard.describe_tier_policy",
+            "storage.ledger_store::ImmutableLedgerStore.get_tenant_balance_cents",
+            "workflows.settlement_engine::InvoiceSettlementEngine",
+            "workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice"
+          ],
+          "hop_breakdown": {
+            "0": [
+              "workflows.settlement_engine::InvoiceSettlementEngine.preview_settlement_headroom"
+            ],
+            "1": [
+              "core.base_service::BaseTelemetryService",
+              "security.quota_guard::TenantQuotaGuard.describe_tier_policy",
+              "storage.ledger_store::ImmutableLedgerStore.get_tenant_balance_cents"
+            ],
+            "2": [
+              "workflows.settlement_engine::InvoiceSettlementEngine",
+              "workflows.settlement_engine::InvoiceSettlementEngine.settle_tenant_invoice"
+            ]
+          },
+          "packed_tokens": 455,
+          "naive_touched_files_tokens": 3509,
+          "naive_full_repo_tokens": 4382,
+          "compression_ratio_vs_touched_files": 7.71,
+          "compression_ratio_vs_full_repo": 9.63,
+          "touched_files": [
+            "core/base_service.py",
+            "security/quota_guard.py",
+            "storage/ledger_store.py",
+            "workflows/settlement_engine.py"
+          ],
+          "ground_truth_neighborhood_count": 5,
+          "neighborhood_recall": 1.0,
+          "single_file_naive_recall": 0.4,
+          "packed_context_preview": "# [HOP 0 | FOCAL SYMBOL] workflows.settlement_engine::InvoiceSettlementEngine.preview_settlement_headroom (workflows/settlement_engine.py:L50-L59)\nclass InvoiceSettlementEngine(BaseTelemetryService):\n        def preview_settlement_headroom(self, tenant_id: str) -> Dict[str, object]:\n            \"\"\"Calculates remaining spend capacity without mutating ledger state.\"\"\"\n            policy = self.quota_guard.describe_tier_policy(tenant_id)\n            balance = self.ledger_store.get_tenant_balance_cents(tenant_id)\n            cap_cents = int(policy[\"cap_cents\"])\n            return {\n                \"tenant_id\": tenant_id,\n                \"tier\": policy[\"tier\"],\n                \"remaining_cents\": max(0, cap_cents - balance),\n            }\n\n# [HOP 1 | DEPENDENCY & CALLER CONTRACTS]\n# core/base_service.py:L39-L102\nclass BaseTelemetryService:\n    \"\"\"Abstract service base providing tracing, audit \n... [truncated preview]"
+        }
+      ],
+      "aggregate_metrics": {
+        "queries_evaluated": 3,
+        "mean_packed_tokens": 733.7,
+        "mean_naive_touched_files_tokens": 3887.0,
+        "mean_naive_full_repo_tokens": 4382.0,
+        "token_compression_ratio_vs_touched_files": 5.3,
+        "token_compression_ratio_vs_full_repo": 5.97,
+        "call_neighborhood_recall_pct": 100.0,
+        "naive_single_file_recall_pct": 20.48
+      },
+      "self_hosted_forge_repo_graph": {
+        "files_indexed": 7,
+        "total_repo_tokens": 39979,
+        "total_nodes": 133,
+        "node_counts_by_kind": {
+          "Module": 7,
+          "Class": 29,
+          "Function": 97
+        },
+        "total_edges": 167,
+        "edge_counts_by_type": {
+          "CALLS": 119,
+          "IMPORTS": 48,
+          "INHERITS": 0
+        }
+      }
+    },
+    "multi_model_router": {
+      "summary": {
+        "total_requests": 12,
+        "tier_distribution": {
+          "bedrock/amazon.nova-lite-v1": 4,
+          "bedrock/anthropic.claude-sonnet-4": 5,
+          "bedrock/anthropic.claude-opus": 3
+        },
+        "total_routed_cost_usd": 0.606917,
+        "static_opus_cost_usd": 0.94665,
+        "static_sonnet_cost_usd": 0.18933,
+        "cost_savings_vs_opus_pct": 35.89,
+        "mean_predicted_p50_latency_ms": 1148.3,
+        "mean_predicted_p95_latency_ms": 1823.3,
+        "latency_reduction_vs_opus_pct": 59.71,
+        "sla_downgrade_count": 1,
+        "budget_downgrade_count": 0,
+        "tier_routing_accuracy_pct": 100.0
+      },
+      "decisions": [
+        {
+          "task_id": "TASK-01",
+          "selected_model": "bedrock/amazon.nova-lite-v1",
+          "ideal_unconstrained_model": "bedrock/amazon.nova-lite-v1",
+          "tier_label": "FAST_SEARCH_LINT",
+          "complexity_score": 0.0358,
+          "estimated_cost_usd": 5.9e-05,
+          "opus_baseline_cost_usd": 0.0168,
+          "sonnet_baseline_cost_usd": 0.00336,
+          "predicted_p50_latency_ms": 195.0,
+          "predicted_p95_latency_ms": 320.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "low complexity (0.04 < 0.34)",
+          "expected_model": "bedrock/amazon.nova-lite-v1",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-02",
+          "selected_model": "bedrock/amazon.nova-lite-v1",
+          "ideal_unconstrained_model": "bedrock/amazon.nova-lite-v1",
+          "tier_label": "FAST_SEARCH_LINT",
+          "complexity_score": 0.034,
+          "estimated_cost_usd": 4.5e-05,
+          "opus_baseline_cost_usd": 0.0129,
+          "sonnet_baseline_cost_usd": 0.00258,
+          "predicted_p50_latency_ms": 195.0,
+          "predicted_p95_latency_ms": 320.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "low complexity (0.03 < 0.34)",
+          "expected_model": "bedrock/amazon.nova-lite-v1",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-03",
+          "selected_model": "bedrock/amazon.nova-lite-v1",
+          "ideal_unconstrained_model": "bedrock/amazon.nova-lite-v1",
+          "tier_label": "FAST_SEARCH_LINT",
+          "complexity_score": 0.0938,
+          "estimated_cost_usd": 6.6e-05,
+          "opus_baseline_cost_usd": 0.01875,
+          "sonnet_baseline_cost_usd": 0.00375,
+          "predicted_p50_latency_ms": 195.0,
+          "predicted_p95_latency_ms": 320.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "low complexity (0.09 < 0.34)",
+          "expected_model": "bedrock/amazon.nova-lite-v1",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-04",
+          "selected_model": "bedrock/amazon.nova-lite-v1",
+          "ideal_unconstrained_model": "bedrock/amazon.nova-lite-v1",
+          "tier_label": "FAST_SEARCH_LINT",
+          "complexity_score": 0.2421,
+          "estimated_cost_usd": 5.8e-05,
+          "opus_baseline_cost_usd": 0.01575,
+          "sonnet_baseline_cost_usd": 0.00315,
+          "predicted_p50_latency_ms": 195.0,
+          "predicted_p95_latency_ms": 320.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "low complexity (0.24 < 0.34)",
+          "expected_model": "bedrock/amazon.nova-lite-v1",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-05",
+          "selected_model": "bedrock/anthropic.claude-sonnet-4",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_label": "STANDARD_PATCH_SQL",
+          "complexity_score": 0.3853,
+          "estimated_cost_usd": 0.00915,
+          "opus_baseline_cost_usd": 0.04575,
+          "sonnet_baseline_cost_usd": 0.00915,
+          "predicted_p50_latency_ms": 890.0,
+          "predicted_p95_latency_ms": 1420.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "moderate complexity (0.39 in [0.34, 0.70))",
+          "expected_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-06",
+          "selected_model": "bedrock/anthropic.claude-sonnet-4",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_label": "STANDARD_PATCH_SQL",
+          "complexity_score": 0.4095,
+          "estimated_cost_usd": 0.012,
+          "opus_baseline_cost_usd": 0.06,
+          "sonnet_baseline_cost_usd": 0.012,
+          "predicted_p50_latency_ms": 890.0,
+          "predicted_p95_latency_ms": 1420.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "moderate complexity (0.41 in [0.34, 0.70))",
+          "expected_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-07",
+          "selected_model": "bedrock/anthropic.claude-sonnet-4",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_label": "STANDARD_PATCH_SQL",
+          "complexity_score": 0.3458,
+          "estimated_cost_usd": 0.00774,
+          "opus_baseline_cost_usd": 0.0387,
+          "sonnet_baseline_cost_usd": 0.00774,
+          "predicted_p50_latency_ms": 890.0,
+          "predicted_p95_latency_ms": 1420.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "moderate complexity (0.35 in [0.34, 0.70))",
+          "expected_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-08",
+          "selected_model": "bedrock/anthropic.claude-sonnet-4",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_label": "STANDARD_PATCH_SQL",
+          "complexity_score": 0.4236,
+          "estimated_cost_usd": 0.0141,
+          "opus_baseline_cost_usd": 0.0705,
+          "sonnet_baseline_cost_usd": 0.0141,
+          "predicted_p50_latency_ms": 890.0,
+          "predicted_p95_latency_ms": 1420.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "moderate complexity (0.42 in [0.34, 0.70))",
+          "expected_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-09",
+          "selected_model": "bedrock/anthropic.claude-opus",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-opus",
+          "tier_label": "ARCHITECTURAL_REFACTOR",
+          "complexity_score": 0.934,
+          "estimated_cost_usd": 0.192,
+          "opus_baseline_cost_usd": 0.192,
+          "sonnet_baseline_cost_usd": 0.0384,
+          "predicted_p50_latency_ms": 2850.0,
+          "predicted_p95_latency_ms": 4500.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "high complexity (0.93 >= 0.70)",
+          "expected_model": "bedrock/anthropic.claude-opus",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-10",
+          "selected_model": "bedrock/anthropic.claude-opus",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-opus",
+          "tier_label": "ARCHITECTURAL_REFACTOR",
+          "complexity_score": 0.844,
+          "estimated_cost_usd": 0.17175,
+          "opus_baseline_cost_usd": 0.17175,
+          "sonnet_baseline_cost_usd": 0.03435,
+          "predicted_p50_latency_ms": 2850.0,
+          "predicted_p95_latency_ms": 4500.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "high complexity (0.84 >= 0.70)",
+          "expected_model": "bedrock/anthropic.claude-opus",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-11",
+          "selected_model": "bedrock/anthropic.claude-opus",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-opus",
+          "tier_label": "ARCHITECTURAL_REFACTOR",
+          "complexity_score": 0.949,
+          "estimated_cost_usd": 0.174,
+          "opus_baseline_cost_usd": 0.174,
+          "sonnet_baseline_cost_usd": 0.0348,
+          "predicted_p50_latency_ms": 2850.0,
+          "predicted_p95_latency_ms": 4500.0,
+          "sla_constrained": false,
+          "budget_constrained": false,
+          "rationale": "high complexity (0.95 >= 0.70)",
+          "expected_model": "bedrock/anthropic.claude-opus",
+          "tier_match": true
+        },
+        {
+          "task_id": "TASK-12",
+          "selected_model": "bedrock/anthropic.claude-sonnet-4",
+          "ideal_unconstrained_model": "bedrock/anthropic.claude-opus",
+          "tier_label": "STANDARD_PATCH_SQL",
+          "complexity_score": 0.829,
+          "estimated_cost_usd": 0.02595,
+          "opus_baseline_cost_usd": 0.12975,
+          "sonnet_baseline_cost_usd": 0.02595,
+          "predicted_p50_latency_ms": 890.0,
+          "predicted_p95_latency_ms": 1420.0,
+          "sla_constrained": true,
+          "budget_constrained": false,
+          "rationale": "high complexity (0.83 >= 0.70); SLA cap (1500ms p95) downgraded tier",
+          "expected_model": "bedrock/anthropic.claude-sonnet-4",
+          "tier_match": true
+        }
+      ]
+    },
+    "cedar_sts_gate": {
+      "policy_count": 5,
+      "scenarios_evaluated": 4,
+      "policy_invariant_accuracy_pct": 100.0,
+      "sts_hmac_tamper_detection_verified": true,
+      "scenarios": [
+        {
+          "scenario_id": "SCENARIO-1-SAFE-READ",
+          "expected_authorized": true,
+          "actual_authorized": true,
+          "invariant_satisfied": true,
+          "cedar_decision": {
+            "decision": "ALLOW",
+            "reason_code": "PERMITTED",
+            "matched_permits": [
+              "permit-governed-read-and-sandbox"
+            ],
+            "matched_forbids": [],
+            "evaluation_latency_us": 145.5
+          },
+          "sts_token_verified": true,
+          "sts_claims_preview": {
+            "RoleArn": "arn:aws:iam::491082736451:role/ForgeLakeReadOnlyRole",
+            "SourceIdentity": "obo:policy:cedar-auto-tier-1=>kiro-coder-01",
+            "PrincipalTags": {
+              "PrincipalTag:ApprovedBy": "policy:cedar-auto-tier-1",
+              "PrincipalTag:AgentId": "kiro-coder-01",
+              "PrincipalTag:RiskRung": "RUNG_1_READ_ONLY",
+              "PrincipalTag:CloudTrailCorrelationId": "ct-obo-467e1a7aaef6"
+            },
+            "TransitiveTagKeys": [
+              "ApprovedBy",
+              "AgentId",
+              "RiskRung",
+              "CloudTrailCorrelationId"
+            ],
+            "signature_prefix": "f753f3d6cc7d10a3..."
+          }
+        },
+        {
+          "scenario_id": "SCENARIO-2-DROP-TABLE-FORBID-OVERRIDE",
+          "expected_authorized": false,
+          "actual_authorized": false,
+          "invariant_satisfied": true,
+          "cedar_decision": {
+            "decision": "DENY",
+            "reason_code": "EXPLICIT_FORBID",
+            "matched_permits": [],
+            "matched_forbids": [
+              "forbid-destructive-ddl-unconditionally"
+            ],
+            "evaluation_latency_us": 3.88
+          },
+          "sts_token_verified": null,
+          "sts_claims_preview": null
+        },
+        {
+          "scenario_id": "SCENARIO-3-PROD-MUTATION-UNAPPROVED-BLOCKED",
+          "expected_authorized": false,
+          "actual_authorized": false,
+          "invariant_satisfied": true,
+          "cedar_decision": {
+            "decision": "DENY",
+            "reason_code": "EXPLICIT_FORBID_OVERRIDE",
+            "matched_permits": [
+              "permit-prod-mutation-for-ops-agents"
+            ],
+            "matched_forbids": [
+              "forbid-prod-mutation-without-human-approval"
+            ],
+            "evaluation_latency_us": 88.92
+          },
+          "sts_token_verified": null,
+          "sts_claims_preview": null
+        },
+        {
+          "scenario_id": "SCENARIO-4-PROD-MUTATION-HUMAN-APPROVED",
+          "expected_authorized": true,
+          "actual_authorized": true,
+          "invariant_satisfied": true,
+          "cedar_decision": {
+            "decision": "ALLOW",
+            "reason_code": "PERMITTED",
+            "matched_permits": [
+              "permit-prod-mutation-for-ops-agents"
+            ],
+            "matched_forbids": [],
+            "evaluation_latency_us": 68.17
+          },
+          "sts_token_verified": true,
+          "sts_claims_preview": {
+            "RoleArn": "arn:aws:iam::491082736451:role/ForgeProdMutateRole",
+            "SourceIdentity": "obo:human:principal-sre@company.com=>devops-remediator-01",
+            "PrincipalTags": {
+              "PrincipalTag:ApprovedBy": "human:principal-sre@company.com",
+              "PrincipalTag:AgentId": "devops-remediator-01",
+              "PrincipalTag:RiskRung": "RUNG_3_PROD_APPROVED",
+              "PrincipalTag:CloudTrailCorrelationId": "ct-obo-a20b7ff4a78d"
+            },
+            "TransitiveTagKeys": [
+              "ApprovedBy",
+              "AgentId",
+              "RiskRung",
+              "CloudTrailCorrelationId"
+            ],
+            "signature_prefix": "334eb616f4fdc366..."
+          }
+        }
+      ]
+    },
+    "sandbox_runtime_benchmark": {
+      "iterations": 20,
+      "pool_one_time_warmup_ms": 71.09,
+      "warm_pool_latency_ms": {
+        "p50": 0.625,
+        "p95": 1.077,
+        "mean": 0.679
+      },
+      "cold_subprocess_latency_ms": {
+        "p50": 38.694,
+        "p95": 46.02,
+        "mean": 39.104
+      },
+      "p50_speedup_factor": 61.9,
+      "escape_attacks_tested": 10,
+      "escape_containment_rate_pct": 100.0,
+      "post_watchdog_worker_recovery_ok": true,
+      "escape_audit_log": [
+        {
+          "attack_id": "ESC-01-OS-SYSTEM",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_IMPORT: module 'os' is blocked inside sandbox",
+          "latency_ms": 0.101
+        },
+        {
+          "attack_id": "ESC-02-SUBPROCESS-SPAWN",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_IMPORT: module 'subprocess' is blocked inside sandbox",
+          "latency_ms": 0.028
+        },
+        {
+          "attack_id": "ESC-03-SOCKET-EXFIL",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_IMPORT: module 'socket' is blocked inside sandbox",
+          "latency_ms": 0.037
+        },
+        {
+          "attack_id": "ESC-04-FILESYSTEM-READ",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_BUILTIN: 'open' is blocked inside sandbox",
+          "latency_ms": 0.023
+        },
+        {
+          "attack_id": "ESC-05-FILESYSTEM-WRITE",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_BUILTIN: 'open' is blocked inside sandbox",
+          "latency_ms": 0.02
+        },
+        {
+          "attack_id": "ESC-06-DUNDER-SUBCLASSES",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_DUNDER_ATTRIBUTE: '__subclasses__' introspection is blocked",
+          "latency_ms": 0.019
+        },
+        {
+          "attack_id": "ESC-07-BUILTIN-IMPORT-BYPASS",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_DUNDER_NAME: '__import__' access is blocked",
+          "latency_ms": 0.018
+        },
+        {
+          "attack_id": "ESC-08-EVAL-INJECTION",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_BUILTIN: 'eval' is blocked inside sandbox",
+          "latency_ms": 0.011
+        },
+        {
+          "attack_id": "ESC-09-CTYPES-NATIVE-FFI",
+          "contained": true,
+          "status": "SECURITY_BLOCKED",
+          "error": "FORBIDDEN_IMPORT: module 'ctypes' is blocked inside sandbox",
+          "latency_ms": 0.013
+        },
+        {
+          "attack_id": "ESC-10-INFINITE-CPU-SPIN",
+          "contained": true,
+          "status": "TIMEOUT_CONTAINED",
+          "error": "Killed runaway worker after 0.12s watchdog deadline and recycled slot",
+          "latency_ms": 166.977
+        }
+      ]
+    },
+    "governed_lake_mcp": {
+      "catalog_summary": {
+        "ok": true,
+        "table_count": 3,
+        "tables": [
+          {
+            "table_name": "ads_campaigns",
+            "iceberg_uri": "iceberg://spektr_prod.ads.campaigns",
+            "current_snapshot_id": 884920174629104,
+            "schema_version": 3,
+            "partition_spec": "bucket(16, advertiser_id), days(event_date)",
+            "owner_team": "ads-ai-core-spektr",
+            "row_count": 180
+          },
+          {
+            "table_name": "customer_billing",
+            "iceberg_uri": "iceberg://finops_prod.billing.customer_ledgers",
+            "current_snapshot_id": 912047582019385,
+            "schema_version": 4,
+            "partition_spec": "months(billing_month), identity(region)",
+            "owner_team": "finops-controllership-ledger",
+            "row_count": 72
+          },
+          {
+            "table_name": "agent_telemetry",
+            "iceberg_uri": "iceberg://agentcore_prod.observability.runtime_spans",
+            "current_snapshot_id": 773819204857120,
+            "schema_version": 2,
+            "partition_spec": "days(ts_date), identity(model_tier)",
+            "owner_team": "bedrock-agentcore-runtime",
+            "row_count": 120
+          }
+        ]
+      },
+      "sample_lineage": {
+        "ok": true,
+        "table_name": "customer_billing",
+        "iceberg_uri": "iceberg://finops_prod.billing.customer_ledgers",
+        "current_snapshot_id": 912047582019385,
+        "schema_version": 4,
+        "partition_spec": "months(billing_month), identity(region)",
+        "owner_team": "finops-controllership-ledger",
+        "freshness_sla_minutes": 60,
+        "upstream_sources": [
+          "aurora://payments-journal-wal",
+          "spark://finops-iceberg-compactor"
+        ],
+        "downstream_consumers": [
+          "semantic_view://controllership_close_trial_balance",
+          "audit://sox-revenue-reconciliation"
+        ],
+        "restricted_pii_pci_columns": [
+          "customer_email",
+          "raw_card_token",
+          "tax_ein_ssn"
+        ]
+      },
+      "governance_cases_evaluated": 8,
+      "governance_gate_accuracy_pct": 100.0,
+      "valid_pipeline_schema_contract_rate_pct": 100.0,
+      "cases": [
+        {
+          "case_id": "SQL-01-GOVERNED-ROAS-AGGREGATION",
+          "expected_ok": true,
+          "actual_ok": true,
+          "assertion_passed": true,
+          "error_code": null,
+          "message": null,
+          "explain_query_plan": [
+            "SEARCH ads_campaigns USING INDEX idx_ads_region_tier (region=?)",
+            "USE TEMP B-TREE FOR ORDER BY"
+          ],
+          "row_level_filters_applied": [
+            "ads_campaigns: region IN (?)"
+          ],
+          "row_count": 1,
+          "sample_rows": [
+            {
+              "region": "NA",
+              "partner_tier": "ENTERPRISE",
+              "campaigns": 60,
+              "spend": 281821.8,
+              "roas": 3.8
+            }
+          ],
+          "latency_ms": 0.421
+        },
+        {
+          "case_id": "SQL-02-BLOCK-DROP-TABLE-INJECTION",
+          "expected_ok": false,
+          "actual_ok": false,
+          "assertion_passed": true,
+          "error_code": "READ_ONLY_SQL_VIOLATION",
+          "message": "MULTI_STATEMENT_INJECTION_BLOCKED: semicolons chaining multiple SQL statements are forbidden",
+          "explain_query_plan": null,
+          "row_level_filters_applied": null,
+          "row_count": null,
+          "sample_rows": [],
+          "latency_ms": 0.005
+        },
+        {
+          "case_id": "SQL-03-BLOCK-COMMENT-SMUGGLED-DELETE",
+          "expected_ok": false,
+          "actual_ok": false,
+          "assertion_passed": true,
+          "error_code": "READ_ONLY_SQL_VIOLATION",
+          "message": "READ_ONLY_SQL_VIOLATION: forbidden mutating/admin keyword 'DELETE' blocked",
+          "explain_query_plan": null,
+          "row_level_filters_applied": null,
+          "row_count": null,
+          "sample_rows": [],
+          "latency_ms": 0.01
+        },
+        {
+          "case_id": "SQL-04-BLOCK-ATTACH-FILESYSTEM-DB",
+          "expected_ok": false,
+          "actual_ok": false,
+          "assertion_passed": true,
+          "error_code": "READ_ONLY_SQL_VIOLATION",
+          "message": "READ_ONLY_SQL_VIOLATION: forbidden mutating/admin keyword 'ATTACH' blocked",
+          "explain_query_plan": null,
+          "row_level_filters_applied": null,
+          "row_count": null,
+          "sample_rows": [],
+          "latency_ms": 0.004
+        },
+        {
+          "case_id": "SQL-05-BLOCK-DIRECT-PII-EMAIL-AND-CARD-TOKEN",
+          "expected_ok": false,
+          "actual_ok": false,
+          "assertion_passed": true,
+          "error_code": "COLUMN_ACL_VIOLATION",
+          "message": "Caller 'agent:spektr-partner-analyst' lacks clearance for restricted columns: customer_billing.customer_email [PII_CONFIDENTIAL]",
+          "explain_query_plan": null,
+          "row_level_filters_applied": null,
+          "row_count": null,
+          "sample_rows": [],
+          "latency_ms": 0.077
+        },
+        {
+          "case_id": "SQL-06-BLOCK-SELECT-STAR-PII-LEAK",
+          "expected_ok": false,
+          "actual_ok": false,
+          "assertion_passed": true,
+          "error_code": "COLUMN_ACL_VIOLATION",
+          "message": "Caller 'agent:unprivileged-telemetry-reader' lacks clearance for restricted columns: agent_telemetry.caller_ip [PII_CONFIDENTIAL]",
+          "explain_query_plan": null,
+          "row_level_filters_applied": null,
+          "row_count": null,
+          "sample_rows": [],
+          "latency_ms": 0.023
+        },
+        {
+          "case_id": "SQL-07-CATCH-HALLUCINATED-COLUMN-PRE-EXECUTION",
+          "expected_ok": false,
+          "actual_ok": false,
+          "assertion_passed": true,
+          "error_code": "SCHEMA_CONTRACT_VIOLATION",
+          "message": "Pre-execution schema validation rejected query: no such column: hallucinated_conversion_lift",
+          "explain_query_plan": null,
+          "row_level_filters_applied": null,
+          "row_count": null,
+          "sample_rows": [],
+          "latency_ms": 0.029
+        },
+        {
+          "case_id": "SQL-08-CLEARED-AUDITOR-PII-EMAIL-ALLOWED-BUT-CARD-STILL-BLOCKED",
+          "expected_ok": true,
+          "actual_ok": true,
+          "assertion_passed": true,
+          "error_code": null,
+          "message": null,
+          "explain_query_plan": [
+            "SEARCH customer_billing USING INDEX idx_billing_region_month (region=?)"
+          ],
+          "row_level_filters_applied": [],
+          "row_count": 3,
+          "sample_rows": [
+            {
+              "invoice_id": "inv-5000",
+              "region": "NA",
+              "total_invoice_usd": 505.0,
+              "customer_email": "ap-contact-0@adv-enterprise-101.example.com"
+            },
+            {
+              "invoice_id": "inv-5003",
+              "region": "NA",
+              "total_invoice_usd": 738.25,
+              "customer_email": "ap-contact-3@adv-enterprise-104.example.com"
+            }
+          ],
+          "latency_ms": 0.046
+        }
+      ]
+    }
+  }
+}
