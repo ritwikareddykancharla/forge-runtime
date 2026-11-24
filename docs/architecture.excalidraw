@@ -1,0 +1,63 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://github.com/ritwikareddykancharla/forge-runtime",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title-1",
+      "x": 36,
+      "y": 24,
+      "text": "ForgeRuntime \u2014 Code Context Slicer, SQL Policy Proxy & Sandbox Runner"
+    },
+    {
+      "type": "rectangle",
+      "id": "ast-1",
+      "x": 55,
+      "y": 236,
+      "width": 300,
+      "height": 82,
+      "backgroundColor": "#a5d8ff"
+    },
+    {
+      "type": "rectangle",
+      "id": "router-1",
+      "x": 55,
+      "y": 350,
+      "width": 300,
+      "height": 82,
+      "backgroundColor": "#d0bfff"
+    },
+    {
+      "type": "rectangle",
+      "id": "cedar-1",
+      "x": 445,
+      "y": 145,
+      "width": 290,
+      "height": 96,
+      "backgroundColor": "#ffec99"
+    },
+    {
+      "type": "rectangle",
+      "id": "sql-1",
+      "x": 445,
+      "y": 278,
+      "width": 290,
+      "height": 110,
+      "backgroundColor": "#ffd8a8"
+    },
+    {
+      "type": "rectangle",
+      "id": "sandbox-1",
+      "x": 825,
+      "y": 145,
+      "width": 300,
+      "height": 102,
+      "backgroundColor": "#a5d8ff"
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff",
+    "gridSize": 24
+  }
+}

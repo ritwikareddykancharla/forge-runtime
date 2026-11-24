@@ -18,17 +18,13 @@
 
 ---
 
-## How It Works
+## System Architecture
 
-```mermaid
-flowchart LR
-    Req["Code Edit or SQL Task"] --> AST["AST Call & Import Slicer\n(forge_runtime/ast_graph.py)"]
-    AST --> Router["Complexity & SLA Model Router\n(Nova Lite / Sonnet / Opus)"]
-    Router --> Cedar["Cedar Policy & STS Session Check\n(forge_runtime/cedar_sts_gate.py)"]
-    Cedar -->|ALLOW| Sandbox["Pre-Warmed Worker Pool\n(python3 -I pipes, 0.63ms p50)"]
-    Cedar -->|ALLOW| SQLProxy["SQL / Iceberg Policy Proxy\n(Column ACLs + Row Filters)"]
-    Cedar -->|DENY| Reject["Structured Policy Rejection"]
-```
+> **Excalidraw Source:** [`docs/architecture.excalidraw`](docs/architecture.excalidraw)
+
+![ForgeRuntime Architecture Diagram](docs/architecture.svg)
+
+## How It Works
 
 1. **AST Call & Import Context Slicer (`forge_runtime/ast_graph.py`)**  
    Indexes Python and TypeScript modules, classes, and functions into directed `CALLS`, `IMPORTS`, and `INHERITS` edges (`ASTRepoGraph`). Given a target symbol and `hop_budget=2`, `pack_minimal_context()` emits full source for the target symbol (`Hop 0`) and compact type signatures plus docstrings for `Hop 1` and `Hop 2` callers, callees, and base classes.
