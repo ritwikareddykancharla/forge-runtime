@@ -5,7 +5,7 @@
 > **Live API Call:** `curl -s -X POST https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`  
 > **Interactive Web UI:** [https://ritwikareddykancharla.github.io/forge-runtime/](https://ritwikareddykancharla.github.io/forge-runtime/)
 
-**ForgeRuntime** is a zero-dependency Python runtime for coding and data-analytics agents. It slices multi-file repositories along AST import and call graphs so prompts include exact caller/callee definitions without raw-file bloat, runs untrusted Python patches inside a pre-warmed worker pool, routes requests across Bedrock model tiers by complexity and latency budget, and enforces column- and row-level SQL/Iceberg access policies via Cedar.
+**ForgeRuntime** solves four bottlenecks in coding and data-analytics agents: slicing multi-file repositories down to the exact caller/callee functions needed for an edit (`-83.2%` prompt tokens), blocking queries that touch restricted PII/PCI columns before SQL runs, executing untrusted code inside pre-warmed sandbox workers (`0.63 ms` dispatch vs. `38.7 ms` cold spawn), and routing simple edits to smaller, faster models.
 
 ---
 

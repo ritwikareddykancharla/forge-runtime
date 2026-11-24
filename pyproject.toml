@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "forge-runtime"
 version = "0.1.0"
-description = "ForgeRuntime: Sandboxed Coding & Governed Data-Lake Agent Platform (AST Repo Graph + Multi-Model Router + Cedar/STS OBO Gate + Warm Sandbox Pool + Governed SQL/Iceberg MCP)"
+description = "Context slicer, SQL column guard, and warm sandbox runner for coding and analytics agents"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
