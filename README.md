@@ -1,95 +1,84 @@
-# ForgeRuntime — Sandboxed Coding & Governed Data-Lake Agent Platform
+# ForgeRuntime — Code Context Slicer, SQL Policy Proxy & Sandbox Runner
 
-> **☁️ Live AWS Deployment (`us-west-2` Lambda Function URL):** [https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/](https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/)  
-> **Health Check:** `https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/api/health` · **Live Execution API:** `curl -s -X POST https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`
+> **Live AWS Endpoint (`us-west-2` Lambda Function URL):** [https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/](https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/)  
+> **Health Check:** `https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/api/health`  
+> **Live API Call:** `curl -s -X POST https://w6jkm2tnqcysmunvv72awnziya0dqlxn.lambda-url.us-west-2.on.aws/api/run -H 'Content-Type: application/json' -d '{}'`  
+> **Interactive Web UI:** [https://ritwikareddykancharla.github.io/forge-runtime/](https://ritwikareddykancharla.github.io/forge-runtime/)
 
-[![Live Interactive Web App](https://img.shields.io/badge/Live%20Web%20App-GitHub%20Pages%20Interactive%20Studio-B8F200?style=flat&logo=github)](https://ritwikareddykancharla.github.io/forge-runtime/)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B%20%7C%203.14-blue.svg)](https://www.python.org/)
-[![Zero External Dependencies](https://img.shields.io/badge/dependencies-zero%20(stdlib)-brightgreen.svg)](#quick-start)
-[![Sandbox Escape Containment](https://img.shields.io/badge/Sandbox%20Containment-100.0%25%20(10%2F10)-success.svg)](#3-cedar-policy-engine-aws-sts-on-behalf-of--warm-sandbox-pool)
-[![AST Context Compression](https://img.shields.io/badge/AST%20Compression-5.30x--5.97x%20(100%25%20Recall)-orange.svg)](#1-ast-repo-knowledge-graph--minimal-context-packer)
-
-> **Live Interactive Simulator**: [**`https://ritwikareddykancharla.github.io/forge-runtime/`**](https://ritwikareddykancharla.github.io/forge-runtime/) — Explore the 2-Hop AST Repo Knowledge Graph, SLA/Cost Multi-Model Router, Cedar + AWS STS `On-Behalf-Of` + Warm Sandbox Lab (`10/10` escape vectors), and Governed Apache Iceberg / SQLite MCP Studio directly in your browser.
-
-**`ForgeRuntime`** is a standalone, zero-external-dependency Python runtime for **IDE coding agents**, **isolated code-execution sandboxes**, **deterministic IAM/Cedar policy enforcement**, and **governed Apache Iceberg / SQLite data-lake analytics over MCP**.
-
-Every subsystem runs deterministically out-of-the-box using Python 3.10+ stdlib (`ast`, `sqlite3`, `subprocess`, `select`, `hmac`, `hashlib`), while providing wire-compatible **`boto3` (`bedrock-runtime` Converse + `sts` `AssumeRole`)** and **`strands-agents`** tool-spec adapters in `forge_runtime/adapters.py`.
+**ForgeRuntime** is a zero-dependency Python runtime for coding and data-analytics agents. It slices multi-file repositories along AST import and call graphs so prompts include exact caller/callee definitions without raw-file bloat, runs untrusted Python patches inside a pre-warmed worker pool, routes requests across Bedrock model tiers by complexity and latency budget, and enforces column- and row-level SQL/Iceberg access policies via Cedar.
 
 ---
 
-## Architecture Overview
+## What Problem This Solves
+
+- **Raw file chunking wastes tokens and drops cross-file definitions:** Sending entire files to an LLM burns prompt budget on unrelated functions, while fixed-size text chunks split class methods from imported types. Parsing the AST call/import graph keeps **100%** of 2-hop caller/callee signatures while cutting prompt tokens by **83.2%** (**5.97x** compression).
+- **Cold subprocess sandboxes add ~39 ms per test run:** Spawning a fresh `python3` interpreter on every generated patch adds startup overhead and risks host filesystem/network access if unguarded. Keeping pre-warmed `python3 -I` workers over persistent pipes lowers p50 dispatch latency from **38.7 ms to 0.63 ms** (**98.4%** reduction) while blocking disallowed imports and builtins (**10/10** escape tests blocked).
+- **Routing every edit to a frontier model is slow and expensive:** Simple lint fixes and symbol lookups do not need Opus-class inference. Scoring AST complexity and latency SLAs before dispatch cuts p50 model latency by **59.7%** and token spend by **35.9%**.
+- **Agent-generated SQL can leak restricted columns:** Analytics agents frequently emit `SELECT *` or join sensitive billing tables. Validating queries with Cedar rules, SQLite authorizer callbacks, tenant row filters, and `EXPLAIN QUERY PLAN` blocks **100%** of restricted PII/PCI column reads and invalid table/column references before execution.
+
+---
+
+## How It Works
 
 ```mermaid
 flowchart LR
-    Task["Agent Task / SQL / Patch Request"] --> AST["AST Repo Knowledge Graph\n(pack_minimal_context, hop_budget=2)"]
-    AST --> Router["Multi-Model Bedrock Router\n(Nova Lite / Sonnet 4 / Opus)"]
-    Router --> Gate["Cedar Policy Gate\n(forbid > permit)"]
-    Gate -->|ALLOW| STS["AWS STS On-Behalf-Of Minter\n(TransitiveTagKeys + HMAC-SHA256)"]
-    Gate -->|DENY| Reject["Structured Security Reject"]
-    STS --> Sandbox["Warm Sandbox Pool\n(python3 -I pipes, <1.1ms p95)"]
-    STS --> LakeMCP["Governed Iceberg/SQLite MCP\n(Row/Column PII ACLs + EXPLAIN PLAN)"]
+    Req["Code Edit or SQL Task"] --> AST["AST Call & Import Slicer\n(forge_runtime/ast_graph.py)"]
+    AST --> Router["Complexity & SLA Model Router\n(Nova Lite / Sonnet / Opus)"]
+    Router --> Cedar["Cedar Policy & STS Session Check\n(forge_runtime/cedar_sts_gate.py)"]
+    Cedar -->|ALLOW| Sandbox["Pre-Warmed Worker Pool\n(python3 -I pipes, 0.63ms p50)"]
+    Cedar -->|ALLOW| SQLProxy["SQL / Iceberg Policy Proxy\n(Column ACLs + Row Filters)"]
+    Cedar -->|DENY| Reject["Structured Policy Rejection"]
 ```
 
----
+1. **AST Call & Import Context Slicer (`forge_runtime/ast_graph.py`)**  
+   Indexes Python and TypeScript modules, classes, and functions into directed `CALLS`, `IMPORTS`, and `INHERITS` edges (`ASTRepoGraph`). Given a target symbol and `hop_budget=2`, `pack_minimal_context()` emits full source for the target symbol (`Hop 0`) and compact type signatures plus docstrings for `Hop 1` and `Hop 2` callers, callees, and base classes.
 
-## Core Engineering Pillars
+2. **Complexity & Latency-Budget Model Router (`forge_runtime/model_router.py`)**  
+   Scores cyclomatic complexity, AST hop count, files touched, and prompt size to select between `amazon.nova-lite-v1` (fast lint/lookup tasks under `<350 ms` p95), `anthropic.claude-sonnet-4` (standard patches, tests, and SQL generation), and `anthropic.claude-opus` (multi-file refactors), stepping down automatically when hard latency (`sla_max_p95_ms`) or cost (`max_cost_usd`) caps require it.
 
-### 1. AST Repo Knowledge Graph & Minimal Context Packer (`forge_runtime/ast_graph.py`)
-- Indexes any Python codebase (`ASTRepoGraph.from_directory` or `from_sources`) into typed symbol nodes (`Module`, `Class`, `Function`) and directed edges (`CALLS`, `IMPORTS`, `INHERITS`), resolving `self.<attr>` collaborator types, parameter annotations, and `super()` inheritance chains.
-- **`pack_minimal_context(symbol_query, hop_budget=2)`**: Emits the exact AST implementation slice for the focal symbol (`Hop 0`) plus typed signatures and docstring contracts for `Hop 1` and `Hop 2` callers/callees/base classes—eliminating full-file context bloat while preserving **100.0% call-neighborhood recall** (`5.30x` compression vs. touched full files; `5.97x` vs. full repository).
+3. **Cedar Policy Check, Scoped STS Session Tags & Pre-Warmed Sandbox (`forge_runtime/cedar_sts_gate.py`)**  
+   - **Cedar Evaluator:** Evaluates `permit` and `forbid` statements with explicit `forbid`-overrides-`permit` precedence and default `DENY` (for example, blocking `DropTable` or unapproved production writes even when broad role permits exist).
+   - **AWS STS Session Tag Signer:** Signs scoped session attributes (`ApprovedBy`, `AgentId`, `CloudTrailCorrelationId`) with `HMAC-SHA256` (`hmac.compare_digest`) so downstream tools can detect tampered session claims.
+   - **Pre-Warmed Worker Pool (`WarmSandboxPool`):** Maintains isolated `python3 -I` worker processes over persistent stdio pipes, combining a pre-execution AST check, restricted `__builtins__`, an allowlisted import hook, and a `select`-based timeout watchdog that kills and replaces runaway workers.
 
-### 2. Complexity-, Token-, & SLA-Aware Multi-Model Router (`forge_runtime/model_router.py`)
-- Computes structural complexity scores across cyclomatic complexity, AST hop depth, files touched, token volume, and lexical intent, routing across:
-  - `bedrock/amazon.nova-lite-v1` — Fast AST symbol lookup, lint fix, syntax check, and strict `<350ms` IDE autocomplete SLAs.
-  - `bedrock/anthropic.claude-sonnet-4` — Standard multi-line patches, governed Iceberg SQL synthesis, Cedar policy authoring, and unit test generation.
-  - `bedrock/anthropic.claude-opus` — Multi-file architectural refactors, distributed concurrency debugging, and security boundary redesigns.
-- Enforces hard **`sla_max_p95_ms`** and **`max_cost_usd`** guardrails, stepping down tiers deterministically with explicit audit rationales.
+4. **SQL & Apache Iceberg Policy Proxy (`forge_runtime/governed_lake_mcp.py`)**  
+   Exposes `list_tables`, `describe_lineage`, and `validate_and_query_sql` over `ads_campaigns`, `customer_billing`, and `agent_telemetry` tables with Iceberg partition/snapshot metadata:
+   - Rejects mutating or multi-statement SQL (`DROP`, `DELETE`, `UPDATE`, `INSERT`, `ATTACH`, `PRAGMA`).
+   - Enforces column-level PII/PCI permissions (`customer_email`, `raw_card_token`, `tax_ein_ssn`, `caller_ip`) at SQLite query-compile time via `conn.set_authorizer` (`SQLITE_READ`), catching `SELECT *`, aliases, and CTEs.
+   - Injects parameterized tenant and region (`NA`, `EMEA`, `APAC`) CTE filters and runs `EXPLAIN QUERY PLAN` prior to execution.
 
-### 3. Cedar Policy Engine, AWS STS On-Behalf-Of & Warm Sandbox Pool (`forge_runtime/cedar_sts_gate.py`)
-- **Deterministic Cedar Policy Evaluator (`CedarPolicyEngine`)**: Parses `permit` and `forbid` rules with `when { ... }` and `unless { ... }` AST boolean guards (zero `eval()`), enforcing **implicit default `DENY`** and unconditional **`forbid`-overrides-`permit`** precedence (e.g., blocking `Action::"DropTable"` even when broad admin permits match, and blocking prod mutations unless `context.human_approved == true`).
-- **AWS STS `On-Behalf-Of` Session Token Minter (`STSOnBehalfOfMinter`)**: Mints `HMAC-SHA256` signed `AssumeRole` session claims binding `PrincipalTag:ApprovedBy`, `PrincipalTag:AgentId`, `PrincipalTag:RiskRung`, and `CloudTrailCorrelationId` across `TransitiveTagKeys`, detecting privilege-escalation tag tampering in constant time (`hmac.compare_digest`).
-- **Warm Sandbox Pool vs. Cold Subprocess Executor (`WarmSandboxPool`)**: Pre-warms isolated `python3 -I` OS worker processes with pre-loaded allowlisted stdlib modules communicating over persistent stdio pipes. Enforces 2-layer containment (pre-flight AST scanner + restricted `__builtins__` & guarded import hook) plus a `select`-based watchdog that kills and replaces runaway infinite-loop workers automatically.
-
-### 4. Governed Iceberg / SQLite Data-Lake MCP Server (`forge_runtime/governed_lake_mcp.py`)
-- Implements `list_tables`, `describe_lineage`, and `validate_and_query_sql` over seeded `ads_campaigns`, `customer_billing`, and `agent_telemetry` tables with Apache Iceberg snapshot metadata, partition specs, and column sensitivity classifications (`PUBLIC`, `INTERNAL`, `PII_CONFIDENTIAL`, `PII_RESTRICTED`, `PCI_RESTRICTED`).
-- Enforces four pre-execution gates:
-  1. **Read-Only SQL Safety**: Comment-stripping lexical + multi-statement blocker rejecting `DROP`, `DELETE`, `UPDATE`, `INSERT`, `ATTACH`, `PRAGMA`, etc.
-  2. **Column-Level PII/PCI ACLs**: Uses SQLite's C-engine `conn.set_authorizer` callback (`SQLITE_READ`) during query compilation to block unauthorized reads of `customer_email`, `raw_card_token`, `tax_ein_ssn`, and `caller_ip`—even through `SELECT *`, table aliases, or CTEs.
-  3. **Row-Level Tenant & Sovereign Region Isolation**: Injects parameterized `_rls_<table>` CTE filters scoping queries to the caller's authorized `region` (`NA`, `EMEA`, `APAC`) and `advertiser_id`.
-  4. **Schema-Contract Pre-Validation**: Runs `EXPLAIN QUERY PLAN` prior to execution, catching hallucinated columns/tables before execution (`100.0%` valid pipeline execution).
+5. **AWS Bedrock & Lambda Adapters (`forge_runtime/adapters.py`, `forge_runtime/aws_lambda_handler.py`)**  
+   Provides `boto3` (`bedrock-runtime` Converse API and `sts.assume_role`) tool wrappers alongside the live AWS Lambda Function URL handler.
 
 ---
 
-## Verified Benchmark Metrics (`benchmarks/latest_results.json`)
+## Benchmark Results
 
-Generated on Python `3.14.6` (`macOS arm64`, zero external dependencies) via `python3 benchmarks/run_benchmarks.py`:
+Reproducible on Python 3.10+ (stdlib only) via `python3 benchmarks/run_benchmarks.py` (saved in `benchmarks/latest_results.json`):
 
-| Subsystem & Metric | Verified Benchmark Value | Baseline / Comparison |
+| Component & Metric | Measured Result | Baseline Comparison |
 | :--- | :---: | :---: |
-| **AST Minimal Context Compression (`hop_budget=2`)** | **`5.30x`** (`733.7` vs `3,887.0` tokens) | **`5.97x`** vs. full repo (`4,382.0` tokens) |
-| **AST 2-Hop Call-Neighborhood Recall** | **`100.0%`** | `20.48%` naive single-file stuffing |
-| **Multi-Model Router Tier Accuracy (12-Task Suite)** | **`100.0%`** (`12/12`) | Enforces hard SLA & USD caps |
-| **Multi-Model Router Cost & Latency Reduction** | **`35.89%` lower cost / `59.71%` lower p50** | vs. static `claude-opus` baseline |
-| **Cedar Policy Invariant Accuracy (`forbid` > `permit`)** | **`100.0%`** (`4/4` scenarios) | Blocks `DropTable` & unapproved prod writes |
-| **AWS STS OBO `HMAC-SHA256` Tamper Detection** | **`100%` Verified (`SIGNATURE_TAMPERED`)** | Binds 4 `TransitiveTagKeys` |
-| **Warm Sandbox Pool Dispatch Latency (`p50` / `p95`)** | **`0.625 ms` p50 / `1.077 ms` p95** | **`61.9x` faster** than cold spawn (`38.694 ms` p50) |
-| **Adversarial Escape Containment (10 Attack Vectors)** | **`100.0%`** (`10/10` blocked) | Blocks `os`, `socket`, `/etc/passwd`, dunders & CPU spin |
-| **Governed Lake MCP Gate & Schema-Contract Accuracy** | **`100.0%`** (`8/8` cases) | `100.0%` `EXPLAIN QUERY PLAN` pre-validated |
+| **Multi-File Repo Prompt Token Reduction (`hop_budget=2`)** | **-83.2%** (**5.97x** compression; `734` vs `4,382` tokens) | **5.30x** vs. touched full files (`3,887` tokens) |
+| **2-Hop Caller/Callee Definition Recall** | **100.0%** | `20.5%` single-file truncation |
+| **Pre-Warmed Sandbox Startup Latency (`p50` / `p95`)** | **0.63 ms p50** / **1.08 ms p95** | **98.4% lower** (**61.9x** faster) than cold `subprocess` (`38.7 ms` p50) |
+| **Sandbox Escape Test Suite (10 Attack Vectors)** | **10 / 10 blocked (100%)** | Blocks `os`, `socket`, `/etc/passwd`, dunder traversal & CPU spin |
+| **Model Router Latency & Spend Reduction (12-Task Suite)** | **-59.7% p50 latency** / **-35.9% token spend** | vs. single-model Opus baseline (`12/12` tier match) |
+| **Cedar SQL/Iceberg Policy & Schema Enforcement** | **100.0%** (`8/8` SQL + `4/4` Cedar cases) | Blocks restricted PII/PCI column reads & unapproved writes |
 
 ---
 
-## Quick Start & JSON CLI Modes
+## Quickstart
 
-Every CLI mode emits clean, deterministic JSON suitable for both terminal inspection and live web-backend execution:
+Requires Python 3.10+ with zero external package dependencies:
 
 ```bash
-# Run the full 12-test unit & security suite (zero external dependencies)
+# 1. Run unit, policy, and sandbox escape tests
 python3 -m unittest discover -s tests -v
 
-# Regenerate benchmarks/latest_results.json
+# 2. Reproduce all benchmark numbers in benchmarks/latest_results.json
 python3 benchmarks/run_benchmarks.py
 
-# Live JSON CLI modes
+# 3. Run individual subsystem demos (JSON output)
 python3 -m forge_runtime.cli --mode demo-all
 python3 -m forge_runtime.cli --mode ast-graph
 python3 -m forge_runtime.cli --mode model-router
