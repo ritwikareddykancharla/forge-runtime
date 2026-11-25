@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ForgeRuntime — Sandboxed Coding &amp; Governed Data-Lake Agent Platform</title>
-  <meta name="description" content="Interactive Sandboxed Coding &amp; Governed Data-Lake Agent Runtime: AST Repo Knowledge Graph (-83.2% tokens), Multi-Model SLA Router (-59.7% latency), Cedar + AWS STS On-Behalf-Of Gate &amp; Warm Sandbox (-98.4% latency), and Governed Apache Iceberg / SQLite MCP Studio." />
+  <title>ForgeRuntime — Smaller Code Prompts, Fast Sandboxes, and Safe SQL for Coding Agents</title>
+  <meta name="description" content="ForgeRuntime packs relevant repository code using AST call graphs, routes tasks across models by latency and budget, runs untrusted Python in 0.625ms warm sandboxes, and validates SQL queries before execution." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Kalam:wght@400;700&amp;family=Martian+Mono:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
@@ -1117,12 +1117,12 @@
   <nav class="toc-bar" id="stickyToc" aria-label="Jump to Section Table of Contents">
     <div class="container toc-inner">
       <span class="toc-label">Jump To:</span>
-      <a class="toc-link active" href="#problem-statement" data-toc-sec="problem-statement">§01 · Problem Statement</a>
-      <a class="toc-link" href="#architecture" data-toc-sec="architecture">§02 · System Architecture</a>
-      <a class="toc-link" href="#implementation" data-toc-sec="implementation">§03 · Implementation</a>
-      <a class="toc-link" href="#design-tradeoffs" data-toc-sec="design-tradeoffs">§04 · Design Trade-Offs</a>
-      <a class="toc-link" href="#interactive-studio" data-toc-sec="interactive-studio">§05 · Interactive Studio</a>
-      <a class="toc-link" href="#benchmarks" data-toc-sec="benchmarks">§06 · Benchmarks</a>
+      <a class="toc-link active" href="#problem-statement" data-toc-sec="problem-statement">01 · Problem</a>
+      <a class="toc-link" href="#architecture" data-toc-sec="architecture">02 · Architecture</a>
+      <a class="toc-link" href="#implementation" data-toc-sec="implementation">03 · Implementation</a>
+      <a class="toc-link" href="#design-tradeoffs" data-toc-sec="design-tradeoffs">04 · Trade-Offs</a>
+      <a class="toc-link" href="#interactive-studio" data-toc-sec="interactive-studio">05 · Live Demo</a>
+      <a class="toc-link" href="#benchmarks" data-toc-sec="benchmarks">06 · Benchmarks</a>
     </div>
   </nav>
 
@@ -1130,114 +1130,93 @@
   <section class="hero">
     <div class="container">
       <div class="hero-top-row">
-        <div class="eyebrow">⚡ Flagship Systems Runtime · Python 3.10+ Stdlib · Zero External Dependencies</div>
+        <div class="eyebrow">Coding &amp; Data Agents · Built for Bedrock AgentCore</div>
         <div class="runtime-pill" id="runtimeModeBadge">
           <span class="pulse-dot"></span>
-          <span id="runtimeModeText">Deterministic In-Browser Engine · Verified Benchmark Telemetry</span>
+          <span id="runtimeModeText">Live on AWS · Powered by Amazon Bedrock</span>
         </div>
       </div>
 
-      <h1>ForgeRuntime — Sandboxed Coding &amp; Governed Data-Lake Agent Platform</h1>
+      <h1>ForgeRuntime — Smaller Code Prompts, Fast Sandboxes, and Safe SQL for Coding Agents</h1>
       <p class="hero-sub">
-        End-to-end execution substrate uniting <strong>2-Hop AST Repo Context Slicing</strong>,
-        <strong>SLA- &amp; Budget-Constrained Bedrock Model Routing</strong>,
-        <strong>Deterministic Cedar Policy + AWS STS On-Behalf-Of Session Minting</strong>,
-        <strong>Sub-Millisecond Pre-Warmed Process Sandboxes</strong>, and a
-        <strong>4-Gate Governed Apache Iceberg / SQLite MCP Server</strong>.
+        Coding and data agents waste money when they paste whole repositories into prompts, stall on cold sandboxes, and risk exposing private columns in SQL. ForgeRuntime packs only relevant code, routes tasks by speed and budget, runs tests in warm sandboxes, and checks every query first.
       </p>
 
-      <div class="headline-pills">
-        <div class="headline-pill"><span>-83.2%</span> Prompt Tokens (5.97x AST Compression)</div>
-        <div class="headline-pill"><span>-98.4%</span> Sandbox Latency (0.63ms Warm vs 38.7ms Cold)</div>
-        <div class="headline-pill"><span>-59.7%</span> p50 Router Latency (-35.9% Cost vs Opus)</div>
-        <div class="headline-pill"><span>100%</span> Cedar/STS OBO &amp; Iceberg SQL Safety (10/10 Escapes Blocked)</div>
+      <div style="display:flex; flex-wrap:wrap; gap:0.6rem; margin-bottom:1.35rem;">
+        <a class="btn btn-lime" href="#interactive-studio">▶ Try the Live Demo ↓</a>
+        <a class="btn btn-secondary" href="#architecture">See How It Works ↓</a>
+        <a class="btn btn-secondary" href="#benchmarks">View Test Results ↓</a>
       </div>
 
       <div class="kpi-strip">
         <div class="card kpi-card">
-          <div class="kpi-val">-83.2%</div>
-          <div class="kpi-label">AST Context Token Reduction</div>
-          <div class="kpi-sub">734 vs 4,382 tokens (5.97x) · 100.0% 2-hop recall</div>
+          <div class="kpi-val">83.2% Fewer Tokens</div>
+          <div class="kpi-label">Sends Only Relevant Code</div>
+          <div class="kpi-sub">Packs 734 tokens instead of 4,382 while keeping 100% of needed functions</div>
         </div>
         <div class="card kpi-card">
           <div class="kpi-val">0.625 ms</div>
-          <div class="kpi-label">Warm Sandbox Pool Dispatch (p50)</div>
-          <div class="kpi-sub">-98.4% vs 38.694ms cold spawn (61.9x) · 10/10 blocked</div>
+          <div class="kpi-label">Runs Code in Pre-Warmed Sandboxes</div>
+          <div class="kpi-sub">61.9× faster than 38.7 ms cold spawns · 10/10 escape attempts blocked</div>
         </div>
         <div class="card kpi-card">
-          <div class="kpi-val">-59.7%</div>
-          <div class="kpi-label">Multi-Model Router p50 Latency</div>
-          <div class="kpi-sub">-35.89% cost ($0.61 vs $0.95) · 12/12 tier accuracy</div>
+          <div class="kpi-val">59.7% Faster</div>
+          <div class="kpi-label">Picks the Right Model for Each Task</div>
+          <div class="kpi-sub">Cuts cost by 35.9% ($0.61 vs. $0.95) with 12/12 routing accuracy</div>
         </div>
         <div class="card kpi-card">
-          <div class="kpi-val">100.0%</div>
-          <div class="kpi-label">Cedar + STS OBO &amp; Iceberg ACL Gate</div>
-          <div class="kpi-sub">forbid &gt; permit · HMAC-SHA256 · EXPLAIN QUERY PLAN</div>
+          <div class="kpi-val">8 / 8 Blocked</div>
+          <div class="kpi-label">Stops Unsafe SQL Before Execution</div>
+          <div class="kpi-sub">Blocks private columns, wrong-region rows, and nonexistent schema fields</div>
         </div>
       </div>
 
       <div class="pipeline-bar" role="region" aria-label="Architecture execution flow">
-        <div class="pipe-step"><span class="pipe-num">01</span> AST Repo Graph Slice (hop=2)</div>
+        <div class="pipe-step"><span class="pipe-num">01</span> Slice Relevant Code</div>
         <span class="pipe-arrow">→</span>
-        <div class="pipe-step"><span class="pipe-num">02</span> SLA &amp; Cost Bedrock Router</div>
+        <div class="pipe-step"><span class="pipe-num">02</span> Pick Model by Speed &amp; Cost</div>
         <span class="pipe-arrow">→</span>
-        <div class="pipe-step"><span class="pipe-num">03</span> Cedar Gate + AWS STS OBO Minter</div>
+        <div class="pipe-step"><span class="pipe-num">03</span> Check Policy &amp; Mint Scoped Token</div>
         <span class="pipe-arrow">→</span>
-        <div class="pipe-step"><span class="pipe-num">04A</span> Warm Sandbox Pool (0.63ms)</div>
-        <span class="pipe-arrow">/</span>
-        <div class="pipe-step"><span class="pipe-num">04B</span> Governed Iceberg SQLite MCP</div>
+        <div class="pipe-step"><span class="pipe-num">04</span> Run in Warm Sandbox or Checked SQL</div>
       </div>
     </div>
   </section>
 
-  <!-- §01 · PROBLEM STATEMENT -->
+  <!-- §01 · PROBLEM -->
   <section id="problem-statement" class="section">
     <div class="container">
       <div class="section-header">
         <div>
-          <span class="section-kicker">§01 · Problem Statement</span>
-          <h2 class="section-title">Why Enterprise Coding &amp; Data-Lake Agents Fail Cost, Latency &amp; Isolation SLAs</h2>
+          <span class="section-kicker">01 · Problem</span>
+          <h2 class="section-title">Problem</h2>
           <p class="section-desc">
-            Why production IDE coding agents (Kiro), agent runtimes (Bedrock AgentCore), and governed analytics copilots (Spektr) cannot rely on naive full-repo prompts, static frontier models, cold subprocesses, or raw SQL execution.
+            IDE coding agents and data copilots run into four bottlenecks when deployed on real repositories and multi-tenant tables: oversized prompts, slow static model routing, cold subprocess startup, and unvalidated SQL queries.
           </p>
         </div>
-        <span class="tag tag-lime">Kiro · Bedrock AgentCore · Spektr Alignment</span>
-      </div>
-
-      <div class="plain-callout">
-        <div class="mono" style="font-size:0.72rem; font-weight:700; color:#3F6212; text-transform:uppercase; margin-bottom:0.35rem;">💡 In Plain English — What Problem Does ForgeRuntime Solve?</div>
-        <p style="margin-bottom:0.55rem;">
-          When an AI coding or analytics agent works inside a real company, four things normally go wrong at once:
-          <strong>(1) Context Bloat:</strong> stuffing every file in a repository into the prompt wastes over 80% of your token budget on irrelevant functions;
-          <strong>(2) Slow, Expensive Models:</strong> sending simple symbol lookups to a heavy frontier model takes seconds instead of milliseconds;
-          <strong>(3) Dangerous Execution:</strong> spawning a fresh Python process per test takes ~39 ms and risks shell escapes or unapproved production edits; and
-          <strong>(4) Leaky SQL:</strong> letting an agent run raw <code>SELECT *</code> queries against a billing lake exposes customer emails, credit-card tokens, or wrong-region rows.
-        </p>
-        <p>
-          <strong>ForgeRuntime solves all four in one cohesive runtime:</strong> it slices only the exact 2-hop AST call graph needed (cutting tokens by <strong><code>-83.2%</code></strong> with <strong><code>100.0%</code></strong> recall), routes each task to the fastest model that meets its latency &amp; dollar cap (<strong><code>-59.7%</code></strong> p50 latency, <strong><code>-35.9%</code></strong> cost), enforces Cedar policies + signed AWS STS <code>On-Behalf-Of</code> credentials before running code in a pre-warmed <strong><code>0.625 ms</code></strong> sandbox (blocking <strong><code>10/10</code></strong> escape attacks), and gates every SQL query through 4 pre-execution checks.
-        </p>
+        <span class="tag tag-lime">Python 3.12 · 0 External Dependencies</span>
       </div>
 
       <div class="grid-3">
         <div class="card">
-          <span class="step-badge">FAILURE MODE 01 · CONTEXT &amp; ROUTING</span>
-          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">Prompt Stuffing &amp; Static Frontier Routing</h3>
+          <span class="step-badge">01 · OVERSIZED PROMPTS &amp; SLOW ROUTING</span>
+          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">Whole-Repo Context Wastes Tokens; Single-File Misses Callers</h3>
           <p style="font-size:0.89rem; color:var(--ink-muted);">
-            Single-file context misses <code>79.5%</code> of cross-module collaborators (<code>20.48%</code> recall), while dumping whole repositories burns <code>4,382+</code> tokens per turn and routing sub-second IDE tasks to Opus blows interactive latency SLAs.
+            Sending only the active file misses <code>79.5%</code> of cross-module dependencies (<code>20.48%</code> recall), while pasting the entire repository burns <code>4,382+</code> tokens per turn. Sending simple IDE lookups to a large reasoning model also misses sub-second latency targets.
           </p>
         </div>
         <div class="card">
-          <span class="step-badge">FAILURE MODE 02 · SANDBOX &amp; IAM</span>
-          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">Cold Subprocess Spawns &amp; Confused-Deputy IAM</h3>
+          <span class="step-badge">02 · COLD SUBPROCESSES &amp; BROAD ROLES</span>
+          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">Fresh Process Spawns Add Latency and Shared Roles Over-Permit</h3>
           <p style="font-size:0.89rem; color:var(--ink-muted);">
-            Cold <code>subprocess.run</code> adds <code>38.69 ms</code> overhead per tool call, while shared agent IAM roles allow privilege escalation unless Cedar <code>forbid &gt; permit</code> rules and human-scoped STS <code>On-Behalf-Of</code> tags are enforced.
+            Spawning a cold <code>subprocess.run</code> process adds <code>38.69 ms</code> on every test step, while shared IAM agent roles permit destructive actions unless Cedar <code>forbid &gt; permit</code> policies and human-scoped AWS STS <code>On-Behalf-Of</code> session tags are enforced.
           </p>
         </div>
         <div class="card">
-          <span class="step-badge">FAILURE MODE 03 · UNGOVERNED SQL</span>
-          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">PII/PCI Column Leaks &amp; Hallucinated Schemas</h3>
+          <span class="step-badge">03 · UNCHECKED SQL QUERIES</span>
+          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">Regex Filters Miss <code>SELECT *</code> Leaks and Invalid Columns</h3>
           <p style="font-size:0.89rem; color:var(--ink-muted);">
-            Regex-only SQL filters miss <code>SELECT *</code> PII exposures, cross-region data residency leaks, comment-smuggled <code>DELETE</code> statements, and hallucinated column names that crash downstream analytics jobs.
+            Keyword blocklists miss <code>SELECT *</code> queries that pull customer emails or card tokens, fail to scope rows to the caller's region, and let hallucinated column names fail mid-flight in downstream analytics pipelines.
           </p>
         </div>
       </div>
@@ -1245,42 +1224,42 @@
       <div class="worked-example">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem; flex-wrap:wrap;">
           <div>
-            <span class="step-badge" style="margin-bottom:0.3rem;">CONCRETE END-TO-END WORKED EXAMPLE</span>
-            <h3 style="font-size:1.12rem; font-weight:800;">Tracing One Enterprise Billing Refactor &amp; Governed Lake Query End-to-End</h3>
+            <span class="step-badge" style="margin-bottom:0.3rem;">REQUEST WALKTHROUGH</span>
+            <h3 style="font-size:1.12rem; font-weight:800;">Example: Billing Refactor &amp; Regional SQL Query</h3>
           </div>
           <span class="tag tag-lime">Focal Symbol: settle_tenant_invoice</span>
         </div>
         <div class="worked-steps">
           <div class="worked-step">
-            <strong>Step 1 — 2-Hop AST Context Slice (<code>734</code> mean tokens vs. <code>4,382</code>):</strong><br/>
-            An engineer asks the agent to audit decimal rounding in <code>InvoiceSettlementEngine.settle_tenant_invoice</code>. Instead of sending all 6 billing files, <code>pack_minimal_context(hop_budget=2)</code> emits full source for Hop 0 plus typed signature/docstring stubs for Hop 1–2 collaborators (<code>TenantQuotaGuard</code>, <code>ImmutableLedgerStore</code>, <code>LedgerPosting</code>)—achieving <strong><code>5.97×</code> compression</strong> and <strong><code>100.0%</code></strong> call-neighborhood recall.
+            <strong>Step 1: 2-Hop AST Context Slice (<code>734</code> mean tokens vs. <code>4,382</code>)</strong><br/>
+            An engineer asks the agent to audit decimal rounding in <code>InvoiceSettlementEngine.settle_tenant_invoice</code>. Instead of sending all 6 billing files, <code>pack_minimal_context(hop_budget=2)</code> includes full source for Hop 0 plus typed signature and docstring stubs for Hop 1–2 collaborators (<code>TenantQuotaGuard</code>, <code>ImmutableLedgerStore</code>, <code>LedgerPosting</code>), giving <strong><code>5.97×</code> compression</strong> and <strong><code>100.0%</code></strong> call-neighborhood recall.
           </div>
           <div class="worked-step">
-            <strong>Step 2 — SLA &amp; Budget Bedrock Routing (<code>-59.71%</code> Latency, <code>-35.89%</code> Cost):</strong><br/>
-            If the user's IDE enforces a strict <code>p50 &lt;= 350 ms</code> autocomplete budget, <code>MultiModelSLARouter</code> automatically downgrades an Opus-class prompt to <code>amazon.nova-lite-v1</code> or <code>claude-sonnet-4</code> with explicit guardrail telemetry, hitting <strong><code>12/12</code></strong> benchmark tier accuracy (<code>$0.607</code> vs <code>$0.947</code>).
+            <strong>Step 2: Latency &amp; Budget Routing (<code>-59.71%</code> Latency, <code>-35.89%</code> Cost)</strong><br/>
+            When the IDE sets a strict <code>p50 &lt;= 350 ms</code> autocomplete budget, <code>MultiModelSLARouter</code> steps down from Opus to <code>amazon.nova-lite-v1</code> or <code>claude-sonnet-4</code> with explicit guardrail telemetry, matching <strong><code>12/12</code></strong> benchmark tier targets (<code>$0.607</code> vs. <code>$0.947</code>).
           </div>
           <div class="worked-step">
-            <strong>Step 3 — Cedar Gate + STS OBO + Warm Sandbox (<code>0.625 ms p50</code>):</strong><br/>
-            Before applying or testing a patch, Cedar verifies <code>human_approved == true &amp;&amp; ticket_verified == true</code> (unconditionally blocking <code>DropTable</code> via <code>forbid &gt; permit</code>), mints an <code>HMAC-SHA256</code> signed STS session, and executes verification tests in a pre-warmed <code>python3 -I</code> worker pipe—<strong><code>61.9×</code> faster</strong> than cold spawn while blocking <strong><code>10/10</code></strong> escape payloads (<code>os.system</code>, <code>socket</code>, <code>/etc/passwd</code>, <code>__subclasses__</code>).
+            <strong>Step 3: Cedar Policy + Scoped STS Token + Warm Sandbox (<code>0.625 ms p50</code>)</strong><br/>
+            Before applying or testing a patch, Cedar checks <code>human_approved == true &amp;&amp; ticket_verified == true</code> (blocking <code>DropTable</code> unconditionally via <code>forbid &gt; permit</code>), mints an <code>HMAC-SHA256</code> signed STS session, and runs tests over a persistent <code>python3 -I</code> worker pipe: <strong><code>61.9×</code> faster</strong> than cold spawn with <strong><code>10/10</code></strong> escape payloads blocked.
           </div>
           <div class="worked-step">
-            <strong>Step 4 — 4-Gate Governed Iceberg / SQLite Query (<code>0.421 ms</code>):</strong><br/>
-            When <code>agent:spektr-partner-analyst</code> queries <code>ads_campaigns</code>, SQLite's C-level <code>set_authorizer</code> blocks restricted PII/PCI columns (<code>raw_card_token</code>, <code>customer_email</code>), injects a sovereign <code>region IN ('NA')</code> CTE filter, and validates the query plan via <code>EXPLAIN QUERY PLAN</code> before returning <code>1</code> governed row.
+            <strong>Step 4: 4-Gate SQLite / Iceberg Query Check (<code>0.421 ms</code>)</strong><br/>
+            When <code>agent:spektr-partner-analyst</code> queries <code>ads_campaigns</code>, SQLite's C-level <code>set_authorizer</code> blocks restricted PII/PCI columns (<code>raw_card_token</code>, <code>customer_email</code>), applies a <code>region IN ('NA')</code> CTE filter, and verifies the query plan via <code>EXPLAIN QUERY PLAN</code> before returning <code>1</code> row.
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- §02 · SYSTEM ARCHITECTURE -->
+  <!-- §02 · ARCHITECTURE -->
   <section id="architecture" class="section">
     <div class="container">
       <div class="section-header">
         <div>
-          <span class="section-kicker">§02 · System Architecture</span>
-          <h2 class="section-title">Multi-Plane AST Slicing, Bedrock Routing, Cedar/Sandbox &amp; Iceberg MCP Topology</h2>
+          <span class="section-kicker">02 · Architecture</span>
+          <h2 class="section-title">Architecture</h2>
           <p class="section-desc">
-            Serverless AWS CloudFront + private S3 (OAC) + Python 3.12 Lambda runtime connecting the AST Repo Graph, SLA Model Router, Cedar/STS Gate, Warm Sandbox Pool, and 4-Gate Iceberg/SQLite MCP Server. <strong>Click any component below to inspect its contract.</strong>
+            Requests pass through the 2-hop AST context slicer and latency/budget router before hitting the Cedar authorization gate, warm Python worker pool, or 4-gate SQL server. <strong>Click any component below to inspect its module and runtime contract.</strong>
           </p>
         </div>
       </div>
@@ -1536,10 +1515,10 @@
     <div class="container">
       <div class="section-header">
         <div>
-          <span class="section-kicker">§03 · Implementation</span>
-          <h2 class="section-title">End-to-End Runtime Modules &amp; Algorithms (<code>forge_runtime/</code>)</h2>
+          <span class="section-kicker">03 · Implementation</span>
+          <h2 class="section-title">Implementation</h2>
           <p class="section-desc">
-            Every subsystem is built with zero third-party Python dependencies and pairs plain-English intuition with exact AST algorithms, Cedar semantics, IPC framing, and SQLite C-engine hooks.
+            Each subsystem is implemented in standard-library Python across <code>forge_runtime/</code> using AST graph traversal, Cedar policy evaluation, persistent worker pipes, and SQLite C-engine authorizer callbacks.
           </p>
         </div>
         <span class="tag tag-pass">0 External Dependencies · Python Stdlib</span>
@@ -1554,10 +1533,10 @@
           <div class="impl-body">
             <h3 style="font-size:1.08rem; font-weight:800;"><code>RepoKnowledgeGraph</code> + 2-Hop Minimal Contract Packer</h3>
             <div class="layer-plain">
-              <strong>Plain-English Intuition:</strong> When editing one method, an engineer reads that method's full body plus the function signatures and docstrings of the helpers it calls—not 4,000 lines of unrelated code. Our AST slicer gives the LLM that exact view.
+              When modifying a single method, an engineer reads that method's full body plus the function signatures and docstrings of the helpers it calls, rather than 4,000 lines of unrelated code. The AST slicer builds that exact prompt slice automatically.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (Python <code>ast</code> BFS):</strong> Parses modules into <code>56</code> reference nodes / <code>38</code> directed <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges (plus self-indexing ForgeRuntime's own <code>133</code> nodes / <code>167</code> edges). Bounded BFS (<code>hop_budget=2</code>) emits full source for Hop 0 and signature/type stubs for Hop 1–2: <strong><code>733.7</code> vs <code>4,382</code> tokens (<code>5.97×</code>, <code>-83.2%</code>)</strong> at <strong><code>100.0%</code></strong> recall.
+              <strong>Python <code>ast</code> BFS:</strong> Parses modules into <code>56</code> reference nodes and <code>38</code> directed <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges (plus self-indexing ForgeRuntime's own <code>133</code> nodes and <code>167</code> edges). Bounded BFS (<code>hop_budget=2</code>) emits full source for Hop 0 and signature/type stubs for Hop 1–2: <strong><code>733.7</code> vs. <code>4,382</code> tokens (<code>5.97×</code>, <code>-83.2%</code>)</strong> at <strong><code>100.0%</code></strong> recall.
             </div>
           </div>
         </div>
@@ -1568,12 +1547,12 @@
             <span style="color:#DDD6FE;">forge_runtime/model_router.py · web_api.py</span>
           </div>
           <div class="impl-body">
-            <h3 style="font-size:1.08rem; font-weight:800;"><code>MultiModelSLARouter</code> + Live Bedrock Nova Synthesis</h3>
+            <h3 style="font-size:1.08rem; font-weight:800;"><code>MultiModelSLARouter</code> + Live Bedrock Synthesis</h3>
             <div class="layer-plain">
-              <strong>Plain-English Intuition:</strong> Fast IDE autocompletes belong on lightweight sub-300 ms models, medium SQL patches belong on Sonnet, and multi-file architectural refactors belong on Opus—unless a strict latency or cost cap forces a safe automatic downgrade.
+              Quick IDE symbol lookups fit on sub-300 ms models, standard SQL patches fit on Sonnet, and multi-file refactors go to Opus, unless a strict latency or cost ceiling triggers an automatic step-down.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (Structural Scoring):</strong> Computes composite complexity over cyclomatic branches, AST hop depth, files touched, and token budget to route across <code>bedrock/amazon.nova-lite-v1</code> (<code>4</code>), <code>bedrock/anthropic.claude-sonnet-4</code> (<code>5</code>), and <code>bedrock/anthropic.claude-opus</code> (<code>3</code>), cutting p50 latency <strong><code>-59.71%</code></strong> and cost <strong><code>-35.89%</code></strong> (<code>$0.6069</code> vs <code>$0.9467</code>, <code>12/12</code> accuracy).
+              <strong>Structural Scoring:</strong> Scores cyclomatic branches, AST hop depth, files touched, and token volume to route across <code>bedrock/amazon.nova-lite-v1</code> (<code>4</code>), <code>bedrock/anthropic.claude-sonnet-4</code> (<code>5</code>), and <code>bedrock/anthropic.claude-opus</code> (<code>3</code>), cutting p50 latency <strong><code>-59.71%</code></strong> and cost <strong><code>-35.89%</code></strong> (<code>$0.6069</code> vs. <code>$0.9467</code>, <code>12/12</code> accuracy).
             </div>
           </div>
         </div>
@@ -1584,12 +1563,12 @@
             <span style="color:#FCA5A5;">forge_runtime/cedar_sts_gate.py</span>
           </div>
           <div class="impl-body">
-            <h3 style="font-size:1.08rem; font-weight:800;">Deterministic Cedar Evaluator, STS Session Minter &amp; <code>python3 -I</code> Pool</h3>
+            <h3 style="font-size:1.08rem; font-weight:800;">Cedar Policy Evaluator, STS Session Minter &amp; <code>python3 -I</code> Pool</h3>
             <div class="layer-plain">
-              <strong>Plain-English Intuition:</strong> Even an admin agent is never allowed to drop a production table, and any production patch requires a human-approved ticket. Once authorized, code runs inside an already-booted locked room so tests finish in under a millisecond.
+              Destructive DDL actions stay blocked even for admin roles, and production patches require a verified human approval ticket. Authorized code runs inside pre-started isolated workers so test checks finish in under a millisecond.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (Zero-<code>eval</code> Cedar + Pipe IPC):</strong> Evaluates <code>5</code> Cedar policies with strict <code>forbid &gt; permit</code> (<code>4/4</code> invariants <code>100.0%</code>), signs <code>sts:TransitiveTagKeys</code> via <code>HMAC-SHA256</code>, and dispatches untrusted AST-checked code over persistent <code>python3 -I</code> pipes in <strong><code>0.625 ms p50</code></strong> (<code>1.077 ms p95</code>) vs <code>38.694 ms</code> cold spawn (<strong><code>61.9×</code> speedup</strong>, <strong><code>10/10</code> escapes blocked</strong> + automatic watchdog worker respawn).
+              <strong>Cedar AST &amp; Pipe IPC:</strong> Evaluates <code>5</code> Cedar policies with strict <code>forbid &gt; permit</code> (<code>4/4</code> invariants <code>100.0%</code>), signs <code>sts:TransitiveTagKeys</code> via <code>HMAC-SHA256</code>, and dispatches AST-checked Python over persistent <code>python3 -I</code> pipes in <strong><code>0.625 ms p50</code></strong> (<code>1.077 ms p95</code>) vs. <code>38.694 ms</code> cold spawn (<strong><code>61.9×</code> speedup</strong>, <strong><code>10/10</code> escapes blocked</strong>, automatic watchdog worker respawn).
             </div>
           </div>
         </div>
@@ -1602,10 +1581,10 @@
           <div class="impl-body">
             <h3 style="font-size:1.08rem; font-weight:800;">SQLite C-Engine <code>set_authorizer</code>, Region RLS &amp; Schema Pre-Check</h3>
             <div class="layer-plain">
-              <strong>Plain-English Intuition:</strong> Instead of trying to catch sneaky SQL queries with brittle regexes alone, we hook directly into SQLite's internal compiler so if a query touches a restricted email or credit-card column—even via <code>SELECT *</code>—compilation aborts before a single row is read.
+              Regex filters miss aliased joins and <code>SELECT *</code> queries. Hooking directly into SQLite's query compiler aborts compilation whenever a statement references a restricted email or card column, before any row is read.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (4 Pre-Execution Gates):</strong> (1) Multi-statement &amp; DDL/DML blocker (<code>DROP</code>, <code>DELETE</code>, <code>ATTACH</code>); (2) SQLite C-callback <code>conn.set_authorizer</code> enforcing <code>PII_CONFIDENTIAL</code> / <code>PCI_RESTRICTED</code> column clearances; (3) CTE rewrite <code>WITH _rls AS (...)</code> scoping sovereign regions (<code>NA</code> / <code>EMEA</code>); and (4) <code>EXPLAIN QUERY PLAN</code> catching hallucinated columns pre-execution (**<code>8/8</code> cases <code>100.0%</code>**).
+              <strong>4 Pre-Execution Gates:</strong> (1) Multi-statement &amp; DDL/DML blocker (<code>DROP</code>, <code>DELETE</code>, <code>ATTACH</code>); (2) SQLite C-callback <code>conn.set_authorizer</code> enforcing <code>PII_CONFIDENTIAL</code> / <code>PCI_RESTRICTED</code> column clearances; (3) CTE rewrite <code>WITH _rls AS (...)</code> scoping regions (<code>NA</code> / <code>EMEA</code>); and (4) <code>EXPLAIN QUERY PLAN</code> catching nonexistent columns pre-execution (<strong><code>8/8</code> cases <code>100.0%</code></strong>).
             </div>
           </div>
         </div>
@@ -1613,15 +1592,15 @@
     </div>
   </section>
 
-  <!-- §04 · DESIGN TRADE-OFFS -->
+  <!-- §04 · TRADE-OFFS -->
   <section id="design-tradeoffs" class="section">
     <div class="container">
       <div class="section-header">
         <div>
-          <span class="section-kicker">§04 · Design Trade-Offs</span>
-          <h2 class="section-title">Why ForgeRuntime Outperforms Naive Agent Wrappers &amp; Cold Sandboxes</h2>
+          <span class="section-kicker">04 · Trade-Offs</span>
+          <h2 class="section-title">Trade-Offs</h2>
           <p class="section-desc">
-            Side-by-side comparison across context efficiency, routing economics, execution isolation, and data-lake governance.
+            Comparing AST call-graph slicing, dynamic model routing, pre-warmed worker pools, and compiler-level SQL authorizers against common alternatives.
           </p>
         </div>
       </div>
@@ -1631,32 +1610,32 @@
           <thead>
             <tr>
               <th>Engineering Dimension</th>
-              <th>Naive Full-Repo + Raw Subprocess Agent</th>
+              <th>Whole-Repo Prompt + Raw Subprocess</th>
               <th>Single-File RAG + Cold Container Per Call</th>
-              <th>ForgeRuntime (2-Hop AST + SLA Router + Warm Pool + 4-Gate MCP)</th>
+              <th>ForgeRuntime (2-Hop AST + SLA Router + Warm Pool + 4-Gate SQL)</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><strong>Repo Context Packing</strong></td>
-              <td><code>4,382</code> tokens/turn (expensive, noisy attention dilution)</td>
+              <td><code>4,382</code> tokens/turn (high cost and unrelated code noise)</td>
               <td>Low tokens, but misses <code>79.5%</code> of cross-file call contracts (<code>20.48%</code> recall)</td>
               <td class="winner-row"><strong><code>733.7</code> mean tokens (<code>5.97×</code> / <code>-83.2%</code>) with <code>100.0%</code> 2-hop call recall</strong></td>
             </tr>
             <tr>
-              <td><strong>Foundation Model Routing</strong></td>
-              <td>Static Opus on every turn (<code>$0.947</code>, high p50 latency)</td>
-              <td>Static cheap model fails multi-module architectural refactors</td>
+              <td><strong>Model Selection</strong></td>
+              <td>Static Opus on every turn (<code>$0.947</code>, <code>2,850 ms</code> p50 latency)</td>
+              <td>Static small model fails multi-module refactors</td>
               <td class="winner-row"><strong><code>12/12</code> tier accuracy · <code>-59.71%</code> p50 latency · <code>-35.89%</code> cost (<code>$0.607</code>)</strong></td>
             </tr>
             <tr>
               <td><strong>Code Execution &amp; IAM</strong></td>
               <td>Shared IAM role + unguarded shell (<code>0%</code> escape containment)</td>
-              <td><code>38.69 ms+</code> cold spawn overhead on every verification step</td>
+              <td><code>38.69 ms+</code> cold spawn overhead on every test step</td>
               <td class="winner-row"><strong>Cedar <code>forbid &gt; permit</code> + STS OBO + <code>0.625 ms p50</code> warm pool (<code>61.9×</code>, <code>10/10</code> blocked)</strong></td>
             </tr>
             <tr>
-              <td><strong>Data-Lake SQL Governance</strong></td>
+              <td><strong>SQL Data Access</strong></td>
               <td>Regex blocklists bypassed by <code>SELECT *</code> or SQL comments</td>
               <td>Table-level ACLs block entire tables instead of sensitive columns</td>
               <td class="winner-row"><strong>SQLite C-level <code>set_authorizer</code> column ACL + Region CTEs + <code>EXPLAIN PLAN</code> (<code>8/8</code>)</strong></td>
@@ -1668,64 +1647,61 @@
       <div class="grid-3">
         <div class="card">
           <span class="step-badge">TRADE-OFF 01 · AST vs. EMBEDDINGS</span>
-          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">Deterministic Call Edges Beat Cosine Similarity for Code</h3>
+          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">Call Edges Beat Text Similarity for Code Dependencies</h3>
           <p style="font-size:0.87rem; color:var(--ink-muted);">
-            <strong>Plain English:</strong> Vector search finds functions that <em>sound</em> similar, whereas AST edges find the exact functions your code actually <em>calls</em>.<br/>
-            <strong>Under the Hood:</strong> Parsing Python ASTs adds sub-millisecond indexing while guaranteeing <code>100.0%</code> 2-hop contract recall at <code>5.97×</code> lower token cost.
+            Embedding search retrieves functions with similar wording, whereas AST edges follow the exact methods and dataclasses the target symbol calls or returns. Sub-millisecond AST indexing preserves <code>100.0%</code> 2-hop contract recall at <code>5.97×</code> lower token volume, at the cost of requiring language-specific parsers.
           </p>
         </div>
         <div class="card">
           <span class="step-badge">TRADE-OFF 02 · WARM WORKER PIPES</span>
-          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">71 ms One-Time Pool Warmup vs. 0.625 ms Per-Step Dispatch</h3>
+          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">71 ms Up-Front Pool Warmup vs. 0.625 ms Per-Step Dispatch</h3>
           <p style="font-size:0.87rem; color:var(--ink-muted);">
-            <strong>Plain English:</strong> Booting isolated workers once up front pays a tiny startup cost so every agent test loop afterward feels instantaneous.<br/>
-            <strong>Under the Hood:</strong> One-time <code>71.09 ms</code> warmup amortizes immediately, delivering a <code>61.9×</code> p50 speedup with automatic watchdog worker replacement on timeouts.
+            Starting persistent <code>python3 -I</code> workers pays a one-time <code>71.09 ms</code> pool boot cost and holds idle worker memory, in exchange for a <code>61.9×</code> p50 dispatch speedup (<code>0.625 ms</code> vs. <code>38.694 ms</code>) and automatic watchdog slot replacement on timeouts.
           </p>
         </div>
         <div class="card">
           <span class="step-badge">TRADE-OFF 03 · COMPILER AUTHORIZER</span>
-          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">Engine-Level Column Hooks Beat String Regexes</h3>
+          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">Engine-Level Column Hooks vs. String Regexes</h3>
           <p style="font-size:0.87rem; color:var(--ink-muted);">
-            <strong>Plain English:</strong> Letting the database compiler tell us which columns a query touches catches sneaky <code>SELECT *</code> and aliased joins with zero guesswork.<br/>
-            <strong>Under the Hood:</strong> Combining <code>conn.set_authorizer</code> with <code>EXPLAIN QUERY PLAN</code> validates column clearances and schema contracts in <code>0.023–0.421 ms</code>.
+            Hooking SQLite's compiler via <code>conn.set_authorizer</code> and <code>EXPLAIN QUERY PLAN</code> catches <code>SELECT *</code> expansion, aliased joins, and nonexistent columns in <code>0.023–0.421 ms</code> before execution, trading engine-specific bindings for deterministic column-level enforcement.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- §05 · INTERACTIVE STUDIO -->
+  <!-- §05 · LIVE DEMO -->
   <main id="interactive-studio" class="container tabs-wrapper">
     <div id="ast-graph"></div>
     <div class="section-header">
       <div>
-        <span class="section-kicker">§05 · Interactive Studio</span>
-        <h2 class="section-title">4 Live Runtime Simulators (AST Graph, Bedrock Router, Cedar/Sandbox &amp; Iceberg MCP)</h2>
+        <span class="section-kicker">05 · Live Demo</span>
+        <h2 class="section-title">Live Demo</h2>
         <p class="section-desc">
-          Switch between any of the 4 simulators below to test AST hop budgets, SLA/budget downgrades, live Bedrock Nova synthesis, Cedar + STS tamper checks, 10 sandbox escape payloads, and live SQL governance gates.
+          Test AST hop slicing, model routing with live Amazon Bedrock code synthesis, Cedar and STS session checks against 10 sandbox escape vectors, and 4-gate SQL validation.
         </p>
       </div>
     </div>
     <div class="tab-bar" role="tablist" aria-label="ForgeRuntime Interactive Simulators">
       <button type="button" class="tab-btn active" role="tab" aria-selected="true" data-tab="ast-graph" onclick="switchTab('ast-graph')">
-        <span class="tab-btn-eyebrow">Simulator 01 · Kiro Target</span>
-        <span class="tab-btn-title">1. AST Repo Knowledge Graph</span>
-        <span class="tab-btn-metric">734 vs 4,382 tok (-83.2% · 100% recall)</span>
+        <span class="tab-btn-eyebrow">01 · Code Context</span>
+        <span class="tab-btn-title">Slice Relevant Repo Code</span>
+        <span class="tab-btn-metric">734 vs. 4,382 tokens (-83.2% · 100% recall)</span>
       </button>
       <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="model-router" onclick="switchTab('model-router')">
-        <span class="tab-btn-eyebrow">Simulator 02 · Bedrock Runtime</span>
-        <span class="tab-btn-title">2. Multi-Model SLA &amp; Cost Router</span>
+        <span class="tab-btn-eyebrow">02 · Model Selection</span>
+        <span class="tab-btn-title">Route Tasks by Speed &amp; Budget</span>
         <span class="tab-btn-metric">Nova Lite · Sonnet 4 · Opus (-59.7% p50)</span>
       </button>
       <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="cedar-sandbox" onclick="switchTab('cedar-sandbox')">
-        <span class="tab-btn-eyebrow">Simulator 03 · AgentCore &amp; DevOps</span>
-        <span class="tab-btn-title">3. Cedar + STS OBO + Warm Sandbox</span>
-        <span class="tab-btn-metric">forbid &gt; permit · 10/10 Escapes · 0.63ms</span>
+        <span class="tab-btn-eyebrow">03 · Policy &amp; Sandbox</span>
+        <span class="tab-btn-title">Check Policy &amp; Run Sandboxed Code</span>
+        <span class="tab-btn-metric">0.625 ms warm pool · 10/10 escapes blocked</span>
       </button>
       <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="iceberg-mcp" onclick="switchTab('iceberg-mcp')">
-        <span class="tab-btn-eyebrow">Simulator 04 · Context &amp; Spektr</span>
-        <span class="tab-btn-title">4. Governed Iceberg / SQLite MCP</span>
-        <span class="tab-btn-metric">PII/PCI Column ACLs · EXPLAIN PLAN (8/8)</span>
+        <span class="tab-btn-eyebrow">04 · Data Access</span>
+        <span class="tab-btn-title">Validate &amp; Run Safe SQL Queries</span>
+        <span class="tab-btn-metric">Column ACLs · Region Filters · 8/8 gates</span>
       </button>
     </div>
 
@@ -1733,21 +1709,15 @@
     <!-- TAB 1: AST REPO KNOWLEDGE GRAPH EXPLORER                           -->
     <!-- ================================================================== -->
     <section id="panel-ast-graph" class="tab-panel active" role="tabpanel">
-      <div class="sandbox-guide">
-        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
-        (1) Click any target symbol on the left (e.g., <code>OrderSettlementEngine</code>);
-        (2) Toggle between <strong>Hop 0</strong>, <strong>Hop 1</strong>, and <strong>Hop 2 (Full Contracts ★)</strong> to watch token compression and neighborhood recall update in real time;
-        (3) Inspect the exact packed Python context slice on the right showing full focal code + collaborator type contracts.
-      </div>
       <div class="sim-header">
         <div>
-          <h2 class="sim-title">AST Repo Knowledge Graph &amp; Minimal Context Packer</h2>
+          <h3 class="sim-title">Slice Relevant Repo Code (2-Hop AST Context Packer)</h3>
           <p class="sim-desc">
             Indexes Python modules into typed <code>Module</code>, <code>Class</code>, and <code>Function</code> nodes across directed
-            <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges. Emits full source for <code>Hop 0</code> plus signature &amp; docstring contracts for <code>Hop 1–2</code> collaborators.
+            <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges. Emits full source for <code>Hop 0</code> plus signature and docstring contracts for <code>Hop 1–2</code> collaborators.
           </p>
         </div>
-        <span class="tag tag-lime">100.0% Neighborhood Recall vs 20.5% Single-File</span>
+        <span class="tag tag-lime">100.0% Neighborhood Recall vs. 20.5% Single-File</span>
       </div>
 
       <div class="grid-2">
@@ -1811,15 +1781,11 @@
     <!-- TAB 2: MULTI-MODEL SLA & BUDGET ROUTER                             -->
     <!-- ================================================================== -->
     <section id="panel-model-router" class="tab-panel" role="tabpanel">
-      <div class="sandbox-guide">
-        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
-        Click any of the <strong>4 Workload Presets</strong> (especially <em>"⏱️ Opus Task + Strict 350ms SLA Cap"</em>) or drag the Latency SLA and Budget sliders to watch the router dynamically select or downgrade between <code>amazon.nova-lite-v1</code>, <code>claude-sonnet-4</code>, and <code>claude-opus</code>. Click <strong>"⚡ Synthesize Live via AWS Bedrock Nova"</strong> to invoke CloudFront <code>POST /api/modernize/synthesize</code> live.
-      </div>
       <div class="sim-header">
         <div>
-          <h2 class="sim-title">Complexity-, Token-, &amp; SLA-Aware Multi-Model Bedrock Router</h2>
+          <h3 class="sim-title">Route Tasks by Speed &amp; Budget (Multi-Model Bedrock Router)</h3>
           <p class="sim-desc">
-            Scores structural task complexity across AST hop depth, cyclomatic complexity, files touched, token volume, and lexical intent—then enforces hard latency SLAs and USD cost caps across <code>amazon.nova-lite-v1</code>, <code>claude-sonnet-4</code>, and <code>claude-opus</code>.
+            Scores structural task complexity across AST hop depth, cyclomatic branches, files touched, token volume, and lexical intent, then enforces latency SLAs and USD cost caps across <code>amazon.nova-lite-v1</code>, <code>claude-sonnet-4</code>, and <code>claude-opus</code>.
           </p>
         </div>
         <span class="tag tag-lime">12/12 Benchmark Accuracy · -59.7% p50 Latency · -35.9% Cost</span>
@@ -1845,8 +1811,8 @@
           </div>
           <textarea id="routerPromptInput" rows="3" oninput="evaluateRouterLive()">Redesign cross-module distributed lock &amp; zero-downtime security boundary across settlement_engine and ledger_store</textarea>
           <div style="margin-top:0.65rem; display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-            <button type="button" class="btn btn-lime" onclick="invokeForgeBedrockLive()">⚡ Synthesize Live via AWS Bedrock Nova (/api/modernize/synthesize)</button>
-            <span class="mono" style="font-size:0.7rem; color:var(--ink-muted);" id="forgeBedrockStatus">Zero API Key · CloudFront /api/*</span>
+            <button type="button" class="btn btn-lime" onclick="invokeForgeBedrockLive()">⚡ Generate Patch With Live Amazon Bedrock</button>
+            <span class="mono" style="font-size:0.7rem; color:var(--ink-muted);" id="forgeBedrockStatus">Hosted Live · No API Key Needed</span>
           </div>
           <pre class="code-box" id="forgeBedrockOutput" style="display:none; margin-top:0.65rem; max-height:220px;"></pre>
 
@@ -1939,15 +1905,11 @@
     <!-- TAB 3: CEDAR + AWS STS ON-BEHALF-OF + WARM SANDBOX LAB             -->
     <!-- ================================================================== -->
     <section id="panel-cedar-sandbox" class="tab-panel" role="tabpanel">
-      <div class="sandbox-guide">
-        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
-        On the left (<strong>Part A</strong>), test <code>DropTable (Forbid Override)</code> vs. <code>Approved Prod Patch (+ STS OBO)</code> and click <strong>"🧪 Simulate RiskRung Tag Tamper"</strong> to see HMAC-SHA256 session tampering caught. On the right (<strong>Part B</strong>), click any of the <strong>10 Adversarial Escape Vectors</strong> (or <strong>"🛡️ Run All 10 Escape Vectors"</strong>) to inspect how the pre-warmed <code>python3 -I</code> worker pool blocks shell, network, filesystem, and introspection escapes in sub-millisecond time.
-      </div>
       <div class="sim-header">
         <div>
-          <h2 class="sim-title">Cedar Policy Gate + AWS STS <code>On-Behalf-Of</code> + Warm Sandbox Pool</h2>
+          <h3 class="sim-title">Check Policy &amp; Run Sandboxed Code (Cedar + STS + Warm Pool)</h3>
           <p class="sim-desc">
-            Enforces deterministic Cedar authorization (default <code>DENY</code>, unconditional <code>forbid</code>-overrides-<code>permit</code>), mints <code>HMAC-SHA256</code> signed STS session credentials with <code>sts:TransitiveTagKeys</code>, and isolates untrusted Python inside pre-warmed <code>python3 -I</code> worker pipes (<code>0.625ms</code> p50).
+            Evaluates Cedar authorization policies (default <code>DENY</code>, unconditional <code>forbid</code> over <code>permit</code>), mints <code>HMAC-SHA256</code> signed STS session credentials with <code>sts:TransitiveTagKeys</code>, and runs untrusted Python inside pre-warmed <code>python3 -I</code> worker pipes (<code>0.625ms</code> p50).
           </p>
         </div>
         <span class="tag tag-lime">4/4 Cedar Invariants · 10/10 Escapes Blocked · 61.9x Faster Warm Pool</span>
@@ -2065,17 +2027,13 @@ forbid(
     <!-- TAB 4: GOVERNED APACHE ICEBERG / SQLITE MCP STUDIO                 -->
     <!-- ================================================================== -->
     <section id="panel-iceberg-mcp" class="tab-panel" role="tabpanel">
-      <div class="sandbox-guide">
-        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
-        Choose a caller principal in Step 1 (<code>analyst</code> vs. <code>auditor</code>), then click the <strong>6 Preset SQL Test Cases</strong> (such as <code>🛑 SELECT * PII Leak</code>, <code>🛑 raw_card_token PCI Theft</code>, or <code>🛑 Hallucinated Column Pre-Check</code>) or edit your own SQL query and press <strong>"▶ Validate &amp; Execute SQL"</strong> to see all 4 pre-execution governance gates and <code>EXPLAIN QUERY PLAN</code> output on the right.
-      </div>
       <div class="sim-header">
         <div>
-          <h2 class="sim-title">Governed Apache Iceberg / SQLite Data-Lake MCP Studio</h2>
+          <h3 class="sim-title">Validate &amp; Run Safe SQL Queries (4-Gate SQLite / Iceberg Server)</h3>
           <p class="sim-desc">
-            Enforces 4 pre-execution governance gates across <code>ads_campaigns</code>, <code>customer_billing</code>, and <code>agent_telemetry</code>:
-            <strong>Read-Only Lexical/Multi-Statement Filter</strong>, <strong>SQLite C-Engine <code>set_authorizer</code> Column PII/PCI ACLs</strong>,
-            <strong>Row-Level Sovereign Region CTEs</strong>, and <strong><code>EXPLAIN QUERY PLAN</code> Schema Validation</strong>.
+            Checks every query across <code>ads_campaigns</code>, <code>customer_billing</code>, and <code>agent_telemetry</code> through four pre-execution gates:
+            <strong>Read-Only Statement Filter</strong>, <strong>SQLite C-Engine <code>set_authorizer</code> Column ACLs</strong>,
+            <strong>Row-Level Region CTEs</strong>, and <strong><code>EXPLAIN QUERY PLAN</code> Schema Validation</strong>.
           </p>
         </div>
         <span class="tag tag-lime">8/8 Governance Gates · 100.0% Schema Contract Validated</span>
@@ -2159,18 +2117,13 @@ ORDER BY spend DESC;</textarea>
     <div class="container">
       <div class="section-header">
         <div>
-          <span class="section-kicker">§06 · Benchmarks</span>
-          <h2 class="section-title">End-to-End Measured Runtime Telemetry (<code>benchmarks/latest_results.json</code>)</h2>
+          <span class="section-kicker">06 · Benchmarks</span>
+          <h2 class="section-title">Benchmarks</h2>
           <p class="section-desc">
-            Every metric below is reproduced deterministically via <code>python3 benchmarks/run_benchmarks.py</code> in <code>1,203.72 ms</code> total wall time with zero external Python dependencies.
+            Reproduced deterministically via <code>python3 benchmarks/run_benchmarks.py</code> (<code>benchmarks/latest_results.json</code>) in <code>1,203.72 ms</code> wall time across 3 AST slices, 12 routed model tasks, 4 Cedar/STS invariants, 20 warm vs. cold sandbox runs, 10 escape payloads, and 8 SQL governance queries.
           </p>
         </div>
-        <span class="tag tag-pass">100% Verified Benchmark Suite</span>
-      </div>
-
-      <div class="plain-callout" style="margin-bottom:1.25rem;">
-        <strong>💡 How to Read These Numbers (Plain English + Under the Hood):</strong>
-        Each row pairs what a user feels in production (faster turns, lower AWS Bedrock bills, zero data leaks) with the exact empirical measurement from <code>benchmarks/latest_results.json</code> across <code>3</code> AST repository slices, <code>12</code> routed model requests, <code>4</code> Cedar/STS security invariants, <code>20</code> warm vs. cold process iterations + <code>10</code> adversarial sandbox escape attacks, and <code>8</code> governed Iceberg/SQLite queries.
+        <span class="tag tag-pass">100% Verified Suite</span>
       </div>
 
       <div class="table-wrap">
@@ -2316,8 +2269,8 @@ ORDER BY spend DESC;</textarea>
       const statusEl = document.getElementById('forgeBedrockStatus');
       const outEl = document.getElementById('forgeBedrockOutput');
       outEl.style.display = 'block';
-      statusEl.textContent = 'Calling CloudFront /api/modernize/synthesize -> Bedrock Nova...';
-      outEl.textContent = '// Executing live AWS Bedrock (us.amazon.nova-lite-v1:0) code synthesis & warm sandbox verification...';
+      statusEl.textContent = 'Generating patch on Amazon Bedrock...';
+      outEl.textContent = '// Running live Amazon Bedrock code synthesis and warm sandbox verification...';
       try {
         const res = await fetch('/api/modernize/synthesize', {
           method: 'POST',
@@ -2325,9 +2278,8 @@ ORDER BY spend DESC;</textarea>
           body: JSON.stringify({ task_id: 'MOD-01-DECIMAL-SETTLEMENT', prompt: prompt, sla_max_p95_ms: sla })
         });
         const data = await res.json();
-        statusEl.textContent = `${data.bedrock_engine || 'aws-bedrock (us.amazon.nova-lite-v1:0)'} · ${data.bedrock_latency_ms || 0} ms`;
-        outEl.textContent = `# Engine: ${data.bedrock_engine || 'aws-bedrock'}
-# Explanation: ${data.explanation || ''}
+        statusEl.textContent = `Amazon Bedrock responded in ${data.bedrock_latency_ms || 0} ms`;
+        outEl.textContent = `# Explanation: ${data.explanation || ''}
 
 ${data.modernized_code || JSON.stringify(data, null, 2)}`;
       } catch (err) {
@@ -2344,11 +2296,11 @@ ${data.modernized_code || JSON.stringify(data, null, 2)}`;
           if (data && (data.service === 'forge-runtime' || data.platform === 'ForgeRuntime')) {
             liveLambdaAvailable = true;
             document.getElementById('runtimeModeText').textContent =
-              'AWS CloudFront + Python ' + (data.python_version || '3.12') + ' + Bedrock (' + (data.bedrock_model || 'us.amazon.nova-lite-v1:0') + ') Live (/api/*)';
+              'Live on AWS · Powered by Amazon Bedrock';
           }
         }
       } catch (_) {
-        // Running statically on GitHub Pages — deterministic engine active
+        // Running statically — deterministic engine active
       }
     }
 
@@ -3771,8 +3723,8 @@ class CallerGovernanceContext:
           </div>
           <div class="mono" style="font-size:0.73rem; color:var(--ink-muted); margin-bottom:0.55rem;">Module / Resource: <code>${escHtml(info.module)}</code></div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-            <div class="layer-plain"><strong>Plain English:</strong> ${escHtml(info.plain)}</div>
-            <div class="layer-hood"><strong>Under the Hood:</strong> ${escHtml(info.hood)}</div>
+            <div class="layer-plain"><strong>Role:</strong> ${escHtml(info.plain)}</div>
+            <div class="layer-hood"><strong>Implementation:</strong> ${escHtml(info.hood)}</div>
           </div>
         `;
       }
