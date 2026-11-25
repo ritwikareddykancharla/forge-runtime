@@ -90,6 +90,26 @@ class TestAWSLambdaHandler(unittest.TestCase):
         self.assertFalse(sql_payload["data"]["ok"])
         self.assertEqual(sql_payload["data"]["error_code"], "COLUMN_ACL_VIOLATION")
 
+        # 4. Direct /api/mutants/verify and /api/transform/wave over Lambda handler
+        r_mut = handler(
+            {
+                "rawPath": "/api/mutants/verify",
+                "requestContext": {"http": {"method": "GET"}},
+            }
+        )
+        self.assertEqual(r_mut["statusCode"], 200)
+        self.assertTrue(json.loads(r_mut["body"])["ok"])
+
+        r_wave = handler(
+            {
+                "rawPath": "/api/transform/wave",
+                "requestContext": {"http": {"method": "POST"}},
+                "body": json.dumps({"simulate_crash_after_wave": 1}),
+            }
+        )
+        self.assertEqual(r_wave["statusCode"], 200)
+        self.assertTrue(json.loads(r_wave["body"])["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

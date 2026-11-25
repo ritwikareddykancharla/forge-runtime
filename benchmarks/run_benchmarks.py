@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""End-to-end deterministic & OS-timed benchmark suite for ForgeRuntime.
+"""End-to-end deterministic & OS-timed benchmark suite for ForgeRuntime v2.
 
 Generates `benchmarks/latest_results.json` with verified metrics across:
   1. AST Repo Knowledge Graph & Minimal Context Packing (compression ratio & recall)
@@ -7,6 +7,8 @@ Generates `benchmarks/latest_results.json` with verified metrics across:
   3. Cedar Policy Engine & AWS STS On-Behalf-Of Session Token Minter
   4. Warm Sandbox Pool vs. Cold Subprocess Spawn & 10-Vector Escape Containment
   5. Governed Iceberg / SQLite Data-Lake MCP Server (SQL safety, PII ACLs & EXPLAIN QUERY PLAN)
+  6. Tarjan-SCC Topological Multi-Wave Modernization, SQLite WAL Fencing & k<=3 Self-Repair
+  7. AST Mutation Testing & Mutant-Kill Adequacy Verifier (Tautological vs. Naive vs. Survivor-Guided)
 """
 
 from __future__ import annotations
@@ -31,7 +33,7 @@ def main() -> int:
     elapsed_ms = round((time.perf_counter() - t0) * 1000.0, 2)
 
     report = {
-        "benchmark_suite": "ForgeRuntime End-to-End Verification Suite",
+        "benchmark_suite": "ForgeRuntime v2 End-to-End Verification Suite",
         "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "environment": {
             "python_version": platform.python_version(),
@@ -46,6 +48,8 @@ def main() -> int:
             "cedar_sts_gate": demo_envelope["data"]["cedar_sts"],
             "sandbox_runtime_benchmark": demo_envelope["data"]["sandbox_bench"],
             "governed_lake_mcp": demo_envelope["data"]["lake_mcp"],
+            "transform_wave": demo_envelope["data"]["transform_wave"],
+            "mutant_verifier": demo_envelope["data"]["mutant_verifier"],
         },
     }
 
@@ -53,7 +57,7 @@ def main() -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
-    print("=== ForgeRuntime Verified Benchmark Summary ===")
+    print("=== ForgeRuntime v2 Verified Benchmark Summary ===")
     print(json.dumps(report["headline_metrics"], indent=2))
     print(f"\nSaved full benchmark artifact -> {out_path}")
     return 0

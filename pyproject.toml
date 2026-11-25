@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "forge-runtime"
-version = "0.1.0"
-description = "Context slicer, SQL column guard, and warm sandbox runner for coding and analytics agents"
+version = "2.0.0"
+description = "Multi-wave repository modernizer, AST mutant-kill test verifier, context slicer, warm sandbox, and SQL column guard"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

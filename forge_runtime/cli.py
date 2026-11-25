@@ -1,4 +1,4 @@
-"""ForgeRuntime JSON CLI (`forge_runtime/cli.py`).
+"""ForgeRuntime v2 JSON CLI (`forge_runtime/cli.py`).
 
 Supports live interactive execution from web backends or terminal workflows:
   python3 -m forge_runtime.cli --mode demo-all
@@ -7,6 +7,8 @@ Supports live interactive execution from web backends or terminal workflows:
   python3 -m forge_runtime.cli --mode cedar-sts
   python3 -m forge_runtime.cli --mode sandbox-bench
   python3 -m forge_runtime.cli --mode lake-mcp
+  python3 -m forge_runtime.cli --mode transform-wave
+  python3 -m forge_runtime.cli --mode mutant-verify
 """
 
 from __future__ import annotations
@@ -23,6 +25,8 @@ from .ast_graph import ASTRepoGraph, build_reference_enterprise_repo, run_ast_gr
 from .cedar_sts_gate import run_cedar_sts_demo, run_sandbox_benchmark
 from .governed_lake_mcp import CallerGovernanceContext, GovernedLakeMCPServer, run_governed_lake_demo
 from .model_router import run_model_router_benchmark
+from .mutant_verifier import run_mutant_verifier_benchmark
+from .transform_wave import run_transform_wave_benchmark
 
 
 SUPPORTED_MODES = (
@@ -32,6 +36,8 @@ SUPPORTED_MODES = (
     "cedar-sts",
     "sandbox-bench",
     "lake-mcp",
+    "transform-wave",
+    "mutant-verify",
 )
 
 
@@ -83,12 +89,20 @@ def execute_cli_mode(
         else:
             payload = run_governed_lake_demo()
 
+    elif mode == "transform-wave":
+        payload = run_transform_wave_benchmark()
+
+    elif mode == "mutant-verify":
+        payload = run_mutant_verifier_benchmark()
+
     elif mode == "demo-all":
         ast_res = run_ast_graph_benchmark(repo_path=repo_path or pkg_dir)
         router_res = run_model_router_benchmark()
         cedar_res = run_cedar_sts_demo()
         sandbox_res = run_sandbox_benchmark(iterations=iterations)
         lake_res = run_governed_lake_demo()
+        wave_res = run_transform_wave_benchmark()
+        mutant_res = run_mutant_verifier_benchmark()
         payload = {
             "headline_metrics": {
                 "ast_token_compression_vs_touched_files": ast_res["aggregate_metrics"][
@@ -122,12 +136,38 @@ def execute_cli_mode(
                 "lake_schema_contract_valid_execution_pct": lake_res[
                     "valid_pipeline_schema_contract_rate_pct"
                 ],
+                "transform_wave_count": wave_res["summary"]["waves_executed"],
+                "transform_cyclic_sccs_collapsed": wave_res["summary"]["cyclic_sccs_collapsed"],
+                "transform_scc_pass_at_1_pct": wave_res["summary"]["scc_pass_at_1_pct"],
+                "transform_scc_pass_at_3_repair_pct": wave_res["summary"][
+                    "scc_pass_at_3_after_repair_pct"
+                ],
+                "transform_crash_recovery_pct": wave_res["summary"]["crash_recovery_success_pct"],
+                "transform_duplicate_side_effects": wave_res["summary"]["duplicate_side_effects"],
+                "transform_stale_fencing_rejection_pct": wave_res["summary"][
+                    "stale_fencing_rejection_pct"
+                ],
+                "mutant_count_per_suite": mutant_res["summary"]["mutants_synthesized_per_run"],
+                "mutant_tautological_kill_score_pct": mutant_res["summary"][
+                    "tautological_kill_score_pct"
+                ],
+                "mutant_naive_llm_kill_score_pct": mutant_res["summary"][
+                    "naive_llm_kill_score_pct"
+                ],
+                "mutant_survivor_guided_kill_score_pct": mutant_res["summary"][
+                    "survivor_guided_kill_score_pct"
+                ],
+                "mutant_adequacy_gate_accuracy_pct": mutant_res["summary"][
+                    "adequacy_gate_accuracy_pct"
+                ],
             },
             "ast_graph": ast_res,
             "model_router": router_res,
             "cedar_sts": cedar_res,
             "sandbox_bench": sandbox_res,
             "lake_mcp": lake_res,
+            "transform_wave": wave_res,
+            "mutant_verifier": mutant_res,
         }
     else:
         raise ValueError(f"Unsupported mode: {mode}")
@@ -144,7 +184,7 @@ def execute_cli_mode(
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="forge-runtime",
-        description="ForgeRuntime: Sandboxed Coding & Governed Data-Lake Agent Platform CLI",
+        description="ForgeRuntime v2: Multi-Wave Modernization, Mutant Verifier & Governed Agent Runtime CLI",
     )
     parser.add_argument(
         "--mode",

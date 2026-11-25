@@ -75,6 +75,46 @@ class TestForgeRuntimeWebAPI(unittest.TestCase):
         self.assertFalse(aud_ssn["ok"])
         self.assertEqual(aud_ssn["error_code"], "COLUMN_ACL_VIOLATION")
 
+    def test_04_transform_wave_and_mutants_verify_routes(self) -> None:
+        st_w, wave = web_api.route_api_request(
+            "POST",
+            "/api/transform/wave",
+            {},
+            {"simulate_crash_after_wave": 1, "inject_first_attempt_bug": True},
+        )
+        self.assertEqual(st_w, 200)
+        self.assertTrue(wave["ok"])
+        self.assertEqual(wave["duplicate_side_effects"], 0)
+        self.assertEqual(wave["plan"]["cyclic_scc_count"], 1)
+
+        # GET /api/mutants/verify returns 200 with verified survivor_guided suite
+        st_m_get, mut_get = web_api.route_api_request("GET", "/api/mutants/verify", {}, {})
+        self.assertEqual(st_m_get, 200)
+        self.assertTrue(mut_get["ok"])
+        self.assertEqual(mut_get["adequacy_verdict"], "ADEQUATE_SUITE_VERIFIED")
+
+        # POST /api/mutants/verify rejects tautological suite and synthesizes survivor killers
+        st_m_post, mut_taut = web_api.route_api_request(
+            "POST",
+            "/api/mutants/verify",
+            {},
+            {"suite_id": "tautological", "synthesize_survivors": True},
+        )
+        self.assertEqual(st_m_post, 200)
+        self.assertFalse(mut_taut["ok"])
+        self.assertEqual(mut_taut["adequacy_verdict"], "REJECTED_TAUTOLOGICAL_SUITE")
+        self.assertTrue(mut_taut["survivor_refinement"]["refined_verification"]["ok"])
+
+        # Security block on malicious test code over public endpoint
+        st_sec, sec_out = web_api.route_api_request(
+            "POST",
+            "/api/mutants/verify",
+            {},
+            {"test_code": "import os\nos.system('whoami')"},
+        )
+        self.assertEqual(st_sec, 400)
+        self.assertEqual(sec_out["error_code"], "MUTANT_SANDBOX_SECURITY_BLOCKED")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -184,6 +184,16 @@ def handler(event: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
             }
         )
 
+    if raw_path in ("/api/transform/wave", "/api/mutants/verify"):
+        from .web_api import route_api_request
+
+        raw_body = event.get("body") or "{}"
+        if event.get("isBase64Encoded") and isinstance(raw_body, str):
+            raw_body = base64.b64decode(raw_body).decode("utf-8")
+        body_dict = json.loads(raw_body) if isinstance(raw_body, str) and raw_body.strip() else {}
+        status, payload = route_api_request(method, raw_path, dict(query_params), body_dict)
+        return _json_response(payload, status_code=status)
+
     if raw_path == "/api/run":
         try:
             if method == "GET":

@@ -48,6 +48,19 @@ from .governed_lake_mcp import (
     IcebergTableMetadata,
 )
 from .model_router import CodingTaskRequest, MultiModelRouter
+from .mutant_verifier import (
+    DEFAULT_MUTANT_TARGET_CODE,
+    MUTANT_SUITE_PRESETS,
+    MutantAdequacyVerifier,
+    MutantSecurityViolation,
+    run_mutant_verifier_benchmark,
+    synthesize_survivor_guided_tests,
+)
+from .transform_wave import (
+    FencedCheckpointStore,
+    WaveModernizationOrchestrator,
+    build_legacy_modernization_fixture,
+)
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 WEB_DIR = ROOT_DIR / "web"
@@ -471,6 +484,7 @@ class ForgeModernizationIDE:
         self.lake = StudioGovernedLakeServer()
         self._warm_pool: Optional[WarmSandboxPool] = None
         self.cold_executor = ColdSubprocessExecutor()
+        self.mutant_verifier = MutantAdequacyVerifier(max_workers=4)
 
     def _get_warm_pool(self) -> WarmSandboxPool:
         if self._warm_pool is None or self._warm_pool._closed:
@@ -585,7 +599,89 @@ class ForgeModernizationIDE:
             ],
             "iceberg_tables": self.lake.list_tables(include_columns=True)["tables"],
             "sql_personas": list(SQL_PERSONAS.values()),
+            "mutant_presets": [
+                {"suite_id": v["suite_id"], "label": v["label"]}
+                for v in MUTANT_SUITE_PRESETS.values()
+            ],
+            "mutant_default_target": DEFAULT_MUTANT_TARGET_CODE,
         }
+
+    def execute_transform_wave(
+        self,
+        *,
+        run_id: Optional[str] = None,
+        inject_first_attempt_bug: bool = True,
+        simulate_crash_after_wave: Optional[int] = 1,
+        use_bedrock: bool = False,
+        max_repair_attempts: int = 3,
+    ) -> Dict[str, Any]:
+        wal_path = os.environ.get("FORGERUNTIME_WAL_DB", "/tmp/forgeruntime_v2_checkpoints.sqlite3")
+        effective_run_id = run_id or f"wave-{int(time.time() * 1000)}"
+        store = FencedCheckpointStore(db_path=wal_path)
+        try:
+            orchestrator = WaveModernizationOrchestrator(
+                checkpoint_store=store,
+                max_repair_attempts=max_repair_attempts,
+                bedrock_caller=_call_bedrock_nova if use_bedrock else None,
+            )
+            return orchestrator.run_modernization(
+                run_id=effective_run_id,
+                worker_id="lambda-wave-worker-01",
+                inject_first_attempt_bug=inject_first_attempt_bug,
+                simulate_crash_after_wave=simulate_crash_after_wave,
+                use_bedrock=use_bedrock,
+            )
+        finally:
+            store.close()
+
+    def execute_mutant_verification(
+        self,
+        *,
+        suite_id: str = "survivor_guided",
+        target_code: Optional[str] = None,
+        test_code: Optional[str] = None,
+        synthesize_survivors: bool = False,
+        use_bedrock: bool = False,
+        max_mutants: int = 16,
+        min_kill_score_pct: float = 85.0,
+    ) -> Dict[str, Any]:
+        if suite_id == "compare_all" and not target_code and not test_code:
+            return run_mutant_verifier_benchmark()
+
+        preset = MUTANT_SUITE_PRESETS.get(suite_id, MUTANT_SUITE_PRESETS["survivor_guided"])
+        src = (target_code or DEFAULT_MUTANT_TARGET_CODE).strip()
+        tests = (test_code or preset["test_code"]).strip()
+
+        initial_report = self.mutant_verifier.verify_suite(
+            src,
+            tests,
+            max_mutants=max(4, min(24, int(max_mutants))),
+            min_kill_score_pct=float(min_kill_score_pct),
+        )
+        initial_report["suite_id"] = suite_id
+        initial_report["suite_label"] = preset["label"] if not test_code else "Custom Candidate Test Suite"
+
+        if synthesize_survivors and initial_report.get("survived_mutants", 0) > 0:
+            survivors = [o for o in initial_report.get("outcomes", []) if not o.get("killed")]
+            refined_tests, synth_engine = synthesize_survivor_guided_tests(
+                src,
+                tests,
+                survivors,
+                bedrock_caller=_call_bedrock_nova if use_bedrock else None,
+            )
+            refined_report = self.mutant_verifier.verify_suite(
+                src,
+                refined_tests,
+                max_mutants=max(4, min(24, int(max_mutants))),
+                min_kill_score_pct=float(min_kill_score_pct),
+            )
+            initial_report["survivor_refinement"] = {
+                "synthesis_engine": synth_engine,
+                "synthesized_test_code": refined_tests,
+                "refined_verification": refined_report,
+            }
+
+        return initial_report
 
     def synthesize_and_route_modernization(
         self,
@@ -843,7 +939,47 @@ def route_api_request(
             out["request_id"] = request_id
             return 200, out
 
+        if method in ("GET", "POST") and path == "/api/transform/wave":
+            params = {**query, **body}
+            raw_crash = params.get("simulate_crash_after_wave", 1)
+            crash_wave: Optional[int]
+            if raw_crash in (None, "", "none", "null", "false", False):
+                crash_wave = None
+            else:
+                crash_wave = int(raw_crash)
+            inject_bug = str(params.get("inject_first_attempt_bug", "true")).lower() not in ("false", "0", "no")
+            use_bedrock = str(params.get("use_bedrock", "false")).lower() in ("true", "1", "yes")
+            max_k = int(params.get("max_repair_attempts", 3))
+            out = IDE.execute_transform_wave(
+                run_id=str(params["run_id"]) if params.get("run_id") else None,
+                inject_first_attempt_bug=inject_bug,
+                simulate_crash_after_wave=crash_wave,
+                use_bedrock=use_bedrock,
+                max_repair_attempts=max_k,
+            )
+            out["request_id"] = request_id
+            return 200, out
+
+        if method in ("GET", "POST") and path == "/api/mutants/verify":
+            params = {**query, **body}
+            suite_id = str(params.get("suite_id") or "survivor_guided")
+            synth = str(params.get("synthesize_survivors", "false")).lower() in ("true", "1", "yes")
+            use_bedrock = str(params.get("use_bedrock", "false")).lower() in ("true", "1", "yes")
+            out = IDE.execute_mutant_verification(
+                suite_id=suite_id,
+                target_code=str(params["target_code"]) if params.get("target_code") else None,
+                test_code=str(params["test_code"]) if params.get("test_code") else None,
+                synthesize_survivors=synth,
+                use_bedrock=use_bedrock,
+                max_mutants=int(params.get("max_mutants") or 16),
+                min_kill_score_pct=float(params.get("min_kill_score_pct") or 85.0),
+            )
+            out["request_id"] = request_id
+            return 200, out
+
         return 404, {"error": f"Unknown API route: {method} {path}"}
+    except MutantSecurityViolation as exc:
+        return 400, {"ok": False, "error_code": "MUTANT_SANDBOX_SECURITY_BLOCKED", "error": str(exc)}
     except KeyError as exc:
         return 404, {"error": str(exc)}
     except Exception as exc:
