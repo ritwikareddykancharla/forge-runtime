@@ -3,439 +3,318 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="ForgeRuntime: 2-Hop AST Repository Context Slicer (-83.2% prompt tokens, 100% recall), 0.63ms Pre-Warmed Sandbox Runner (10/10 escape containment), Multi-Model Bedrock Router, and Cedar-Governed Apache Iceberg SQL Proxy.">
-  <meta name="theme-color" content="#f2f5fa">
-  <title>ForgeRuntime — Code Context Slicer, Warm Sandbox &amp; Governed Iceberg Runtime | Ritwika Kancharla</title>
-  <script>
-    (function () {
-      var h = location.hash || "";
-      var dark = h.indexOf("theme=dark") !== -1 || (h.indexOf("theme=light") === -1 && matchMedia("(prefers-color-scheme: dark)").matches);
-      document.documentElement.dataset.theme = dark ? "dark" : "light";
-    })();
-  </script>
+  <title>ForgeRuntime — Agentic Code Modernization, Warm Sandbox &amp; Governed Iceberg IDE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
-<body id="top">
-<header class="site"><div class="bar">
-  <a class="brand" href="https://ritwikareddykancharla.github.io"><span class="mark">RK</span><span class="name">Ritwika Kancharla</span></a>
-  <nav aria-label="Site">
-    <a href="#live-system" class="on">01 Live IDE</a>
-    <a href="#problem">02 Problem</a>
-    <a href="#architecture">03 Architecture</a>
-    <a href="#results">04 Benchmarks</a>
-    <a href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener">GitHub</a>
-  </nav>
-  <button class="theme" type="button" aria-label="Switch between light and dark theme">
-    <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg>
-    <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
-  </button>
-  <a class="btn contact" href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener">Source Repo</a>
-</div></header>
-
-<main><article class="demo" style="--accent:#35527e"><div class="wrap">
-  <a class="crumb" href="https://ritwikareddykancharla.github.io/#projects">&larr; All projects</a>
-
-  <header class="post-head">
-    <p class="eyebrow">ForgeRuntime &middot; Agentic Code Modernization, Warm Sandbox &amp; Governed Iceberg IDE</p>
-    <h1 class="post-title">2-Hop AST Repository Slicing, Pre-Warmed Sandbox Isolation &amp; Column-Governed Apache Iceberg SQL</h1>
-    <p class="meta">
-      <span>Ritwika Kancharla</span>
-      <span>Built for AWS Transform &middot; Velocity Labs &middot; AWS Agentic AI &middot; Forward Deployed Engineering</span>
-      <span>Live on AWS CloudFront + Bedrock (`us.amazon.nova-lite-v1:0`)</span>
-      <span><a href="/api/health" target="_blank" rel="noopener">`/api/health` Telemetry</a></span>
-      <span><a href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener">GitHub (`ritwikareddykancharla/forge-runtime`)</a></span>
-    </p>
-
-    <div class="stats">
-      <div>
-        <b>-83.2% Tokens (5.97x)</b>
-        <span>2-hop AST call/import slice (`734` vs `4,382` full-repo tokens) with `100.0%` neighborhood recall</span>
-      </div>
-      <div>
-        <b>0.63 ms Warm Pool</b>
-        <span>Pre-warmed `python3 -I` pipe dispatch vs `38.7 ms` cold subprocess (`98.4%` lower startup)</span>
-      </div>
-      <div>
-        <b>10 / 10 Escapes Blocked</b>
-        <span>Blocks `os.system`, `/etc/passwd`, `socket`, `__subclasses__` &amp; infinite CPU spin</span>
-      </div>
-      <div>
-        <b>100% PII/PCI SQL Block</b>
-        <span>SQLite C-engine `set_authorizer` blocks `email`, `ssn` &amp; card tokens before query execution</span>
-      </div>
-    </div>
-  </header>
-
-  <div class="post-grid">
-    <aside class="side" aria-label="Contents"><div class="side-in">
-      <p class="side-k"><span>Contents</span><span class="side-pct" aria-hidden="true">0%</span></p>
-      <div class="side-bar" aria-hidden="true"><i></i></div>
-      <ol class="side-list">
-        <i class="side-ind" aria-hidden="true"></i>
-        <li><a href="#live-system"><span class="sn">01</span><span>Live 3-Pane IDE</span></a></li>
-        <li><a href="#problem"><span class="sn">02</span><span>Problem &amp; AWS Alignment</span></a></li>
-        <li><a href="#architecture"><span class="sn">03</span><span>System Architecture</span></a></li>
-        <li><a href="#results"><span class="sn">04</span><span>Measured Benchmarks</span></a></li>
-      </ol>
-      <a class="side-top" href="#top">Back to top</a>
-    </div></aside>
-
-    <div class="post-body">
-      <div class="tldr">
-        <p class="tk">Abstract</p>
-        <p><strong>ForgeRuntime</strong> eliminates four structural bottlenecks in enterprise code-modernization and analytics agents: slicing multi-file Python repositories down to exact 2-hop caller/callee AST signatures (<strong>-83.2% prompt tokens</strong> at <strong>100% recall</strong>), routing tasks by cyclomatic complexity and latency SLA across Bedrock tiers (<strong>-59.7% p50 latency</strong>), executing refactored code inside pre-warmed <code>python3 -I</code> worker pipes (<strong>0.63 ms</strong> warm vs <strong>38.7 ms</strong> cold, <strong>10/10 escape vectors blocked</strong>), and enforcing column-level PII/PCI permissions at SQLite compile time before any Apache Iceberg table row is read.</p>
+<body>
+  <div class="ide-shell">
+    <!-- Top Desktop IDE Window Chrome -->
+    <header class="ide-topbar">
+      <div class="win-left">
+        <div class="traffic-dots" aria-hidden="true">
+          <span class="t-dot r"></span>
+          <span class="t-dot y"></span>
+          <span class="t-dot g"></span>
+        </div>
+        <div class="ide-brand-title">
+          <span class="ide-brand-name">FORGERUNTIME</span>
+          <span class="ide-workspace-tag">forge-enterprise-billing/</span>
+        </div>
       </div>
 
-      <!-- =============================================================== -->
-      <!-- 01 LIVE INTERACTIVE 3-PANE MODERNIZATION & RUNTIME IDE          -->
-      <!-- =============================================================== -->
-      <h2 id="live-system"><span class="num">01</span>Live Interactive 3-Pane Modernization &amp; Runtime IDE</h2>
-      <p>Click any guided workflow below or switch directly across the three studio perspectives: <strong>2-Hop AST Call-Graph Slicer</strong>, <strong>Bedrock Nova Code Modernization + Warm Sandbox Runner</strong>, and <strong>Cedar-Governed Apache Iceberg SQL Proxy</strong>.</p>
+      <div class="cmd-run-strip" aria-label="1-Click Guided IDE Workflows">
+        <button type="button" class="cmd-btn" id="guide-ast-slice">
+          <span class="kbd">&#8984;1</span>
+          <span>2-Hop AST Slice (-83.2% tok)</span>
+        </button>
+        <button type="button" class="cmd-btn violet" id="guide-bedrock-modernize">
+          <span class="kbd">&#8984;2</span>
+          <span>Bedrock Nova Modernize + Run Sandbox</span>
+        </button>
+        <button type="button" class="cmd-btn rose" id="guide-escape-test">
+          <span class="kbd">&#8984;3</span>
+          <span>Probe 10/10 Sandbox Escapes</span>
+        </button>
+        <button type="button" class="cmd-btn" id="guide-iceberg-pii">
+          <span class="kbd">&#8984;4</span>
+          <span>Test Iceberg SQL PII Gate</span>
+        </button>
+      </div>
 
-      <figure class="fig wide">
-        <div class="plate">
-          <!-- 1-Click Guided Workflows -->
-          <div class="ide-guided-strip">
-            <span class="ide-guided-k">1-Click Guided Workflows:</span>
-            <button type="button" class="btn sm" id="guide-ast-slice">1. Slice `settlement.py` 2-Hop AST (-83.2% Tokens)</button>
-            <button type="button" class="btn sm signal" id="guide-bedrock-modernize">2. Modernize via Bedrock Nova + Run Warm Sandbox</button>
-            <button type="button" class="btn sm danger" id="guide-escape-test">3. Test Sandbox Escape (`os.system` / `/etc/passwd` &rarr; 10/10)</button>
-            <button type="button" class="btn sm" id="guide-iceberg-pii">4. Block `email`/`ssn` PII vs Allow ROAS SQL</button>
+      <div class="win-left">
+        <button type="button" class="cmd-btn" id="btn-open-arch">Architecture</button>
+        <a class="cmd-btn" href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener">GitHub &nearr;</a>
+      </div>
+    </header>
+
+    <!-- Main Workbench: Activity Bar + Sidebar + Editor/Terminal Stack -->
+    <div class="ide-workbench">
+      <!-- Left Activity Icon Bar -->
+      <nav class="activity-bar" aria-label="IDE Perspectives">
+        <button type="button" class="act-icon active" id="act-ast" title="AST Call-Graph Slicer">
+          <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M8.5 7.5L11 15.5M15.5 7.5L13 15.5"/></svg>
+        </button>
+        <button type="button" class="act-icon" id="act-sandbox" title="Bedrock Modernizer + Warm Sandbox">
+          <svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </button>
+        <button type="button" class="act-icon" id="act-lake" title="Governed Iceberg SQL Console">
+          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+        </button>
+      </nav>
+
+      <!-- Left Sidebar Explorer (Contextual + Repo Tree) -->
+      <aside class="ide-sidebar">
+        <!-- Sidebar A: Multi-File Python Repo Explorer -->
+        <div id="sb-ast" style="display:flex;flex-direction:column;height:100%;">
+          <div class="sb-head">
+            <span>EXPLORER: BILLING REPO</span>
+            <span id="repo-files-count">6 files</span>
           </div>
+          <div class="sb-scroll">
+            <span class="sb-label">AST Call/Import Hop Budget</span>
+            <div class="hop-pills" id="hop-buttons">
+              <button type="button" class="hop-pill" data-hops="1">1 Hop</button>
+              <button type="button" class="hop-pill active" data-hops="2">2 Hops</button>
+              <button type="button" class="hop-pill" data-hops="3">3 Hops</button>
+            </div>
+            <span class="sb-label">Click Symbol to Slice</span>
+            <div id="repo-tree"></div>
+          </div>
+        </div>
 
-          <!-- 3 Studio Perspectives -->
-          <div class="ide-perspectives">
-            <button type="button" class="persp-btn active" id="tab-ast">
-              <span class="persp-k">Perspective 01 &middot; ASTRepoGraph</span>
-              <span class="persp-t">Multi-File Repo Explorer &amp; 2-Hop AST Slicer</span>
+        <!-- Sidebar B: Modernization Tasks & Adversarial Sandbox Probes -->
+        <div id="sb-sandbox" class="hidden" style="display:flex;flex-direction:column;height:100%;">
+          <div class="sb-head">
+            <span>TRANSFORM &amp; SANDBOX</span>
+            <span style="color:var(--diff-green);">0.63ms</span>
+          </div>
+          <div class="sb-scroll">
+            <span class="sb-label">1. Python Modernization Tasks</span>
+            <div id="mod-task-list"></div>
+
+            <label class="sb-label" for="sla-select" style="margin-top:10px;">2. Latency SLA (`MultiModelRouter`)</label>
+            <select id="sla-select" class="ide-select" style="margin-bottom:12px;">
+              <option value="">Unconstrained (Complexity Tier)</option>
+              <option value="340">&le; 340 ms p95 (&rarr; Nova Lite)</option>
+              <option value="1500">&le; 1,500 ms p95</option>
+            </select>
+
+            <span class="sb-label">3. Sandbox Escape Probes</span>
+            <button type="button" class="cmd-btn rose" id="btn-test-single-escape" style="width:100%;justify-content:center;margin-bottom:6px;">
+              Probe `os.system` + `/etc/passwd`
             </button>
-            <button type="button" class="persp-btn" id="tab-sandbox">
-              <span class="persp-k">Perspective 02 &middot; Bedrock + WarmSandboxPool</span>
-              <span class="persp-t">Live Code Modernization &amp; 0.63ms Sandbox Runner</span>
-            </button>
-            <button type="button" class="persp-btn" id="tab-lake">
-              <span class="persp-k">Perspective 03 &middot; GovernedLakeMCPServer</span>
-              <span class="persp-t">Cedar-Governed Apache Iceberg SQL Proxy</span>
+            <button type="button" class="cmd-btn" id="btn-run-all-10-escapes" style="width:100%;justify-content:center;">
+              Run All 10 Escape Vectors (10/10)
             </button>
           </div>
+        </div>
 
-          <!-- ============================================================= -->
-          <!-- PANE 1: MULTI-FILE REPO EXPLORER & 2-HOP AST SLICER           -->
-          <!-- ============================================================= -->
-          <div id="view-ast" class="three-pane">
-            <!-- Left: Multi-File Enterprise Billing Repo -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>Repo Explorer</span>
-                <span id="repo-files-count">6 Files</span>
-              </div>
-              <div class="bp-pane-body">
-                <span class="bp-label">Hop Depth (`pack_minimal_context`)</span>
-                <div class="hop-row" id="hop-buttons">
-                  <button type="button" class="hop-btn" data-hops="1">1 Hop</button>
-                  <button type="button" class="hop-btn active" data-hops="2">2 Hops</button>
-                  <button type="button" class="hop-btn" data-hops="3">3 Hops</button>
-                </div>
-                <span class="bp-label">Click Symbol (`settlement.py`, `quota_guard.py`...)</span>
-                <div id="repo-tree" class="repo-tree"></div>
-              </div>
+        <!-- Sidebar C: Governance Persona & Apache Iceberg Catalog -->
+        <div id="sb-lake" class="hidden" style="display:flex;flex-direction:column;height:100%;">
+          <div class="sb-head">
+            <span>ICEBERG LAKE CATALOG</span>
+            <span style="color:var(--cyan);">4 tables</span>
+          </div>
+          <div class="sb-scroll">
+            <label class="sb-label" for="sql-persona-select">Caller Governance Persona</label>
+            <select id="sql-persona-select" class="ide-select"></select>
+            <div id="persona-clearance-note" class="mono" style="font-size:10.5px;color:var(--fg-dim);margin:6px 0 12px;"></div>
+
+            <span class="sb-label">Tables &amp; Column Sensitivity</span>
+            <div id="iceberg-schema-list"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Editor Tabs + Center/Right Stage + Bottom Docked Terminal -->
+      <div class="editor-terminal-stack">
+        <!-- Top Editor Tab Bar -->
+        <div class="buffer-tabs" role="tablist">
+          <button type="button" class="buf-tab active" id="tab-ast">
+            <span class="buf-dot" style="background:var(--cyan);"></span>
+            <span>AST Call-Graph Slicer</span>
+            <span class="buf-badge">-83.2% tok</span>
+          </button>
+          <button type="button" class="buf-tab" id="tab-sandbox">
+            <span class="buf-dot" style="background:var(--violet);"></span>
+            <span>Bedrock Modernizer + Warm Sandbox</span>
+            <span class="buf-badge">0.63ms</span>
+          </button>
+          <button type="button" class="buf-tab" id="tab-lake">
+            <span class="buf-dot" style="background:var(--amber);"></span>
+            <span>Governed Iceberg SQL Console</span>
+            <span class="buf-badge">PII Gate</span>
+          </button>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- EDITOR TAB 1: AST CALL-GRAPH SLICER                             -->
+        <!-- =============================================================== -->
+        <section id="view-ast" class="editor-stage">
+          <div class="center-buffer">
+            <div class="buffer-toolbar">
+              <span>Full Repo: <strong style="color:var(--rose);" id="stat-full-tokens">4,382 tok (5.97x bloated)</strong></span>
+              <span>Active Slice: <strong style="color:var(--diff-green);" id="stat-sliced-tokens">455 tok (-89.6%)</strong></span>
+              <span>Benchmark Mean: <strong style="color:var(--cyan);" id="stat-bench-agg">-83.2% tokens &middot; 100.0% recall</strong></span>
             </div>
 
-            <!-- Center: Side-by-Side Full Repo Bloat vs 2-Hop AST Slice -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>Side-by-Side Context Diff: Raw Repo vs. 2-Hop AST Slice</span>
-                <span id="ast-recall-badge">100.0% Recall</span>
+            <div class="dual-diff-buffers">
+              <div class="diff-pane">
+                <div class="diff-pane-head rose">
+                  <span>Naive Full-Repo Context (6 Files &middot; Unrelated Bloat)</span>
+                  <span id="left-tok-pill">4,382 tok</span>
+                </div>
+                <pre class="code-scroll bloated" id="raw-repo-code"></pre>
               </div>
-              <div class="comp-metrics">
-                <div class="comp-cell">
-                  <span>Full Repo Stuffing</span>
-                  <b style="color:var(--bad);" id="stat-full-tokens">4,382 tok (5.97x Bloated)</b>
+              <div class="diff-pane">
+                <div class="diff-pane-head green">
+                  <span id="right-slice-title">2-Hop AST Slice: preview_settlement_headroom()</span>
+                  <span id="right-tok-pill">455 tok</span>
                 </div>
-                <div class="comp-cell">
-                  <span>Selected Symbol Slice</span>
-                  <b style="color:var(--ok);" id="stat-sliced-tokens">455 tok (-89.6%)</b>
-                </div>
-                <div class="comp-cell">
-                  <span>3-Query Benchmark Mean</span>
-                  <b style="color:var(--cobalt);" id="stat-bench-agg">-83.2% (734 vs 4,382 tok)</b>
-                </div>
-              </div>
-              <div class="dual-editors">
-                <div class="ed-col">
-                  <div class="ed-subhead bad">
-                    <span>Naive Full-Repo Context (Unrelated Bloat)</span>
-                    <span id="left-tok-pill">4,382 tok</span>
-                  </div>
-                  <pre class="code-pane dimmed" id="raw-repo-code"></pre>
-                </div>
-                <div class="ed-col">
-                  <div class="ed-subhead ok">
-                    <span id="right-slice-title">2-Hop AST Slice (Hop 0 + Contracts)</span>
-                    <span id="right-tok-pill">455 tok</span>
-                  </div>
-                  <pre class="code-pane" id="sliced-ast-code"></pre>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right: Call/Inherits Neighborhood & Handoff -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>Call &amp; Inherits Graph</span>
-                <span id="graph-edges-badge">Edges</span>
-              </div>
-              <div class="bp-pane-body">
-                <div class="focal-box" id="focal-symbol-card"></div>
-                <span class="bp-label">Included Hop Neighborhood</span>
-                <div id="hop-nodes-list" class="hop-list"></div>
-                <button type="button" class="btn sm primary" id="btn-handoff-modernize" style="width:100%;">
-                  Modernize Sliced Symbol in Sandbox &rarr;
-                </button>
+                <pre class="code-scroll" id="sliced-ast-code"></pre>
               </div>
             </div>
           </div>
 
-          <!-- ============================================================= -->
-          <!-- PANE 2: LIVE BEDROCK MODERNIZATION & WARM SANDBOX RUNNER      -->
-          <!-- ============================================================= -->
-          <div id="view-sandbox" class="three-pane hidden">
-            <!-- Left: Tasks + Escape Probes -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>Modernization &amp; Escapes</span>
-              </div>
-              <div class="bp-pane-body">
-                <span class="bp-label">1. AWS Transform Refactor Tasks</span>
-                <div id="mod-task-list" class="task-stack"></div>
+          <aside class="right-inspector">
+            <span class="sb-label">Focal Symbol &amp; Recall</span>
+            <div class="insp-card" id="focal-symbol-card"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span class="sb-label" style="margin:0;">Call / Inherits Graph</span>
+              <span class="mono" style="font-size:10px;color:var(--fg-dim);" id="graph-edges-badge">0 edges</span>
+            </div>
+            <div id="hop-nodes-list" style="flex:1;overflow-y:auto;margin-bottom:8px;"></div>
+            <button type="button" class="cmd-btn primary" id="btn-handoff-modernize" style="width:100%;justify-content:center;">
+              Open in Bedrock Modernizer &rarr;
+            </button>
+          </aside>
+        </section>
 
-                <label class="bp-label" for="sla-select">Latency SLA Cap (`MultiModelRouter`)</label>
-                <select id="sla-select" class="bp-select" style="margin-bottom:12px;">
-                  <option value="">Unconstrained (Complexity Tier)</option>
-                  <option value="340">Strict &le;340ms p95 (&rarr; Nova Lite)</option>
-                  <option value="1500">Standard &le;1,500ms p95</option>
-                </select>
-
-                <span class="bp-label">2. Adversarial Sandbox Probes</span>
-                <button type="button" class="btn sm danger" id="btn-test-single-escape" style="width:100%;margin-bottom:6px;">
-                  Test Escape (`os.system` / `/etc/passwd`)
-                </button>
-                <button type="button" class="btn sm" id="btn-run-all-10-escapes" style="width:100%;">
-                  Run All 10 Escape Vectors (10/10)
-                </button>
+        <!-- =============================================================== -->
+        <!-- EDITOR TAB 2: BEDROCK MODERNIZER + WARM SANDBOX                 -->
+        <!-- =============================================================== -->
+        <section id="view-sandbox" class="editor-stage hidden">
+          <div class="center-buffer">
+            <div class="buffer-toolbar">
+              <span>Router: <strong style="color:var(--cyan);" id="rt-model-id">bedrock/amazon.nova-lite-v1</strong> (score <span id="rt-complexity">0.42</span>)</span>
+              <div style="display:flex;gap:6px;">
+                <button type="button" class="cmd-btn violet" id="btn-bedrock-synthesize">&#10024; Synthesize via Bedrock Nova</button>
+                <button type="button" class="cmd-btn primary" id="btn-exec-sandbox">&#9654; Run in Warm Sandbox</button>
               </div>
             </div>
-
-            <!-- Center: Live Editable Python Code + Bedrock Synthesis -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>Python Modernization Editor</span>
-                <div style="display:flex;gap:6px;">
-                  <button type="button" class="btn sm signal" id="btn-bedrock-synthesize">Synthesize via Bedrock Nova</button>
-                  <button type="button" class="btn sm primary" id="btn-exec-sandbox">Run Warm Sandbox</button>
-                </div>
-              </div>
-              <div class="router-bar">
-                <span>Model: <strong id="rt-model-id">bedrock/amazon.nova-lite-v1</strong></span>
-                <span>Complexity: <strong id="rt-complexity">0.42</strong></span>
-                <span style="color:var(--ok);">-59.7% p50 Latency &middot; -35.9% Spend</span>
-              </div>
-              <textarea id="python-editor" class="code-textarea" spellcheck="false" aria-label="Python Modernization Code Editor"></textarea>
-              <div class="explain-strip" id="bedrock-explanation">Select a modernization task and click "Synthesize via Bedrock Nova" (or edit Python directly above) and run it inside the isolated `python3 -I` WarmSandboxPool.</div>
-            </div>
-
-            <!-- Right: Warm vs Cold Latency & Containment Output -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>WarmSandboxPool Console</span>
-                <span id="sbx-status-pill">READY</span>
-              </div>
-              <div class="bp-pane-body">
-                <div class="lat-box">
-                  <div class="lat-line">
-                    <span>Warm Pool (`python3 -I` pipe)</span>
-                    <strong style="color:var(--ok);" id="lat-warm-val">0.63 ms</strong>
-                  </div>
-                  <div class="lat-meter"><i id="lat-warm-bar" style="width:6%;background:var(--ok);"></i></div>
-                  <div class="lat-line">
-                    <span>Cold Subprocess (`subprocess.run`)</span>
-                    <strong style="color:var(--signal);" id="lat-cold-val">38.70 ms</strong>
-                  </div>
-                  <div class="lat-meter"><i id="lat-cold-bar" style="width:100%;background:var(--signal);"></i></div>
-                  <div id="lat-speedup-caption" style="color:var(--soft);">61.9x faster p50 dispatch vs cold interpreter spawn.</div>
-                </div>
-
-                <span class="bp-label">Execution Output / AST Security Gate</span>
-                <pre class="console-dump" id="sbx-output-pre">Click "Run Warm Sandbox" to execute live.</pre>
-
-                <div id="escape-matrix-wrap" class="hidden">
-                  <span class="bp-label" style="margin-top:10px;">10-Vector Containment Proof</span>
-                  <div id="escape-matrix-list" class="esc-list"></div>
-                </div>
-              </div>
-            </div>
+            <textarea id="python-editor" class="code-editor-area" spellcheck="false" aria-label="Python Modernization Buffer"></textarea>
           </div>
 
-          <!-- ============================================================= -->
-          <!-- PANE 3: CEDAR-GOVERNED APACHE ICEBERG SQL PROXY               -->
-          <!-- ============================================================= -->
-          <div id="view-lake" class="three-pane hidden">
-            <!-- Left: Persona & Iceberg Schemas -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>Caller Persona &amp; Catalog</span>
-              </div>
-              <div class="bp-pane-body">
-                <label class="bp-label" for="sql-persona-select">Active Governance Identity</label>
-                <select id="sql-persona-select" class="bp-select"></select>
-                <div id="persona-clearance-note" style="font:400 10px/1.45 var(--mono);color:var(--soft);margin:6px 0 12px;"></div>
-
-                <span class="bp-label">Iceberg Tables (`customer_ads`, `ads_campaigns`...)</span>
-                <div id="iceberg-schema-list" class="schema-stack"></div>
-              </div>
+          <aside class="right-inspector">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span class="sb-label" style="margin:0;">Warm Pool vs Cold Spawn</span>
+              <span class="mono" style="font-size:10.5px;color:var(--diff-green);" id="sbx-status-pill">READY</span>
             </div>
 
-            <!-- Center: SQL Editor + Presets + Bedrock NL2SQL -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>Governed Iceberg SQL Workbench</span>
-                <button type="button" class="btn sm primary" id="btn-run-sql">Validate &amp; Run SQL</button>
+            <div class="insp-card">
+              <div style="display:flex;justify-content:space-between;">
+                <span>WarmSandboxPool (`python3 -I`)</span>
+                <strong style="color:var(--diff-green);" id="lat-warm-val">0.63 ms</strong>
               </div>
-              <div class="sql-presets">
-                <button type="button" class="btn sm sql-preset-chip" data-sql="SELECT channel, partner_tier, COUNT(*) AS accounts, ROUND(SUM(spend_usd), 2) AS total_spend_usd, ROUND(AVG(roas), 2) AS avg_roas FROM customer_ads GROUP BY channel, partner_tier ORDER BY avg_roas DESC">
-                  ✓ Aggregate ROAS (`customer_ads`)
-                </button>
-                <button type="button" class="btn sm danger sql-preset-chip" data-sql="SELECT account_id, email, ssn, spend_usd FROM customer_ads LIMIT 5">
-                  ✗ Read `email, ssn` PII (`customer_ads`)
-                </button>
-                <button type="button" class="btn sm danger sql-preset-chip" data-sql="SELECT * FROM customer_billing LIMIT 5">
-                  ✗ `SELECT *` Wildcard (`customer_billing`)
-                </button>
-                <button type="button" class="btn sm danger sql-preset-chip" data-sql="DROP TABLE ads_campaigns">
-                  ✗ `DROP TABLE` Mutation
-                </button>
+              <div class="speed-bar"><i id="lat-warm-bar" style="width:6%;background:var(--diff-green);"></i></div>
+
+              <div style="display:flex;justify-content:space-between;">
+                <span>ColdSubprocessExecutor</span>
+                <strong style="color:var(--amber);" id="lat-cold-val">38.70 ms</strong>
               </div>
+              <div class="speed-bar"><i style="width:100%;background:var(--amber);"></i></div>
+              <div id="lat-speedup-caption" style="color:var(--fg-dim);font-size:10px;">61.9x faster benchmark p50 dispatch.</div>
+            </div>
 
-              <form id="nl2sql-form" class="nl-form">
-                <input type="text" id="nl2sql-input" class="bp-input" placeholder="Ask Bedrock Nova in plain English (e.g. 'Total spend and clicks by channel in ads_campaigns')..." aria-label="Natural language to Iceberg SQL">
-                <button type="submit" class="btn sm signal">Nova SQL</button>
-              </form>
+            <span class="sb-label">Bedrock Synthesis Notes</span>
+            <div class="insp-card" id="bedrock-explanation" style="white-space:pre-wrap;max-height:130px;overflow:auto;">Click "Synthesize via Bedrock Nova" or edit Python directly and run inside WarmSandboxPool.</div>
 
-              <textarea id="sql-editor" class="code-textarea" style="height:145px;" spellcheck="false" aria-label="SQL Query Editor">SELECT channel, partner_tier, COUNT(*) AS accounts, ROUND(SUM(spend_usd), 2) AS total_spend_usd, ROUND(AVG(roas), 2) AS avg_roas
+            <div id="escape-matrix-wrap" class="hidden">
+              <span class="sb-label">10/10 Escape Containment</span>
+              <div id="escape-matrix-list"></div>
+            </div>
+          </aside>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- EDITOR TAB 3: GOVERNED ICEBERG SQL CONSOLE                      -->
+        <!-- =============================================================== -->
+        <section id="view-lake" class="editor-stage hidden">
+          <div class="center-buffer">
+            <div class="buffer-toolbar">
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                <button type="button" class="cmd-btn sql-preset-chip" data-sql="SELECT channel, partner_tier, COUNT(*) AS accounts, ROUND(SUM(spend_usd), 2) AS total_spend_usd, ROUND(AVG(roas), 2) AS avg_roas FROM customer_ads GROUP BY channel, partner_tier ORDER BY avg_roas DESC">&#10003; Channel ROAS (`customer_ads`)</button>
+                <button type="button" class="cmd-btn rose sql-preset-chip" data-sql="SELECT account_id, email, ssn, spend_usd FROM customer_ads LIMIT 5">&#10007; Read `email, ssn` PII</button>
+                <button type="button" class="cmd-btn rose sql-preset-chip" data-sql="SELECT * FROM customer_billing LIMIT 5">&#10007; `SELECT *` Wildcard</button>
+                <button type="button" class="cmd-btn rose sql-preset-chip" data-sql="DROP TABLE ads_campaigns">&#10007; `DROP TABLE`</button>
+              </div>
+              <button type="button" class="cmd-btn primary" id="btn-run-sql">&#9654; Run Governed SQL</button>
+            </div>
+
+            <form id="nl2sql-form" style="display:flex;gap:6px;padding:6px 12px;background:var(--bg-chrome);border-bottom:1px solid var(--border);">
+              <input type="text" id="nl2sql-input" class="ide-input" placeholder="Ask Bedrock Nova in plain English (e.g. 'Total spend and clicks by channel in ads_campaigns')..." aria-label="Natural language to Iceberg SQL">
+              <button type="submit" class="cmd-btn violet">Nova NL2SQL</button>
+            </form>
+
+            <textarea id="sql-editor" class="code-editor-area" style="flex:0 0 118px;border-bottom:1px solid var(--border);" spellcheck="false" aria-label="Governed Iceberg SQL Buffer">SELECT channel, partner_tier, COUNT(*) AS accounts, ROUND(SUM(spend_usd), 2) AS total_spend_usd, ROUND(AVG(roas), 2) AS avg_roas
 FROM customer_ads
 GROUP BY channel, partner_tier
 ORDER BY avg_roas DESC</textarea>
 
-              <div id="sql-result-table-wrap" style="padding:10px 12px;overflow:auto;"></div>
-            </div>
-
-            <!-- Right: 4-Gate Verifier -->
-            <div class="bp-pane">
-              <div class="bp-pane-head">
-                <span>4-Gate SQL Verifier</span>
-                <span id="sql-verdict-badge">READY</span>
-              </div>
-              <div class="bp-pane-body">
-                <div id="sql-gates-checklist"></div>
-                <span class="bp-label" style="margin-top:10px;">C-Authorizer &amp; Query Plan Trace</span>
-                <pre class="console-dump" id="sql-audit-pre">Run any SQL query to inspect pre-execution PII/PCI column checks &amp; sovereign RLS CTEs.</pre>
-              </div>
-            </div>
+            <div id="sql-result-table-wrap" class="sql-grid-area"></div>
           </div>
-        </div>
-        <figcaption><b>Plate 1.</b> Live ForgeRuntime 3-pane modernization studio executing real `ASTRepoGraph` 2-hop slicing, `MultiModelRouter` + Amazon Bedrock (`us.amazon.nova-lite-v1:0`) refactoring, `WarmSandboxPool` execution (`10/10` escape containment), and `GovernedLakeMCPServer` column-ACL SQL pre-validation.</figcaption>
-      </figure>
 
-      <!-- =============================================================== -->
-      <!-- 02 PROBLEM & AWS TEAM ALIGNMENT                                 -->
-      <!-- =============================================================== -->
-      <h2 id="problem"><span class="num">02</span>Problem &amp; AWS Team Alignment</h2>
-      <p>Built directly for agentic modernization, developer runtime, and governed analytics workloads (<strong>AWS Transform</strong>, <strong>Velocity Labs</strong>, <strong>AWS Agentic AI</strong>, and <strong>Forward Deployed Engineering</strong>):</p>
-      <ul>
-        <li><strong>AST Call-Graph Slicing vs. Raw File Chunking (`forge_runtime/ast_graph.py`):</strong> Sending entire repositories burns <code>4,382</code> tokens per turn on unrelated methods, while naive single-file truncation captures only <code>20.5%</code> of cross-file dependencies. Indexing directed <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges emits full focal AST bodies (`Hop 0`) plus typed signatures (`Hop 1..2`), cutting prompt tokens by <strong>83.2%</strong> (<strong>5.97x</strong> compression) at <strong>100.0%</strong> 2-hop recall.</li>
-        <li><strong>Pre-Warmed OS Worker Pool vs. Cold Subprocesses (`forge_runtime/cedar_sts_gate.py`):</strong> Keeping isolated <code>python3 -I</code> workers alive over persistent pipes lowers p50 dispatch from <strong>38.7 ms to 0.63 ms</strong> (<strong>61.9x</strong> faster) while combining pre-flight AST validation, safe builtins, import allowlists, and a timeout watchdog to block <strong>10/10 escape vectors</strong>.</li>
-        <li><strong>Compile-Time PII/PCI SQL Governance (`forge_runtime/governed_lake_mcp.py`):</strong> Analytics agents routinely emit <code>SELECT *</code> or join sensitive customer columns. Registering SQLite's C-level <code>set_authorizer</code> (`SQLITE_READ`) alongside sovereign region CTE injection blocks unauthorized reads of <code>email</code>, <code>ssn</code>, and <code>raw_card_token</code> before execution while allowing aggregate ROAS queries.</li>
-      </ul>
+          <aside class="right-inspector">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span class="sb-label" style="margin:0;">4-Gate SQLite C-Authorizer</span>
+              <span class="mono" style="font-size:10.5px;" id="sql-verdict-badge">READY</span>
+            </div>
+            <div id="sql-gates-checklist"></div>
+            <span class="sb-label" style="margin-top:8px;">EXPLAIN QUERY PLAN &amp; RLS</span>
+            <pre class="insp-card" id="sql-audit-pre" style="margin:0;white-space:pre-wrap;overflow:auto;flex:1;"></pre>
+          </aside>
+        </section>
 
-      <!-- =============================================================== -->
-      <!-- 03 SYSTEM ARCHITECTURE                                          -->
-      <!-- =============================================================== -->
-      <h2 id="architecture"><span class="num">03</span>System Architecture</h2>
-      <figure class="fig wide">
-        <div class="plate">
-          <img src="/architecture.svg" alt="ForgeRuntime CloudFront + Private S3 OAC + AST Slicer + Warm Sandbox + Governed Iceberg Architecture">
-        </div>
-        <figcaption><b>Figure 1.</b> Single-origin Amazon CloudFront distribution serving the blueprint 3-pane IDE from a private S3 bucket via SigV4 OAC (`*`) and routing `/api/*` to `forgeruntime-api-origin` (`us-west-2` Python 3.12) wired to Amazon Bedrock (`us.amazon.nova-lite-v1:0`).</figcaption>
-      </figure>
-
-      <!-- =============================================================== -->
-      <!-- 04 MEASURED BENCHMARKS                                          -->
-      <!-- =============================================================== -->
-      <h2 id="results"><span class="num">04</span>Measured Benchmarks</h2>
-      <div class="tablewrap wide">
-        <table>
-          <thead>
-            <tr>
-              <th>Subsystem &amp; Benchmark Metric</th>
-              <th class="r">Measured ForgeRuntime</th>
-              <th class="r">Naive Baseline</th>
-              <th>Engineering Impact</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="best">
-              <td><strong>2-Hop AST Context Slicer (`hop_budget=2`)</strong></td>
-              <td class="r"><strong>734 tok (-83.2% / 5.97x)</strong></td>
-              <td class="r">4,382 tok (Full Repo)</td>
-              <td><strong>100.0%</strong> 2-hop dependency recall vs. `20.5%` single-file truncation</td>
-            </tr>
-            <tr class="best">
-              <td><strong>Pre-Warmed `python3 -I` Sandbox Pool (`p50` / `p95`)</strong></td>
-              <td class="r"><strong>0.63 ms / 1.08 ms</strong></td>
-              <td class="r">38.7 ms cold `subprocess`</td>
-              <td><strong>98.4% lower</strong> startup overhead (<strong>61.9x</strong> faster)</td>
-            </tr>
-            <tr>
-              <td>Adversarial Sandbox Escape Suite (10 Vectors)</td>
-              <td class="r"><strong>10 / 10 Blocked (100%)</strong></td>
-              <td class="r">Host FS / socket exposed</td>
-              <td>Blocks `os`, `socket`, `/etc/passwd`, dunder traversal &amp; CPU spin</td>
-            </tr>
-            <tr>
-              <td>MultiModelRouter (12-Task Coding &amp; SQL Suite)</td>
-              <td class="r"><strong>-59.7% p50 Latency</strong></td>
-              <td class="r">Static Frontier Opus</td>
-              <td><strong>-35.9% token spend</strong> with `12/12` tier match &amp; SLA step-down</td>
-            </tr>
-            <tr>
-              <td>Cedar &amp; Iceberg SQL Policy Proxy</td>
-              <td class="r"><strong>100.0% (8/8 SQL + 4/4 Cedar)</strong></td>
-              <td class="r">Post-hoc regex filter</td>
-              <td>Pre-execution `SQLITE_READ` blocks `email`, `ssn` &amp; `SELECT *`</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="note">
-        <b>Reproducibility</b>
-        <p>All 4 subsystems run on the Python 3.10+ standard library with zero external package requirements: execute <code>python3 -m unittest discover -s tests -v</code> and <code>python3 benchmarks/run_benchmarks.py</code>.</p>
+        <!-- Docked Live Bottom Sandbox & Runtime Terminal -->
+        <section class="terminal-dock" aria-label="Live Sandbox and Runtime Terminal">
+          <div class="term-head">
+            <span>TERMINAL // WARM SANDBOX POOL &amp; BEDROCK TELEMETRY (`python3 -I` pipe)</span>
+            <button type="button" class="cmd-btn" id="btn-clear-term" style="height:20px;font-size:10px;">Clear</button>
+          </div>
+          <div id="term-stream" class="term-stream"></div>
+        </section>
       </div>
     </div>
+
+    <!-- Bottom Tokyo-Night IDE Statusbar -->
+    <footer class="ide-statusbar">
+      <div class="sb-items">
+        <span class="sb-pill-live">&#9679; main*</span>
+        <span id="sb-ast-count">AST: 56 symbols / 6 modules</span>
+        <span>WarmSandboxPool: READY (10/10 escapes blocked)</span>
+      </div>
+      <div class="sb-items">
+        <span>Bedrock: `us.amazon.nova-lite-v1:0` (`us-west-2`)</span>
+        <span>CloudFront + Private S3 OAC</span>
+        <span>Python 3.12</span>
+      </div>
+    </footer>
   </div>
-</div></article></main>
 
-<footer class="site-foot"><div class="wrap">
-  <span>Ritwika Kancharla, 2026</span>
-  <span><a href="https://ritwikareddykancharla.github.io">Portfolio</a> &nbsp;&middot;&nbsp; <a href="https://github.com/ritwikareddykancharla/forge-runtime">GitHub</a> &nbsp;&middot;&nbsp; <a href="mailto:ritwikareddykancharla@gmail.com">Email</a></span>
-</div></footer>
+  <!-- Architecture Modal -->
+  <div id="arch-modal" class="ide-modal hidden" role="dialog" aria-modal="true" aria-label="ForgeRuntime CloudFront Architecture">
+    <div class="ide-modal-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <strong class="mono" style="color:var(--fg-bright);">ForgeRuntime — CloudFront + Private S3 OAC + `/api/*` + Bedrock Architecture</strong>
+        <button type="button" class="cmd-btn" id="btn-close-arch">Close</button>
+      </div>
+      <img src="/architecture.svg" alt="ForgeRuntime Architecture">
+    </div>
+  </div>
 
-<a class="totop" href="#top" aria-label="Back to top">
-  <svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="21"/><circle class="ring" cx="24" cy="24" r="21"/><path d="M24 31V18M18 23.5l6-6 6 6"/></svg>
-</a>
-
-<script src="/app.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>
