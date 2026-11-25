@@ -1086,7 +1086,8 @@
       font-size: 0.83rem;
       color: var(--ink-muted);
     }
-  </style>
+  .plain-callout code,.worked-step code,.layer-plain code,.layer-hood code,.sandbox-guide code{font:500 .88em var(--mono);padding:1px 5px;border-radius:2px}
+</style>
 </head>
 <body>
   <!-- Sticky Topbar -->
@@ -1256,15 +1257,15 @@
           </div>
           <div class="worked-step">
             <strong>Step 2 — SLA &amp; Budget Bedrock Routing (<code>-59.71%</code> Latency, <code>-35.89%</code> Cost):</strong><br/>
-            If the user's IDE enforces a strict <code>p50 &lt;= 350 ms</code> autocomplete budget, <code>MultiModelSLARouter</code> automatically downgrades an Opus-class prompt to <code>amazon.nova-lite-v1</code> or <code>claude-sonnet-4</code> with explicit guardrail telemetry, hitting <strong><code>12/12</code></strong> benchmark tier accuracy (`$0.607` vs `$0.947`).
+            If the user's IDE enforces a strict <code>p50 &lt;= 350 ms</code> autocomplete budget, <code>MultiModelSLARouter</code> automatically downgrades an Opus-class prompt to <code>amazon.nova-lite-v1</code> or <code>claude-sonnet-4</code> with explicit guardrail telemetry, hitting <strong><code>12/12</code></strong> benchmark tier accuracy (<code>$0.607</code> vs <code>$0.947</code>).
           </div>
           <div class="worked-step">
             <strong>Step 3 — Cedar Gate + STS OBO + Warm Sandbox (<code>0.625 ms p50</code>):</strong><br/>
-            Before applying or testing a patch, Cedar verifies <code>human_approved == true &amp;&amp; ticket_verified == true</code> (unconditionally blocking <code>DropTable</code> via <code>forbid &gt; permit</code>), mints an <code>HMAC-SHA256</code> signed STS session, and executes verification tests in a pre-warmed <code>python3 -I</code> worker pipe—<strong><code>61.9×</code> faster</strong> than cold spawn while blocking <strong><code>10/10</code></strong> escape payloads (`os.system`, `socket`, `/etc/passwd`, `__subclasses__`).
+            Before applying or testing a patch, Cedar verifies <code>human_approved == true &amp;&amp; ticket_verified == true</code> (unconditionally blocking <code>DropTable</code> via <code>forbid &gt; permit</code>), mints an <code>HMAC-SHA256</code> signed STS session, and executes verification tests in a pre-warmed <code>python3 -I</code> worker pipe—<strong><code>61.9×</code> faster</strong> than cold spawn while blocking <strong><code>10/10</code></strong> escape payloads (<code>os.system</code>, <code>socket</code>, <code>/etc/passwd</code>, <code>__subclasses__</code>).
           </div>
           <div class="worked-step">
             <strong>Step 4 — 4-Gate Governed Iceberg / SQLite Query (<code>0.421 ms</code>):</strong><br/>
-            When <code>agent:spektr-partner-analyst</code> queries <code>ads_campaigns</code>, SQLite's C-level <code>set_authorizer</code> blocks restricted PII/PCI columns (`raw_card_token`, `customer_email`), injects a sovereign <code>region IN ('NA')</code> CTE filter, and validates the query plan via <code>EXPLAIN QUERY PLAN</code> before returning <code>1</code> governed row.
+            When <code>agent:spektr-partner-analyst</code> queries <code>ads_campaigns</code>, SQLite's C-level <code>set_authorizer</code> blocks restricted PII/PCI columns (<code>raw_card_token</code>, <code>customer_email</code>), injects a sovereign <code>region IN ('NA')</code> CTE filter, and validates the query plan via <code>EXPLAIN QUERY PLAN</code> before returning <code>1</code> governed row.
           </div>
         </div>
       </div>
@@ -1556,7 +1557,7 @@
               <strong>Plain-English Intuition:</strong> When editing one method, an engineer reads that method's full body plus the function signatures and docstrings of the helpers it calls—not 4,000 lines of unrelated code. Our AST slicer gives the LLM that exact view.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (Python <code>ast</code> BFS):</strong> Parses modules into <code>56</code> reference nodes / <code>38</code> directed <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges (plus self-indexing ForgeRuntime's own <code>133</code> nodes / <code>167</code> edges). Bounded BFS (`hop_budget=2`) emits full source for Hop 0 and signature/type stubs for Hop 1–2: <strong><code>733.7</code> vs <code>4,382</code> tokens (`5.97×`, `-83.2%`)</strong> at <strong><code>100.0%</code></strong> recall.
+              <strong>Under the Hood (Python <code>ast</code> BFS):</strong> Parses modules into <code>56</code> reference nodes / <code>38</code> directed <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges (plus self-indexing ForgeRuntime's own <code>133</code> nodes / <code>167</code> edges). Bounded BFS (<code>hop_budget=2</code>) emits full source for Hop 0 and signature/type stubs for Hop 1–2: <strong><code>733.7</code> vs <code>4,382</code> tokens (<code>5.97×</code>, <code>-83.2%</code>)</strong> at <strong><code>100.0%</code></strong> recall.
             </div>
           </div>
         </div>
@@ -1572,7 +1573,7 @@
               <strong>Plain-English Intuition:</strong> Fast IDE autocompletes belong on lightweight sub-300 ms models, medium SQL patches belong on Sonnet, and multi-file architectural refactors belong on Opus—unless a strict latency or cost cap forces a safe automatic downgrade.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (Structural Scoring):</strong> Computes composite complexity over cyclomatic branches, AST hop depth, files touched, and token budget to route across <code>bedrock/amazon.nova-lite-v1</code> (<code>4</code>), <code>bedrock/anthropic.claude-sonnet-4</code> (<code>5</code>), and <code>bedrock/anthropic.claude-opus</code> (<code>3</code>), cutting p50 latency <strong><code>-59.71%</code></strong> and cost <strong><code>-35.89%</code></strong> (`$0.6069` vs `$0.9467`, `12/12` accuracy).
+              <strong>Under the Hood (Structural Scoring):</strong> Computes composite complexity over cyclomatic branches, AST hop depth, files touched, and token budget to route across <code>bedrock/amazon.nova-lite-v1</code> (<code>4</code>), <code>bedrock/anthropic.claude-sonnet-4</code> (<code>5</code>), and <code>bedrock/anthropic.claude-opus</code> (<code>3</code>), cutting p50 latency <strong><code>-59.71%</code></strong> and cost <strong><code>-35.89%</code></strong> (<code>$0.6069</code> vs <code>$0.9467</code>, <code>12/12</code> accuracy).
             </div>
           </div>
         </div>
@@ -1588,7 +1589,7 @@
               <strong>Plain-English Intuition:</strong> Even an admin agent is never allowed to drop a production table, and any production patch requires a human-approved ticket. Once authorized, code runs inside an already-booted locked room so tests finish in under a millisecond.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (Zero-<code>eval</code> Cedar + Pipe IPC):</strong> Evaluates `5` Cedar policies with strict `forbid > permit` (`4/4` invariants `100.0%`), signs `sts:TransitiveTagKeys` via `HMAC-SHA256`, and dispatches untrusted AST-checked code over persistent `python3 -I` pipes in <strong>`0.625 ms p50`</strong> (`1.077 ms p95`) vs `38.694 ms` cold spawn (<strong>`61.9×` speedup</strong>, <strong>`10/10` escapes blocked</strong> + automatic watchdog worker respawn).
+              <strong>Under the Hood (Zero-<code>eval</code> Cedar + Pipe IPC):</strong> Evaluates <code>5</code> Cedar policies with strict <code>forbid &gt; permit</code> (<code>4/4</code> invariants <code>100.0%</code>), signs <code>sts:TransitiveTagKeys</code> via <code>HMAC-SHA256</code>, and dispatches untrusted AST-checked code over persistent <code>python3 -I</code> pipes in <strong><code>0.625 ms p50</code></strong> (<code>1.077 ms p95</code>) vs <code>38.694 ms</code> cold spawn (<strong><code>61.9×</code> speedup</strong>, <strong><code>10/10</code> escapes blocked</strong> + automatic watchdog worker respawn).
             </div>
           </div>
         </div>
@@ -1604,7 +1605,7 @@
               <strong>Plain-English Intuition:</strong> Instead of trying to catch sneaky SQL queries with brittle regexes alone, we hook directly into SQLite's internal compiler so if a query touches a restricted email or credit-card column—even via <code>SELECT *</code>—compilation aborts before a single row is read.
             </div>
             <div class="layer-hood">
-              <strong>Under the Hood (4 Pre-Execution Gates):</strong> (1) Multi-statement &amp; DDL/DML blocker (`DROP`, `DELETE`, `ATTACH`); (2) SQLite C-callback `conn.set_authorizer` enforcing `PII_CONFIDENTIAL` / `PCI_RESTRICTED` column clearances; (3) CTE rewrite `WITH _rls AS (...)` scoping sovereign regions (`NA` / `EMEA`); and (4) `EXPLAIN QUERY PLAN` catching hallucinated columns pre-execution (**`8/8` cases `100.0%`**).
+              <strong>Under the Hood (4 Pre-Execution Gates):</strong> (1) Multi-statement &amp; DDL/DML blocker (<code>DROP</code>, <code>DELETE</code>, <code>ATTACH</code>); (2) SQLite C-callback <code>conn.set_authorizer</code> enforcing <code>PII_CONFIDENTIAL</code> / <code>PCI_RESTRICTED</code> column clearances; (3) CTE rewrite <code>WITH _rls AS (...)</code> scoping sovereign regions (<code>NA</code> / <code>EMEA</code>); and (4) <code>EXPLAIN QUERY PLAN</code> catching hallucinated columns pre-execution (**<code>8/8</code> cases <code>100.0%</code>**).
             </div>
           </div>
         </div>
@@ -1644,13 +1645,13 @@
             </tr>
             <tr>
               <td><strong>Foundation Model Routing</strong></td>
-              <td>Static Opus on every turn (`$0.947`, high p50 latency)</td>
+              <td>Static Opus on every turn (<code>$0.947</code>, high p50 latency)</td>
               <td>Static cheap model fails multi-module architectural refactors</td>
-              <td class="winner-row"><strong><code>12/12</code> tier accuracy · <code>-59.71%</code> p50 latency · <code>-35.89%</code> cost (`$0.607`)</strong></td>
+              <td class="winner-row"><strong><code>12/12</code> tier accuracy · <code>-59.71%</code> p50 latency · <code>-35.89%</code> cost (<code>$0.607</code>)</strong></td>
             </tr>
             <tr>
               <td><strong>Code Execution &amp; IAM</strong></td>
-              <td>Shared IAM role + unguarded shell (`0%` escape containment)</td>
+              <td>Shared IAM role + unguarded shell (<code>0%</code> escape containment)</td>
               <td><code>38.69 ms+</code> cold spawn overhead on every verification step</td>
               <td class="winner-row"><strong>Cedar <code>forbid &gt; permit</code> + STS OBO + <code>0.625 ms p50</code> warm pool (<code>61.9×</code>, <code>10/10</code> blocked)</strong></td>
             </tr>
