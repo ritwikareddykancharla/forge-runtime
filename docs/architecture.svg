@@ -62,7 +62,7 @@
   <!-- Node 3B: Lambda Core Runtime -->
   <g>
     <rect x="514" y="210" width="276" height="232" fill="#ffffff" stroke="#35527e" stroke-width="2"/>
-    <text x="530" y="234" font-family="'Martian Mono', monospace" font-size="9.5" fill="#35527e" letter-spacing="1">03B · PYTHON 3.12 API ORIGIN</text>
+    <text x="530" y="234" font-family="'Martian Mono', monospace" font-size="9.5" fill="#35527e" letter-spacing="1">03B · SERVERLESS API ORIGIN</text>
     <text x="530" y="256" font-size="15.5" font-weight="800" fill="#0e1a2b">forgeruntime-api-origin</text>
 
     <rect x="530" y="272" width="244" height="48" fill="#35527e"/>

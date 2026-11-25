@@ -33,7 +33,7 @@
 
 ## Measured Benchmark Results (`benchmarks/latest_results.json`)
 
-Reproducible on Python 3.10+ (using built-in Python runtime modules, `0` third-party packages required) via `python3 benchmarks/run_benchmarks.py` (`1,608.38 ms` total wall time):
+Reproducible end-to-end via `python3 benchmarks/run_benchmarks.py` (`1,608.38 ms` total wall time):
 
 | Component & Metric | Measured Result | Baseline / Verification Proof |
 | :--- | :---: | :--- |
