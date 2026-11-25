@@ -7,7 +7,7 @@
   <meta name="description" content="Interactive Sandboxed Coding &amp; Governed Data-Lake Agent Runtime: AST Repo Knowledge Graph (-83.2% tokens), Multi-Model SLA Router (-59.7% latency), Cedar + AWS STS On-Behalf-Of Gate &amp; Warm Sandbox (-98.4% latency), and Governed Apache Iceberg / SQLite MCP Studio." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Kalam:wght@400;700&amp;family=Martian+Mono:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg-paper: #FAF7F2;
@@ -69,6 +69,7 @@
       --dot-color: rgba(255, 255, 255, 0.08);
     }
 
+    html { scroll-behavior: smooth; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -77,7 +78,7 @@
       background-image: radial-gradient(var(--dot-color) 1.25px, transparent 1.25px);
       background-size: 20px 20px;
       color: var(--ink);
-      line-height: 1.55;
+      line-height: 1.68;
       padding-bottom: 4rem;
     }
 
@@ -371,9 +372,320 @@
       font-weight: 700;
     }
 
+    /* Sticky Jump-to-Section TOC & Editorial Sections */
+    .toc-bar {
+      position: sticky;
+      top: var(--topbar-h, 58px);
+      z-index: 95;
+      background: var(--bg-subtle);
+      border-bottom: 2px solid var(--border);
+      padding: 0.52rem 0;
+      box-shadow: 0 3px 0 rgba(24, 24, 27, 0.08);
+    }
+
+    .toc-inner {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: thin;
+      padding-bottom: 2px;
+    }
+
+    .toc-label {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-right: 0.3rem;
+    }
+
+    .toc-link {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.71rem;
+      font-weight: 700;
+      padding: 0.32rem 0.65rem;
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+      color: var(--ink);
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transition: background 0.12s ease, color 0.12s ease, transform 0.08s ease, box-shadow 0.1s ease;
+    }
+
+    .toc-link:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: var(--shadow);
+    }
+
+    .toc-link.active {
+      background: var(--lime) !important;
+      color: var(--lime-ink) !important;
+      border-color: var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section {
+      padding: 2.2rem 0 1.8rem;
+      border-bottom: 2px solid var(--border);
+      scroll-margin-top: 126px;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.22rem 0.6rem;
+      background: var(--lime);
+      color: var(--lime-ink);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header {
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-size: 1.54rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.12rem;
+      color: var(--ink-muted);
+      max-width: 900px;
+      margin-top: 0.22rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.15rem;
+    }
+    @media (max-width: 960px) {
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.69rem;
+      font-weight: 700;
+      padding: 0.2rem 0.54rem;
+      background: #18181B;
+      color: #C4FF1A;
+      border: 1.5px solid var(--border);
+      margin-bottom: 0.55rem;
+    }
+
+    .plain-callout {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-left: 6px solid #3F6212;
+      box-shadow: var(--shadow);
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1.35rem;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .worked-example {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.35rem 1.45rem;
+      margin-top: 1.35rem;
+    }
+
+    .worked-steps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 900px) {
+      .worked-steps { grid-template-columns: 1fr; }
+    }
+
+    .worked-step {
+      background: var(--bg-paper);
+      border: 2px solid var(--border);
+      padding: 1rem 1.1rem;
+      font-size: 0.89rem;
+      line-height: 1.65;
+    }
+
+    .arch-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.7rem 0.95rem;
+      background: var(--bg-subtle);
+      border: 2px solid var(--border);
+      border-bottom: none;
+    }
+
+    .arch-viewport {
+      background-color: #FFFFFF;
+      background-image: radial-gradient(rgba(24, 24, 27, 0.14) 1px, transparent 1px);
+      background-size: 18px 18px;
+      border: 2px solid #18181B;
+      box-shadow: 4px 4px 0px #18181B;
+      overflow-x: auto;
+      padding: 0.9rem;
+    }
+
+    .arch-svg {
+      display: block;
+      width: 100%;
+      min-width: 980px;
+      height: auto;
+      transition: width 0.22s ease, min-width 0.22s ease;
+    }
+
+    .arch-svg.zoom-125 {
+      width: 125%;
+      min-width: 1225px;
+    }
+
+    .ex-hand { font-family: 'Caveat', 'Kalam', cursive; }
+    .ex-mono { font-family: 'Martian Mono', monospace; }
+
+    .ex-node {
+      cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+
+    .ex-node:hover {
+      filter: drop-shadow(3px 3px 0px #3F6212);
+    }
+
+    .ex-node.selected .ex-stroke-main {
+      stroke: #3F6212 !important;
+      stroke-width: 3.3px !important;
+    }
+
+    .arch-inspector {
+      margin-top: 1rem;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.05rem 1.2rem;
+    }
+
+    .arch-node-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .arch-node-pill {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.69rem;
+      font-weight: 700;
+      padding: 0.26rem 0.58rem;
+      border: 1.5px solid var(--border);
+      background: var(--bg-subtle);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .arch-node-pill.active {
+      background: var(--lime);
+      color: var(--lime-ink);
+    }
+
+    .impl-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 920px) {
+      .impl-grid { grid-template-columns: 1fr; }
+    }
+
+    .impl-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .impl-head {
+      background: var(--bg-code);
+      color: var(--text-code);
+      padding: 0.72rem 1.05rem;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .impl-body {
+      padding: 1.2rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      font-size: 0.9rem;
+      line-height: 1.68;
+    }
+
+    .layer-plain {
+      background: var(--lime-soft);
+      border: 1.5px solid var(--border);
+      padding: 0.78rem 0.95rem;
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+
+    .layer-hood {
+      background: var(--bg-paper);
+      border: 1.5px solid var(--border);
+      padding: 0.82rem 0.95rem;
+      font-size: 0.85rem;
+      line-height: 1.62;
+    }
+
+    .sandbox-guide {
+      background: var(--bg-subtle);
+      border: 2px solid var(--border);
+      border-left: 6px solid #3F6212;
+      padding: 0.9rem 1.15rem;
+      margin-bottom: 1.15rem;
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+
+    tr.winner-row { background: var(--lime-soft); font-weight: 600; }
+
     /* Tab Switcher */
     .tabs-wrapper {
-      padding: 1.9rem 0 0.5rem;
+      padding: 2.1rem 0 1.8rem;
+      scroll-margin-top: 126px;
     }
 
     .tab-bar {
@@ -778,9 +1090,9 @@
 </head>
 <body>
   <!-- Sticky Topbar -->
-  <header class="topbar">
+  <header class="topbar" id="topHeader">
     <div class="container topbar-inner">
-      <a href="#ast-graph" class="brand">
+      <a href="#interactive-studio" class="brand">
         <span class="brand-badge">FORGE v0.1</span>
         <span>ForgeRuntime</span>
       </a>
@@ -799,6 +1111,19 @@
       </div>
     </div>
   </header>
+
+  <!-- Sticky Jump-to-Section TOC -->
+  <nav class="toc-bar" id="stickyToc" aria-label="Jump to Section Table of Contents">
+    <div class="container toc-inner">
+      <span class="toc-label">Jump To:</span>
+      <a class="toc-link active" href="#problem-statement" data-toc-sec="problem-statement">§01 · Problem Statement</a>
+      <a class="toc-link" href="#architecture" data-toc-sec="architecture">§02 · System Architecture</a>
+      <a class="toc-link" href="#implementation" data-toc-sec="implementation">§03 · Implementation</a>
+      <a class="toc-link" href="#design-tradeoffs" data-toc-sec="design-tradeoffs">§04 · Design Trade-Offs</a>
+      <a class="toc-link" href="#interactive-studio" data-toc-sec="interactive-studio">§05 · Interactive Studio</a>
+      <a class="toc-link" href="#benchmarks" data-toc-sec="benchmarks">§06 · Benchmarks</a>
+    </div>
+  </nav>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -864,8 +1189,522 @@
     </div>
   </section>
 
-  <!-- 4 Interactive Simulator Tabs -->
-  <main class="container tabs-wrapper">
+  <!-- §01 · PROBLEM STATEMENT -->
+  <section id="problem-statement" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">§01 · Problem Statement</span>
+          <h2 class="section-title">Why Enterprise Coding &amp; Data-Lake Agents Fail Cost, Latency &amp; Isolation SLAs</h2>
+          <p class="section-desc">
+            Why production IDE coding agents (Kiro), agent runtimes (Bedrock AgentCore), and governed analytics copilots (Spektr) cannot rely on naive full-repo prompts, static frontier models, cold subprocesses, or raw SQL execution.
+          </p>
+        </div>
+        <span class="tag tag-lime">Kiro · Bedrock AgentCore · Spektr Alignment</span>
+      </div>
+
+      <div class="plain-callout">
+        <div class="mono" style="font-size:0.72rem; font-weight:700; color:#3F6212; text-transform:uppercase; margin-bottom:0.35rem;">💡 In Plain English — What Problem Does ForgeRuntime Solve?</div>
+        <p style="margin-bottom:0.55rem;">
+          When an AI coding or analytics agent works inside a real company, four things normally go wrong at once:
+          <strong>(1) Context Bloat:</strong> stuffing every file in a repository into the prompt wastes over 80% of your token budget on irrelevant functions;
+          <strong>(2) Slow, Expensive Models:</strong> sending simple symbol lookups to a heavy frontier model takes seconds instead of milliseconds;
+          <strong>(3) Dangerous Execution:</strong> spawning a fresh Python process per test takes ~39 ms and risks shell escapes or unapproved production edits; and
+          <strong>(4) Leaky SQL:</strong> letting an agent run raw <code>SELECT *</code> queries against a billing lake exposes customer emails, credit-card tokens, or wrong-region rows.
+        </p>
+        <p>
+          <strong>ForgeRuntime solves all four in one cohesive runtime:</strong> it slices only the exact 2-hop AST call graph needed (cutting tokens by <strong><code>-83.2%</code></strong> with <strong><code>100.0%</code></strong> recall), routes each task to the fastest model that meets its latency &amp; dollar cap (<strong><code>-59.7%</code></strong> p50 latency, <strong><code>-35.9%</code></strong> cost), enforces Cedar policies + signed AWS STS <code>On-Behalf-Of</code> credentials before running code in a pre-warmed <strong><code>0.625 ms</code></strong> sandbox (blocking <strong><code>10/10</code></strong> escape attacks), and gates every SQL query through 4 pre-execution checks.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <span class="step-badge">FAILURE MODE 01 · CONTEXT &amp; ROUTING</span>
+          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">Prompt Stuffing &amp; Static Frontier Routing</h3>
+          <p style="font-size:0.89rem; color:var(--ink-muted);">
+            Single-file context misses <code>79.5%</code> of cross-module collaborators (<code>20.48%</code> recall), while dumping whole repositories burns <code>4,382+</code> tokens per turn and routing sub-second IDE tasks to Opus blows interactive latency SLAs.
+          </p>
+        </div>
+        <div class="card">
+          <span class="step-badge">FAILURE MODE 02 · SANDBOX &amp; IAM</span>
+          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">Cold Subprocess Spawns &amp; Confused-Deputy IAM</h3>
+          <p style="font-size:0.89rem; color:var(--ink-muted);">
+            Cold <code>subprocess.run</code> adds <code>38.69 ms</code> overhead per tool call, while shared agent IAM roles allow privilege escalation unless Cedar <code>forbid &gt; permit</code> rules and human-scoped STS <code>On-Behalf-Of</code> tags are enforced.
+          </p>
+        </div>
+        <div class="card">
+          <span class="step-badge">FAILURE MODE 03 · UNGOVERNED SQL</span>
+          <h3 style="font-size:1.05rem; font-weight:800; margin-bottom:0.45rem;">PII/PCI Column Leaks &amp; Hallucinated Schemas</h3>
+          <p style="font-size:0.89rem; color:var(--ink-muted);">
+            Regex-only SQL filters miss <code>SELECT *</code> PII exposures, cross-region data residency leaks, comment-smuggled <code>DELETE</code> statements, and hallucinated column names that crash downstream analytics jobs.
+          </p>
+        </div>
+      </div>
+
+      <div class="worked-example">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+          <div>
+            <span class="step-badge" style="margin-bottom:0.3rem;">CONCRETE END-TO-END WORKED EXAMPLE</span>
+            <h3 style="font-size:1.12rem; font-weight:800;">Tracing One Enterprise Billing Refactor &amp; Governed Lake Query End-to-End</h3>
+          </div>
+          <span class="tag tag-lime">Focal Symbol: settle_tenant_invoice</span>
+        </div>
+        <div class="worked-steps">
+          <div class="worked-step">
+            <strong>Step 1 — 2-Hop AST Context Slice (<code>734</code> mean tokens vs. <code>4,382</code>):</strong><br/>
+            An engineer asks the agent to audit decimal rounding in <code>InvoiceSettlementEngine.settle_tenant_invoice</code>. Instead of sending all 6 billing files, <code>pack_minimal_context(hop_budget=2)</code> emits full source for Hop 0 plus typed signature/docstring stubs for Hop 1–2 collaborators (<code>TenantQuotaGuard</code>, <code>ImmutableLedgerStore</code>, <code>LedgerPosting</code>)—achieving <strong><code>5.97×</code> compression</strong> and <strong><code>100.0%</code></strong> call-neighborhood recall.
+          </div>
+          <div class="worked-step">
+            <strong>Step 2 — SLA &amp; Budget Bedrock Routing (<code>-59.71%</code> Latency, <code>-35.89%</code> Cost):</strong><br/>
+            If the user's IDE enforces a strict <code>p50 &lt;= 350 ms</code> autocomplete budget, <code>MultiModelSLARouter</code> automatically downgrades an Opus-class prompt to <code>amazon.nova-lite-v1</code> or <code>claude-sonnet-4</code> with explicit guardrail telemetry, hitting <strong><code>12/12</code></strong> benchmark tier accuracy (`$0.607` vs `$0.947`).
+          </div>
+          <div class="worked-step">
+            <strong>Step 3 — Cedar Gate + STS OBO + Warm Sandbox (<code>0.625 ms p50</code>):</strong><br/>
+            Before applying or testing a patch, Cedar verifies <code>human_approved == true &amp;&amp; ticket_verified == true</code> (unconditionally blocking <code>DropTable</code> via <code>forbid &gt; permit</code>), mints an <code>HMAC-SHA256</code> signed STS session, and executes verification tests in a pre-warmed <code>python3 -I</code> worker pipe—<strong><code>61.9×</code> faster</strong> than cold spawn while blocking <strong><code>10/10</code></strong> escape payloads (`os.system`, `socket`, `/etc/passwd`, `__subclasses__`).
+          </div>
+          <div class="worked-step">
+            <strong>Step 4 — 4-Gate Governed Iceberg / SQLite Query (<code>0.421 ms</code>):</strong><br/>
+            When <code>agent:spektr-partner-analyst</code> queries <code>ads_campaigns</code>, SQLite's C-level <code>set_authorizer</code> blocks restricted PII/PCI columns (`raw_card_token`, `customer_email`), injects a sovereign <code>region IN ('NA')</code> CTE filter, and validates the query plan via <code>EXPLAIN QUERY PLAN</code> before returning <code>1</code> governed row.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §02 · SYSTEM ARCHITECTURE -->
+  <section id="architecture" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">§02 · System Architecture</span>
+          <h2 class="section-title">Multi-Plane AST Slicing, Bedrock Routing, Cedar/Sandbox &amp; Iceberg MCP Topology</h2>
+          <p class="section-desc">
+            Serverless AWS CloudFront + private S3 (OAC) + Python 3.12 Lambda runtime connecting the AST Repo Graph, SLA Model Router, Cedar/STS Gate, Warm Sandbox Pool, and 4-Gate Iceberg/SQLite MCP Server. <strong>Click any component below to inspect its contract.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="arch-toolbar">
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <span class="mono" style="font-size:0.72rem; font-weight:700;">SYSTEM ARCHITECTURE · CLICK ANY COMPONENT TO INSPECT</span>
+          <span class="tag tag-lime" id="archZoomLabel">Zoom: 100%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+          <button type="button" class="btn btn-lime" style="padding:0.3rem 0.62rem; font-size:0.75rem;" id="zoom100Btn">100%</button>
+          <button type="button" class="btn btn-secondary" style="padding:0.3rem 0.62rem; font-size:0.75rem;" id="zoom125Btn">125%</button>
+          <button type="button" class="btn btn-secondary" style="padding:0.3rem 0.62rem; font-size:0.75rem;" id="zoomResetBtn">↺ Reset</button>
+          <button type="button" class="btn btn-secondary" style="padding:0.3rem 0.62rem; font-size:0.75rem;" id="downloadArchSvgBtn">⬇ Export SVG</button>
+        </div>
+      </div>
+
+      <div class="arch-viewport" id="archViewport">
+        <svg id="forgeArchSvg" class="arch-svg" viewBox="0 0 1220 756" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ForgeRuntime Multi-Plane System Architecture Diagram">
+          <defs>
+            <pattern id="frDotGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1" fill="#D4D4D8" />
+            </pattern>
+          </defs>
+
+          <rect x="0" y="0" width="1220" height="756" fill="#FFFFFF" />
+          <rect x="0" y="0" width="1220" height="756" fill="url(#frDotGrid)" opacity="0.65" />
+
+          <!-- PLANE 1: AWS EDGE DELIVERY -->
+          <path d="M 22,18 Q 600,14 1196,19 Q 1201,94 1195,168 Q 610,172 24,167 Q 19,92 22,18 Z" fill="#FAFAFA" stroke="#71717A" stroke-width="1.6" stroke-dasharray="8 6" />
+          <text x="36" y="40" class="ex-hand" font-size="21" font-weight="700" fill="#3F6212">① AWS Edge Delivery Plane (Serverless Static S3 + Python 3.12 Lambda · 0 EC2 / 0 RDS)</text>
+
+          <g class="ex-node" data-arch-node="edge-browser" tabindex="0">
+            <path d="M 38,56 Q 136,53 234,57 Q 238,98 233,140 Q 135,143 39,139 Q 35,97 38,56 Z" fill="#DBEAFE" />
+            <path class="ex-stroke-main" d="M 38,56 Q 136,53 234,57 Q 238,98 233,140 Q 135,143 39,139 Q 35,97 38,56 Z" fill="none" stroke="#18181B" stroke-width="2.1" />
+            <path d="M 40,58 Q 138,56 232,59 Q 235,99 231,138 Q 134,140 41,137 Z" fill="none" stroke="#18181B" stroke-width="1.1" opacity="0.65" />
+            <text x="136" y="84" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">User Browser</text>
+            <text x="136" y="106" text-anchor="middle" class="ex-mono" font-size="10" font-weight="600" fill="#1E3A8A">4-Tab Simulator &amp; TOC</text>
+            <text x="136" y="124" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#3F3F46">location.hash · Stateless UI</text>
+          </g>
+
+          <path d="M 237,98 Q 268,94 298,98" fill="none" stroke="#18181B" stroke-width="2.1" stroke-dasharray="6 4" />
+          <path d="M 289,92 L 300,98 L 289,104" fill="none" stroke="#18181B" stroke-width="2.1" />
+          <text x="268" y="87" text-anchor="middle" class="ex-hand" font-size="16" font-weight="700" fill="#18181B">HTTPS</text>
+
+          <g class="ex-node" data-arch-node="edge-cloudfront" tabindex="0">
+            <path d="M 304,56 Q 430,52 556,57 Q 560,98 555,140 Q 428,144 305,139 Q 301,97 304,56 Z" fill="#ECFCCB" />
+            <path class="ex-stroke-main" d="M 304,56 Q 430,52 556,57 Q 560,98 555,140 Q 428,144 305,139 Q 301,97 304,56 Z" fill="none" stroke="#18181B" stroke-width="2.1" />
+            <path d="M 306,59 Q 431,55 554,59 Q 557,99 553,138 Q 429,141 307,137 Z" fill="none" stroke="#18181B" stroke-width="1.1" opacity="0.65" />
+            <text x="430" y="84" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">Amazon CloudFront (HTTPS)</text>
+            <text x="430" y="106" text-anchor="middle" class="ex-mono" font-size="10" font-weight="600" fill="#3F6212">TLS 1.3 · E1LO785RWQJ3ND</text>
+            <text x="430" y="124" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#3F3F46">Routes /* static &amp; /api/*</text>
+          </g>
+
+          <path d="M 559,80 Q 596,68 634,68" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4" />
+          <path d="M 625,62 L 636,68 L 625,74" fill="none" stroke="#18181B" stroke-width="2" />
+          <text x="596" y="61" text-anchor="middle" class="ex-hand" font-size="15" font-weight="700" fill="#3F6212">OAC GET</text>
+
+          <path d="M 559,116 Q 596,128 634,128" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4" />
+          <path d="M 625,122 L 636,128 L 625,134" fill="none" stroke="#18181B" stroke-width="2" />
+          <text x="596" y="145" text-anchor="middle" class="ex-hand" font-size="15" font-weight="700" fill="#9A3412">/api/*</text>
+
+          <g class="ex-node" data-arch-node="edge-s3" tabindex="0">
+            <path d="M 640,40 Q 775,37 910,41 Q 913,67 909,92 Q 774,95 641,91 Q 637,66 640,40 Z" fill="#DCFCE7" />
+            <path class="ex-stroke-main" d="M 640,40 Q 775,37 910,41 Q 913,67 909,92 Q 774,95 641,91 Q 637,66 640,40 Z" fill="none" stroke="#18181B" stroke-width="2" />
+            <text x="775" y="63" text-anchor="middle" class="ex-hand" font-size="20" font-weight="700" fill="#18181B">Private S3 Bucket (OAC)</text>
+            <text x="775" y="81" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#065F46">web/index.html · BlockPublicAccess</text>
+          </g>
+
+          <g class="ex-node" data-arch-node="edge-lambda" tabindex="0">
+            <path d="M 640,102 Q 775,99 910,103 Q 913,130 909,156 Q 774,159 641,155 Q 637,129 640,102 Z" fill="#FFE8D6" />
+            <path class="ex-stroke-main" d="M 640,102 Q 775,99 910,103 Q 913,130 909,156 Q 774,159 641,155 Q 637,129 640,102 Z" fill="none" stroke="#18181B" stroke-width="2" />
+            <text x="775" y="125" text-anchor="middle" class="ex-hand" font-size="20" font-weight="700" fill="#18181B">AWS Lambda (Python 3.12)</text>
+            <text x="775" y="144" text-anchor="middle" class="ex-mono" font-size="9.5" fill="#9A3412">forge_runtime/web_api.py · /api/*</text>
+          </g>
+
+          <!-- Sticky Note -->
+          <g transform="rotate(-1.6 1055 96)">
+            <path d="M 936,42 L 1176,42 L 1176,136 L 1158,152 L 936,152 Z" fill="#FEF3C7" stroke="#18181B" stroke-width="2" />
+            <path d="M 1158,152 L 1158,136 L 1176,136" fill="#FDE68A" stroke="#18181B" stroke-width="1.6" />
+            <text x="950" y="68" class="ex-hand" font-size="19" font-weight="700" fill="#92400E">📌 Verified Speedups</text>
+            <text x="950" y="91" class="ex-hand" font-size="17" font-weight="600" fill="#18181B">• 5.97× AST compression</text>
+            <text x="950" y="112" class="ex-hand" font-size="17" font-weight="600" fill="#18181B">• 61.9× faster warm pool</text>
+            <text x="950" y="133" class="ex-hand" font-size="17" font-weight="700" fill="#3F6212">• 0 external Python deps</text>
+          </g>
+
+          <path d="M 775,157 Q 770,180 612,196" fill="none" stroke="#18181B" stroke-width="2.1" stroke-dasharray="7 5" />
+          <path d="M 621,190 L 610,197 L 622,202" fill="none" stroke="#18181B" stroke-width="2.1" />
+          <text x="758" y="185" class="ex-hand" font-size="16" font-weight="700" fill="#18181B">Task &amp; Context Dispatch</text>
+
+          <!-- PLANE 2: AST REPO KNOWLEDGE GRAPH & MULTI-MODEL SLA ROUTER -->
+          <path d="M 22,198 Q 610,194 1196,199 Q 1200,270 1195,340 Q 608,344 24,339 Q 19,268 22,198 Z" fill="#F8FAFC" stroke="#1E40AF" stroke-width="1.6" stroke-dasharray="8 6" />
+          <text x="36" y="221" class="ex-hand" font-size="21" font-weight="700" fill="#1D4ED8">② AST Repo Context Slicer &amp; SLA / Budget Multi-Model Bedrock Router</text>
+
+          <g class="ex-node" data-arch-node="ast-indexer" tabindex="0">
+            <path d="M 42,235 Q 218,231 394,236 Q 398,281 393,326 Q 216,330 43,325 Q 39,280 42,235 Z" fill="#ECFCCB" />
+            <path class="ex-stroke-main" d="M 42,235 Q 218,231 394,236 Q 398,281 393,326 Q 216,330 43,325 Q 39,280 42,235 Z" fill="none" stroke="#18181B" stroke-width="2.1" />
+            <text x="218" y="263" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">AST Repo Knowledge Graph</text>
+            <text x="218" y="285" text-anchor="middle" class="ex-mono" font-size="9.8" font-weight="600" fill="#3F6212">CALLS · IMPORTS · INHERITS</text>
+            <text x="218" y="304" text-anchor="middle" class="ex-mono" font-size="9.4" fill="#3F3F46">56 ref nodes + 133 self-hosted nodes</text>
+          </g>
+
+          <path d="M 397,280 L 428,280" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="5 4" />
+          <path d="M 421,274 L 430,280 L 421,286" fill="none" stroke="#18181B" stroke-width="2" />
+
+          <g class="ex-node" data-arch-node="context-packer" tabindex="0">
+            <path d="M 432,235 Q 610,231 788,236 Q 792,281 787,326 Q 609,330 433,325 Q 429,280 432,235 Z" fill="#DBEAFE" />
+            <path class="ex-stroke-main" d="M 432,235 Q 610,231 788,236 Q 792,281 787,326 Q 609,330 433,325 Q 429,280 432,235 Z" fill="none" stroke="#18181B" stroke-width="2.1" />
+            <text x="610" y="263" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">2-Hop Minimal Context Packer</text>
+            <text x="610" y="285" text-anchor="middle" class="ex-mono" font-size="9.8" font-weight="600" fill="#1E3A8A">733.7 vs 4,382 tok (-83.2%)</text>
+            <text x="610" y="304" text-anchor="middle" class="ex-mono" font-size="9.4" fill="#3F3F46">5.97× compression · 100.0% recall</text>
+          </g>
+
+          <path d="M 791,280 L 821,280" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="5 4" />
+          <path d="M 814,274 L 823,280 L 814,286" fill="none" stroke="#18181B" stroke-width="2" />
+
+          <g class="ex-node" data-arch-node="model-router" tabindex="0">
+            <path d="M 824,235 Q 1001,231 1178,236 Q 1182,281 1177,326 Q 1000,330 825,325 Q 821,280 824,235 Z" fill="#F3E8FF" />
+            <path class="ex-stroke-main" d="M 824,235 Q 1001,231 1178,236 Q 1182,281 1177,326 Q 1000,330 825,325 Q 821,280 824,235 Z" fill="none" stroke="#18181B" stroke-width="2.1" />
+            <text x="1001" y="263" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#18181B">SLA &amp; Cost Bedrock Router</text>
+            <text x="1001" y="285" text-anchor="middle" class="ex-mono" font-size="9.8" font-weight="600" fill="#5B21B6">Nova Lite · Sonnet 4 · Opus</text>
+            <text x="1001" y="304" text-anchor="middle" class="ex-mono" font-size="9.4" fill="#3F3F46">-59.71% p50 latency · -35.89% cost</text>
+          </g>
+
+          <!-- Vertical Arrows to Plane 3 -->
+          <path d="M 610,328 Q 520,368 316,422" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4" />
+          <path d="M 324,413 L 315,423 L 328,423" fill="none" stroke="#18181B" stroke-width="2" />
+          <text x="415" y="366" class="ex-hand" font-size="15.5" font-weight="700" fill="#1E40AF">Packed AST Slice</text>
+
+          <path d="M 1001,328 Q 840,368 698,422" fill="none" stroke="#18181B" stroke-width="2" stroke-dasharray="6 4" />
+          <path d="M 706,414 L 696,423 L 709,425" fill="none" stroke="#18181B" stroke-width="2" />
+          <text x="865" y="366" class="ex-hand" font-size="15.5" font-weight="700" fill="#5B21B6">Routed Action Plan + Bedrock Live</text>
+
+          <!-- PLANE 3: DETERMINISTIC EXECUTION PIPELINE -->
+          <g class="ex-node selected" data-arch-node="exec-pipeline" tabindex="0">
+            <path d="M 22,384 Q 610,380 1196,385 Q 1200,458 1195,532 Q 608,536 24,531 Q 19,457 22,384 Z" fill="#F7FEE7" />
+            <path class="ex-stroke-main" d="M 22,384 Q 610,380 1196,385 Q 1200,458 1195,532 Q 608,536 24,531 Q 19,457 22,384 Z" fill="none" stroke="#18181B" stroke-width="2.1" />
+            <text x="36" y="408" class="ex-hand" font-size="21" font-weight="700" fill="#3F6212">③ Deterministic Agent Execution Pipeline (100.0% Cedar Invariants · HMAC-SHA256 STS OBO · Zero Unapproved Writes)</text>
+
+            <path d="M 40,425 Q 124,422 208,426 Q 211,468 207,510 Q 123,513 41,509 Q 38,467 40,425 Z" fill="#ECFCCB" stroke="#18181B" stroke-width="1.9" />
+            <text x="124" y="451" text-anchor="middle" class="ex-hand" font-size="17" font-weight="700" fill="#18181B">01 · AST_SLICE</text>
+            <text x="124" y="473" text-anchor="middle" class="ex-mono" font-size="8.7" fill="#3F6212">hop_budget = 2</text>
+            <text x="124" y="492" text-anchor="middle" class="ex-mono" font-size="8.4" fill="#3F3F46">100.0% Recall</text>
+
+            <path d="M 210,468 L 228,468" stroke="#18181B" stroke-width="2" />
+            <path d="M 222,463 L 230,468 L 222,473" fill="none" stroke="#18181B" stroke-width="2" />
+
+            <path d="M 232,425 Q 316,422 400,426 Q 403,468 399,510 Q 315,513 233,509 Q 230,467 232,425 Z" fill="#F3E8FF" stroke="#18181B" stroke-width="1.9" />
+            <text x="316" y="451" text-anchor="middle" class="ex-hand" font-size="17" font-weight="700" fill="#18181B">02 · SLA_ROUTE</text>
+            <text x="316" y="473" text-anchor="middle" class="ex-mono" font-size="8.7" fill="#5B21B6">12 / 12 Tier Hit</text>
+            <text x="316" y="492" text-anchor="middle" class="ex-mono" font-size="8.4" fill="#3F3F46">Budget Guardrail</text>
+
+            <path d="M 402,468 L 420,468" stroke="#18181B" stroke-width="2" />
+            <path d="M 414,463 L 422,468 L 414,473" fill="none" stroke="#18181B" stroke-width="2" />
+
+            <path d="M 424,425 Q 508,422 592,426 Q 595,468 591,510 Q 507,513 425,509 Q 422,467 424,425 Z" fill="#FEE2E2" stroke="#18181B" stroke-width="1.9" />
+            <text x="508" y="451" text-anchor="middle" class="ex-hand" font-size="17" font-weight="700" fill="#18181B">03 · CEDAR_GATE</text>
+            <text x="508" y="473" text-anchor="middle" class="ex-mono" font-size="8.7" fill="#991B1B">forbid &gt; permit</text>
+            <text x="508" y="492" text-anchor="middle" class="ex-mono" font-size="8.4" fill="#3F3F46">Default DENY</text>
+
+            <path d="M 594,468 L 612,468" stroke="#18181B" stroke-width="2" />
+            <path d="M 606,463 L 614,468 L 606,473" fill="none" stroke="#18181B" stroke-width="2" />
+
+            <path d="M 616,425 Q 700,422 784,426 Q 787,468 783,510 Q 699,513 617,509 Q 614,467 616,425 Z" fill="#FEF3C7" stroke="#18181B" stroke-width="1.9" />
+            <text x="700" y="451" text-anchor="middle" class="ex-hand" font-size="17" font-weight="700" fill="#18181B">04 · STS_OBO_MINT</text>
+            <text x="700" y="473" text-anchor="middle" class="ex-mono" font-size="8.7" fill="#92400E">HMAC-SHA256</text>
+            <text x="700" y="492" text-anchor="middle" class="ex-mono" font-size="8.4" fill="#3F3F46">Transitive Tags</text>
+
+            <path d="M 786,468 L 804,468" stroke="#18181B" stroke-width="2" />
+            <path d="M 798,463 L 806,468 L 798,473" fill="none" stroke="#18181B" stroke-width="2" />
+
+            <path d="M 808,425 Q 892,422 976,426 Q 979,468 975,510 Q 891,513 809,509 Q 806,467 808,425 Z" fill="#DCFCE7" stroke="#18181B" stroke-width="1.9" />
+            <text x="892" y="451" text-anchor="middle" class="ex-hand" font-size="16.5" font-weight="700" fill="#18181B">05 · WARM_SANDBOX</text>
+            <text x="892" y="473" text-anchor="middle" class="ex-mono" font-size="8.7" fill="#065F46">0.625 ms p50</text>
+            <text x="892" y="492" text-anchor="middle" class="ex-mono" font-size="8.4" fill="#3F3F46">10 / 10 Blocked</text>
+
+            <path d="M 978,468 L 996,468" stroke="#18181B" stroke-width="2" />
+            <path d="M 990,463 L 998,468 L 990,473" fill="none" stroke="#18181B" stroke-width="2" />
+
+            <path d="M 1000,425 Q 1089,422 1178,426 Q 1181,468 1177,510 Q 1088,513 1001,509 Q 998,467 1000,425 Z" fill="#DBEAFE" stroke="#18181B" stroke-width="1.9" />
+            <text x="1089" y="451" text-anchor="middle" class="ex-hand" font-size="16.5" font-weight="700" fill="#18181B">06 · ICEBERG_4_GATE</text>
+            <text x="1089" y="473" text-anchor="middle" class="ex-mono" font-size="8.7" fill="#1E3A8A">8 / 8 SQL Gates</text>
+            <text x="1089" y="492" text-anchor="middle" class="ex-mono" font-size="8.4" fill="#3F3F46">EXPLAIN PLAN</text>
+          </g>
+
+          <!-- Arrows to Plane 4 & 5 -->
+          <path d="M 508,512 Q 360,552 220,584" fill="none" stroke="#DC2626" stroke-width="2.1" stroke-dasharray="7 5" />
+          <path d="M 228,576 L 218,585 L 231,588" fill="none" stroke="#DC2626" stroke-width="2.1" />
+          <text x="318" y="558" class="ex-hand" font-size="16" font-weight="700" fill="#DC2626">Cedar + STS Session</text>
+
+          <path d="M 892,512 Q 750,552 610,584" fill="none" stroke="#3F6212" stroke-width="2.1" stroke-dasharray="7 5" />
+          <path d="M 618,576 L 608,585 L 621,588" fill="none" stroke="#3F6212" stroke-width="2.1" />
+          <text x="720" y="560" class="ex-hand" font-size="16" font-weight="700" fill="#3F6212">Isolated Pipe Dispatch</text>
+
+          <path d="M 1089,512 Q 1045,552 1008,584" fill="none" stroke="#1D4ED8" stroke-width="2.1" stroke-dasharray="7 5" />
+          <path d="M 1015,575 L 1006,585 L 1019,586" fill="none" stroke="#1D4ED8" stroke-width="2.1" />
+          <text x="1080" y="560" class="ex-hand" font-size="16" font-weight="700" fill="#1D4ED8">Governed SQL</text>
+
+          <!-- PLANE 4 & 5: CEDAR/STS + WARM SANDBOX + ICEBERG MCP -->
+          <g class="ex-node" data-arch-node="cedar-sts" tabindex="0">
+            <path d="M 32,588 Q 214,583 396,589 Q 401,660 395,730 Q 212,735 34,729 Q 29,658 32,588 Z" fill="#FEE2E2" />
+            <path class="ex-stroke-main" d="M 32,588 Q 214,583 396,589 Q 401,660 395,730 Q 212,735 34,729 Q 29,658 32,588 Z" fill="none" stroke="#18181B" stroke-width="2.2" />
+            <text x="214" y="618" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#991B1B">④ Cedar + AWS STS OBO Gate</text>
+            <text x="214" y="643" text-anchor="middle" class="ex-mono" font-size="9.6" font-weight="700" fill="#18181B">forbid &gt; permit + TransitiveTagKeys</text>
+            <text x="214" y="666" text-anchor="middle" class="ex-mono" font-size="9.3" fill="#7F1D1D">HMAC-SHA256 RiskRung Tamper Check</text>
+            <rect x="58" y="684" width="312" height="28" fill="#FFFFFF" stroke="#18181B" stroke-width="1.6" />
+            <text x="214" y="702" text-anchor="middle" class="ex-mono" font-size="9.5" font-weight="700" fill="#DC2626">🛡️ 100.0% Policy Invariant Accuracy</text>
+          </g>
+
+          <g class="ex-node" data-arch-node="warm-sandbox" tabindex="0">
+            <path d="M 428,588 Q 610,583 792,589 Q 797,660 791,730 Q 608,735 430,729 Q 425,658 428,588 Z" fill="#ECFCCB" />
+            <path class="ex-stroke-main" d="M 428,588 Q 610,583 792,589 Q 797,660 791,730 Q 608,735 430,729 Q 425,658 428,588 Z" fill="none" stroke="#18181B" stroke-width="2.2" />
+            <text x="610" y="618" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#3F6212">⑤ Pre-Warmed Sandbox Pool</text>
+            <text x="610" y="643" text-anchor="middle" class="ex-mono" font-size="9.6" font-weight="700" fill="#18181B">Persistent python3 -I Worker Pipes</text>
+            <text x="610" y="666" text-anchor="middle" class="ex-mono" font-size="9.3" fill="#365314">0.625 ms p50 vs 38.694 ms cold (61.9×)</text>
+            <rect x="454" y="684" width="312" height="28" fill="#FFFFFF" stroke="#18181B" stroke-width="1.6" />
+            <text x="610" y="702" text-anchor="middle" class="ex-mono" font-size="9.4" font-weight="700" fill="#3F6212">⚡ 10 / 10 Escape Attacks Contained</text>
+          </g>
+
+          <g class="ex-node" data-arch-node="iceberg-mcp" tabindex="0">
+            <path d="M 826,588 Q 1010,583 1194,589 Q 1199,660 1193,730 Q 1008,735 828,729 Q 823,658 826,588 Z" fill="#DBEAFE" />
+            <path class="ex-stroke-main" d="M 826,588 Q 1010,583 1194,589 Q 1199,660 1193,730 Q 1008,735 828,729 Q 823,658 826,588 Z" fill="none" stroke="#18181B" stroke-width="2.2" />
+            <text x="1010" y="618" text-anchor="middle" class="ex-hand" font-size="22" font-weight="700" fill="#1E3A8A">⑤ Governed Iceberg / SQLite MCP</text>
+            <text x="1010" y="643" text-anchor="middle" class="ex-mono" font-size="9.6" font-weight="700" fill="#18181B">set_authorizer ACL + Region RLS CTEs</text>
+            <text x="1010" y="666" text-anchor="middle" class="ex-mono" font-size="9.3" fill="#1E40AF">EXPLAIN QUERY PLAN Pre-Check</text>
+            <rect x="854" y="684" width="312" height="28" fill="#DCFCE7" stroke="#18181B" stroke-width="1.6" />
+            <text x="1010" y="702" text-anchor="middle" class="ex-mono" font-size="9.5" font-weight="700" fill="#065F46">✓ 8 / 8 SQL Governance Gates (100%)</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="arch-inspector" id="archInspector">
+        <div class="arch-node-pills" id="archNodePills">
+          <button type="button" class="arch-node-pill" data-arch-btn="edge-browser">1. User Browser</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="edge-cloudfront">2. CloudFront Edge</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="edge-s3">3. Private S3 (OAC)</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="edge-lambda">4. Python 3.12 Lambda</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="ast-indexer">5. AST Repo Graph</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="context-packer">6. 2-Hop Context Packer</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="model-router">7. Bedrock SLA Router</button>
+          <button type="button" class="arch-node-pill active" data-arch-btn="exec-pipeline">8. Execution Pipeline</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="cedar-sts">9. Cedar + STS OBO</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="warm-sandbox">10. Warm Sandbox Pool</button>
+          <button type="button" class="arch-node-pill" data-arch-btn="iceberg-mcp">11. Iceberg / SQLite MCP</button>
+        </div>
+        <div id="archInspectorDetail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §03 · IMPLEMENTATION -->
+  <section id="implementation" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">§03 · Implementation</span>
+          <h2 class="section-title">End-to-End Runtime Modules &amp; Algorithms (<code>forge_runtime/</code>)</h2>
+          <p class="section-desc">
+            Every subsystem is built with zero third-party Python dependencies and pairs plain-English intuition with exact AST algorithms, Cedar semantics, IPC framing, and SQLite C-engine hooks.
+          </p>
+        </div>
+        <span class="tag tag-pass">0 External Dependencies · Python Stdlib</span>
+      </div>
+
+      <div class="impl-grid">
+        <div class="impl-card">
+          <div class="impl-head">
+            <span>MODULE 01 · AST REPO GRAPH &amp; SLICER</span>
+            <span style="color:#C4FF1A;">forge_runtime/ast_graph.py</span>
+          </div>
+          <div class="impl-body">
+            <h3 style="font-size:1.08rem; font-weight:800;"><code>RepoKnowledgeGraph</code> + 2-Hop Minimal Contract Packer</h3>
+            <div class="layer-plain">
+              <strong>Plain-English Intuition:</strong> When editing one method, an engineer reads that method's full body plus the function signatures and docstrings of the helpers it calls—not 4,000 lines of unrelated code. Our AST slicer gives the LLM that exact view.
+            </div>
+            <div class="layer-hood">
+              <strong>Under the Hood (Python <code>ast</code> BFS):</strong> Parses modules into <code>56</code> reference nodes / <code>38</code> directed <code>CALLS</code>, <code>IMPORTS</code>, and <code>INHERITS</code> edges (plus self-indexing ForgeRuntime's own <code>133</code> nodes / <code>167</code> edges). Bounded BFS (`hop_budget=2`) emits full source for Hop 0 and signature/type stubs for Hop 1–2: <strong><code>733.7</code> vs <code>4,382</code> tokens (`5.97×`, `-83.2%`)</strong> at <strong><code>100.0%</code></strong> recall.
+            </div>
+          </div>
+        </div>
+
+        <div class="impl-card">
+          <div class="impl-head">
+            <span>MODULE 02 · SLA &amp; BUDGET BEDROCK ROUTER</span>
+            <span style="color:#DDD6FE;">forge_runtime/model_router.py · web_api.py</span>
+          </div>
+          <div class="impl-body">
+            <h3 style="font-size:1.08rem; font-weight:800;"><code>MultiModelSLARouter</code> + Live Bedrock Nova Synthesis</h3>
+            <div class="layer-plain">
+              <strong>Plain-English Intuition:</strong> Fast IDE autocompletes belong on lightweight sub-300 ms models, medium SQL patches belong on Sonnet, and multi-file architectural refactors belong on Opus—unless a strict latency or cost cap forces a safe automatic downgrade.
+            </div>
+            <div class="layer-hood">
+              <strong>Under the Hood (Structural Scoring):</strong> Computes composite complexity over cyclomatic branches, AST hop depth, files touched, and token budget to route across <code>bedrock/amazon.nova-lite-v1</code> (<code>4</code>), <code>bedrock/anthropic.claude-sonnet-4</code> (<code>5</code>), and <code>bedrock/anthropic.claude-opus</code> (<code>3</code>), cutting p50 latency <strong><code>-59.71%</code></strong> and cost <strong><code>-35.89%</code></strong> (`$0.6069` vs `$0.9467`, `12/12` accuracy).
+            </div>
+          </div>
+        </div>
+
+        <div class="impl-card">
+          <div class="impl-head">
+            <span>MODULE 03 · CEDAR + STS OBO + WARM POOL</span>
+            <span style="color:#FCA5A5;">forge_runtime/cedar_sts_gate.py</span>
+          </div>
+          <div class="impl-body">
+            <h3 style="font-size:1.08rem; font-weight:800;">Deterministic Cedar Evaluator, STS Session Minter &amp; <code>python3 -I</code> Pool</h3>
+            <div class="layer-plain">
+              <strong>Plain-English Intuition:</strong> Even an admin agent is never allowed to drop a production table, and any production patch requires a human-approved ticket. Once authorized, code runs inside an already-booted locked room so tests finish in under a millisecond.
+            </div>
+            <div class="layer-hood">
+              <strong>Under the Hood (Zero-<code>eval</code> Cedar + Pipe IPC):</strong> Evaluates `5` Cedar policies with strict `forbid > permit` (`4/4` invariants `100.0%`), signs `sts:TransitiveTagKeys` via `HMAC-SHA256`, and dispatches untrusted AST-checked code over persistent `python3 -I` pipes in <strong>`0.625 ms p50`</strong> (`1.077 ms p95`) vs `38.694 ms` cold spawn (<strong>`61.9×` speedup</strong>, <strong>`10/10` escapes blocked</strong> + automatic watchdog worker respawn).
+            </div>
+          </div>
+        </div>
+
+        <div class="impl-card">
+          <div class="impl-head">
+            <span>MODULE 04 · 4-GATE ICEBERG / SQLITE MCP</span>
+            <span style="color:#93C5FD;">forge_runtime/governed_lake_mcp.py</span>
+          </div>
+          <div class="impl-body">
+            <h3 style="font-size:1.08rem; font-weight:800;">SQLite C-Engine <code>set_authorizer</code>, Region RLS &amp; Schema Pre-Check</h3>
+            <div class="layer-plain">
+              <strong>Plain-English Intuition:</strong> Instead of trying to catch sneaky SQL queries with brittle regexes alone, we hook directly into SQLite's internal compiler so if a query touches a restricted email or credit-card column—even via <code>SELECT *</code>—compilation aborts before a single row is read.
+            </div>
+            <div class="layer-hood">
+              <strong>Under the Hood (4 Pre-Execution Gates):</strong> (1) Multi-statement &amp; DDL/DML blocker (`DROP`, `DELETE`, `ATTACH`); (2) SQLite C-callback `conn.set_authorizer` enforcing `PII_CONFIDENTIAL` / `PCI_RESTRICTED` column clearances; (3) CTE rewrite `WITH _rls AS (...)` scoping sovereign regions (`NA` / `EMEA`); and (4) `EXPLAIN QUERY PLAN` catching hallucinated columns pre-execution (**`8/8` cases `100.0%`**).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §04 · DESIGN TRADE-OFFS -->
+  <section id="design-tradeoffs" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">§04 · Design Trade-Offs</span>
+          <h2 class="section-title">Why ForgeRuntime Outperforms Naive Agent Wrappers &amp; Cold Sandboxes</h2>
+          <p class="section-desc">
+            Side-by-side comparison across context efficiency, routing economics, execution isolation, and data-lake governance.
+          </p>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:1.25rem;">
+        <table>
+          <thead>
+            <tr>
+              <th>Engineering Dimension</th>
+              <th>Naive Full-Repo + Raw Subprocess Agent</th>
+              <th>Single-File RAG + Cold Container Per Call</th>
+              <th>ForgeRuntime (2-Hop AST + SLA Router + Warm Pool + 4-Gate MCP)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Repo Context Packing</strong></td>
+              <td><code>4,382</code> tokens/turn (expensive, noisy attention dilution)</td>
+              <td>Low tokens, but misses <code>79.5%</code> of cross-file call contracts (<code>20.48%</code> recall)</td>
+              <td class="winner-row"><strong><code>733.7</code> mean tokens (<code>5.97×</code> / <code>-83.2%</code>) with <code>100.0%</code> 2-hop call recall</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Foundation Model Routing</strong></td>
+              <td>Static Opus on every turn (`$0.947`, high p50 latency)</td>
+              <td>Static cheap model fails multi-module architectural refactors</td>
+              <td class="winner-row"><strong><code>12/12</code> tier accuracy · <code>-59.71%</code> p50 latency · <code>-35.89%</code> cost (`$0.607`)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Code Execution &amp; IAM</strong></td>
+              <td>Shared IAM role + unguarded shell (`0%` escape containment)</td>
+              <td><code>38.69 ms+</code> cold spawn overhead on every verification step</td>
+              <td class="winner-row"><strong>Cedar <code>forbid &gt; permit</code> + STS OBO + <code>0.625 ms p50</code> warm pool (<code>61.9×</code>, <code>10/10</code> blocked)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Data-Lake SQL Governance</strong></td>
+              <td>Regex blocklists bypassed by <code>SELECT *</code> or SQL comments</td>
+              <td>Table-level ACLs block entire tables instead of sensitive columns</td>
+              <td class="winner-row"><strong>SQLite C-level <code>set_authorizer</code> column ACL + Region CTEs + <code>EXPLAIN PLAN</code> (<code>8/8</code>)</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <span class="step-badge">TRADE-OFF 01 · AST vs. EMBEDDINGS</span>
+          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">Deterministic Call Edges Beat Cosine Similarity for Code</h3>
+          <p style="font-size:0.87rem; color:var(--ink-muted);">
+            <strong>Plain English:</strong> Vector search finds functions that <em>sound</em> similar, whereas AST edges find the exact functions your code actually <em>calls</em>.<br/>
+            <strong>Under the Hood:</strong> Parsing Python ASTs adds sub-millisecond indexing while guaranteeing <code>100.0%</code> 2-hop contract recall at <code>5.97×</code> lower token cost.
+          </p>
+        </div>
+        <div class="card">
+          <span class="step-badge">TRADE-OFF 02 · WARM WORKER PIPES</span>
+          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">71 ms One-Time Pool Warmup vs. 0.625 ms Per-Step Dispatch</h3>
+          <p style="font-size:0.87rem; color:var(--ink-muted);">
+            <strong>Plain English:</strong> Booting isolated workers once up front pays a tiny startup cost so every agent test loop afterward feels instantaneous.<br/>
+            <strong>Under the Hood:</strong> One-time <code>71.09 ms</code> warmup amortizes immediately, delivering a <code>61.9×</code> p50 speedup with automatic watchdog worker replacement on timeouts.
+          </p>
+        </div>
+        <div class="card">
+          <span class="step-badge">TRADE-OFF 03 · COMPILER AUTHORIZER</span>
+          <h3 style="font-size:1.02rem; font-weight:800; margin-bottom:0.45rem;">Engine-Level Column Hooks Beat String Regexes</h3>
+          <p style="font-size:0.87rem; color:var(--ink-muted);">
+            <strong>Plain English:</strong> Letting the database compiler tell us which columns a query touches catches sneaky <code>SELECT *</code> and aliased joins with zero guesswork.<br/>
+            <strong>Under the Hood:</strong> Combining <code>conn.set_authorizer</code> with <code>EXPLAIN QUERY PLAN</code> validates column clearances and schema contracts in <code>0.023–0.421 ms</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §05 · INTERACTIVE STUDIO -->
+  <main id="interactive-studio" class="container tabs-wrapper">
+    <div id="ast-graph"></div>
+    <div class="section-header">
+      <div>
+        <span class="section-kicker">§05 · Interactive Studio</span>
+        <h2 class="section-title">4 Live Runtime Simulators (AST Graph, Bedrock Router, Cedar/Sandbox &amp; Iceberg MCP)</h2>
+        <p class="section-desc">
+          Switch between any of the 4 simulators below to test AST hop budgets, SLA/budget downgrades, live Bedrock Nova synthesis, Cedar + STS tamper checks, 10 sandbox escape payloads, and live SQL governance gates.
+        </p>
+      </div>
+    </div>
     <div class="tab-bar" role="tablist" aria-label="ForgeRuntime Interactive Simulators">
       <button type="button" class="tab-btn active" role="tab" aria-selected="true" data-tab="ast-graph" onclick="switchTab('ast-graph')">
         <span class="tab-btn-eyebrow">Simulator 01 · Kiro Target</span>
@@ -893,6 +1732,12 @@
     <!-- TAB 1: AST REPO KNOWLEDGE GRAPH EXPLORER                           -->
     <!-- ================================================================== -->
     <section id="panel-ast-graph" class="tab-panel active" role="tabpanel">
+      <div class="sandbox-guide">
+        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
+        (1) Click any target symbol on the left (e.g., <code>OrderSettlementEngine</code>);
+        (2) Toggle between <strong>Hop 0</strong>, <strong>Hop 1</strong>, and <strong>Hop 2 (Full Contracts ★)</strong> to watch token compression and neighborhood recall update in real time;
+        (3) Inspect the exact packed Python context slice on the right showing full focal code + collaborator type contracts.
+      </div>
       <div class="sim-header">
         <div>
           <h2 class="sim-title">AST Repo Knowledge Graph &amp; Minimal Context Packer</h2>
@@ -965,6 +1810,10 @@
     <!-- TAB 2: MULTI-MODEL SLA & BUDGET ROUTER                             -->
     <!-- ================================================================== -->
     <section id="panel-model-router" class="tab-panel" role="tabpanel">
+      <div class="sandbox-guide">
+        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
+        Click any of the <strong>4 Workload Presets</strong> (especially <em>"⏱️ Opus Task + Strict 350ms SLA Cap"</em>) or drag the Latency SLA and Budget sliders to watch the router dynamically select or downgrade between <code>amazon.nova-lite-v1</code>, <code>claude-sonnet-4</code>, and <code>claude-opus</code>. Click <strong>"⚡ Synthesize Live via AWS Bedrock Nova"</strong> to invoke CloudFront <code>POST /api/modernize/synthesize</code> live.
+      </div>
       <div class="sim-header">
         <div>
           <h2 class="sim-title">Complexity-, Token-, &amp; SLA-Aware Multi-Model Bedrock Router</h2>
@@ -1089,6 +1938,10 @@
     <!-- TAB 3: CEDAR + AWS STS ON-BEHALF-OF + WARM SANDBOX LAB             -->
     <!-- ================================================================== -->
     <section id="panel-cedar-sandbox" class="tab-panel" role="tabpanel">
+      <div class="sandbox-guide">
+        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
+        On the left (<strong>Part A</strong>), test <code>DropTable (Forbid Override)</code> vs. <code>Approved Prod Patch (+ STS OBO)</code> and click <strong>"🧪 Simulate RiskRung Tag Tamper"</strong> to see HMAC-SHA256 session tampering caught. On the right (<strong>Part B</strong>), click any of the <strong>10 Adversarial Escape Vectors</strong> (or <strong>"🛡️ Run All 10 Escape Vectors"</strong>) to inspect how the pre-warmed <code>python3 -I</code> worker pool blocks shell, network, filesystem, and introspection escapes in sub-millisecond time.
+      </div>
       <div class="sim-header">
         <div>
           <h2 class="sim-title">Cedar Policy Gate + AWS STS <code>On-Behalf-Of</code> + Warm Sandbox Pool</h2>
@@ -1211,6 +2064,10 @@ forbid(
     <!-- TAB 4: GOVERNED APACHE ICEBERG / SQLITE MCP STUDIO                 -->
     <!-- ================================================================== -->
     <section id="panel-iceberg-mcp" class="tab-panel" role="tabpanel">
+      <div class="sandbox-guide">
+        <strong>🧭 How to Use This Sandbox (What to Click &amp; What Happens):</strong>
+        Choose a caller principal in Step 1 (<code>analyst</code> vs. <code>auditor</code>), then click the <strong>6 Preset SQL Test Cases</strong> (such as <code>🛑 SELECT * PII Leak</code>, <code>🛑 raw_card_token PCI Theft</code>, or <code>🛑 Hallucinated Column Pre-Check</code>) or edit your own SQL query and press <strong>"▶ Validate &amp; Execute SQL"</strong> to see all 4 pre-execution governance gates and <code>EXPLAIN QUERY PLAN</code> output on the right.
+      </div>
       <div class="sim-header">
         <div>
           <h2 class="sim-title">Governed Apache Iceberg / SQLite Data-Lake MCP Studio</h2>
@@ -1294,24 +2151,102 @@ ORDER BY spend DESC;</textarea>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div>
-        <strong>ForgeRuntime</strong> — Zero-Dependency Sandboxed Coding &amp; Governed Data-Lake Agent Runtime · Built by Ritwika Reddy Kancharla
-      </div>
-      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-        <a href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">GitHub Repository</a>
-        <span>·</span>
-        <a href="https://d1k0p1n5ip2921.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AgentDen</a>
-        <span>·</span>
-        <a href="https://d13kangk4fqjbf.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AegisOps</a>
-        <span>·</span>
-        <a href="https://d3bfhuibgzllcf.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AgentGuard</a>
-        <span>·</span>
-        <a href="https://d14kv31n2lrkoa.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">VeriRAG</a>
-      </div>
-    </footer>
   </main>
+
+  <!-- §06 · BENCHMARKS -->
+  <section id="benchmarks" class="section" style="border-bottom:none;">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">§06 · Benchmarks</span>
+          <h2 class="section-title">End-to-End Measured Runtime Telemetry (<code>benchmarks/latest_results.json</code>)</h2>
+          <p class="section-desc">
+            Every metric below is reproduced deterministically via <code>python3 benchmarks/run_benchmarks.py</code> in <code>1,203.72 ms</code> total wall time with zero external Python dependencies.
+          </p>
+        </div>
+        <span class="tag tag-pass">100% Verified Benchmark Suite</span>
+      </div>
+
+      <div class="plain-callout" style="margin-bottom:1.25rem;">
+        <strong>💡 How to Read These Numbers (Plain English + Under the Hood):</strong>
+        Each row pairs what a user feels in production (faster turns, lower AWS Bedrock bills, zero data leaks) with the exact empirical measurement from <code>benchmarks/latest_results.json</code> across <code>3</code> AST repository slices, <code>12</code> routed model requests, <code>4</code> Cedar/STS security invariants, <code>20</code> warm vs. cold process iterations + <code>10</code> adversarial sandbox escape attacks, and <code>8</code> governed Iceberg/SQLite queries.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Runtime Pillar &amp; Measured Metric</th>
+              <th>Exact Measured Value</th>
+              <th>Baseline / Sample Proof</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>AST 2-Hop Context Compression vs. Full Repo</strong></td>
+              <td class="mono"><strong>5.97× (-83.2% tokens)</strong></td>
+              <td class="mono">733.7 mean packed tokens vs. 4,382 full-repo tokens (5.30× vs. 3,887 touched-file tokens)</td>
+              <td><span class="tag tag-pass">MEASURED</span></td>
+            </tr>
+            <tr>
+              <td><strong>AST Call-Neighborhood Contract Recall</strong></td>
+              <td class="mono"><strong>100.0%</strong></td>
+              <td class="mono">vs. 20.48% single-file stuffing · Also self-indexes ForgeRuntime (7 files, 133 nodes, 167 edges, 39,979 tok)</td>
+              <td><span class="tag tag-pass">100% RECALL</span></td>
+            </tr>
+            <tr>
+              <td><strong>Multi-Model SLA &amp; Cost Router Accuracy</strong></td>
+              <td class="mono"><strong>100.0% (12 / 12 tasks)</strong></td>
+              <td class="mono">4 Nova Lite · 5 Sonnet 4 · 3 Opus · -59.71% p50 latency · -35.89% cost ($0.6069 vs. $0.9467 Opus)</td>
+              <td><span class="tag tag-pass">VERIFIED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Cedar Policy Gate + STS OBO Tamper Check</strong></td>
+              <td class="mono"><strong>100.0% (4 / 4 invariants)</strong></td>
+              <td class="mono">5 Cedar policies (unconditional forbid &gt; permit) + HMAC-SHA256 TransitiveTagKeys tamper rejection</td>
+              <td><span class="tag tag-pass">ZERO BYPASS</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pre-Warmed Process Sandbox Pool Latency</strong></td>
+              <td class="mono"><strong>0.625 ms p50 / 1.077 ms p95</strong></td>
+              <td class="mono">61.9× faster (-98.4%) vs. 38.694 ms p50 / 46.020 ms p95 cold subprocess (71.09 ms one-time warmup)</td>
+              <td><span class="tag tag-pass">61.9× FASTER</span></td>
+            </tr>
+            <tr>
+              <td><strong>Adversarial Sandbox Escape Containment</strong></td>
+              <td class="mono"><strong>100.0% (10 / 10 blocked)</strong></td>
+              <td class="mono">os.system, socket, /etc/passwd, __subclasses__, CPU timeout + automatic post-watchdog worker recovery</td>
+              <td><span class="tag tag-pass">CONTAINED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Governed Iceberg / SQLite 4-Gate Accuracy</strong></td>
+              <td class="mono"><strong>100.0% (8 / 8 SQL cases)</strong></td>
+              <td class="mono">3 tables (ads_campaigns 180, customer_billing 72, agent_telemetry 120) · set_authorizer + EXPLAIN PLAN</td>
+              <td><span class="tag tag-pass">100% GATED</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="footer">
+        <div>
+          <strong>ForgeRuntime</strong> — Zero-Dependency Sandboxed Coding &amp; Governed Data-Lake Agent Runtime · Built by Ritwika Reddy Kancharla
+        </div>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <a href="https://github.com/ritwikareddykancharla/forge-runtime" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">GitHub Repository</a>
+          <span>·</span>
+          <a href="https://d1k0p1n5ip2921.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AgentDen</a>
+          <span>·</span>
+          <a href="https://d13kangk4fqjbf.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AegisOps</a>
+          <span>·</span>
+          <a href="https://d3bfhuibgzllcf.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">AgentGuard</a>
+          <span>·</span>
+          <a href="https://d14kv31n2lrkoa.cloudfront.net" target="_blank" rel="noopener" style="color:var(--ink); font-weight:700;">VeriRAG</a>
+        </div>
+      </footer>
+    </div>
+  </section>
 
   <script>
     // =========================================================================
@@ -2718,8 +3653,217 @@ class CallerGovernanceContext:
     };
 
     // =========================================================================
+    // INTERACTIVE SYSTEM ARCHITECTURE INSPECTOR, ZOOM & STICKY TOC SCROLL-SPY
+    // =========================================================================
+    const ARCH_NODE_DETAILS = {
+      'edge-browser': {
+        plane: 'Plane ① · AWS Edge Delivery',
+        title: 'User Browser (4-Tab Runtime Studio & Sticky TOC)',
+        module: 'web/index.html (Stateless Hash-Routed Console)',
+        plain: 'Provides instant interactive exploration of AST slicing, Bedrock routing, Cedar/STS policies, sandbox escapes, and SQL governance.',
+        hood: 'Zero external JS frameworks; persists active simulator tab and theme exclusively in window.location.hash.',
+        metric: '4 Interactive Simulators · Stateless UI'
+      },
+      'edge-cloudfront': {
+        plane: 'Plane ① · AWS Edge Delivery',
+        title: 'Amazon CloudFront Global Edge Distribution (E1LO785RWQJ3ND)',
+        module: 'infra/deploy_cloudfront.sh · HTTPS TLS 1.3 + OAC',
+        plain: 'Delivers the studio globally over HTTPS and proxies live /api/* synthesis and benchmark calls to AWS Lambda.',
+        hood: 'Uses SigV4 Origin Access Control (OAC) for private S3 static delivery and same-origin /api/* Lambda routing.',
+        metric: 'Distribution E1LO785RWQJ3ND · HTTPS + OAC'
+      },
+      'edge-s3': {
+        plane: 'Plane ① · AWS Edge Delivery',
+        title: 'Private Amazon S3 Bucket (BlockPublicAccess)',
+        module: 's3://forgeruntime-web-796330847946-us-west-2/index.html',
+        plain: 'Hosts static assets privately with direct public bucket URLs completely locked down.',
+        hood: 'All 4 S3 BlockPublicAccess settings enabled; IAM policy scopes s3:GetObject strictly to CloudFront E1LO785RWQJ3ND.',
+        metric: '0 Public ACLs · $0 Idle Cost'
+      },
+      'edge-lambda': {
+        plane: 'Plane ① · AWS Edge Delivery',
+        title: 'AWS Lambda Python 3.12 Serverless Runtime Router',
+        module: 'forge_runtime/web_api.py & aws_lambda_handler.py',
+        plain: 'Executes live Bedrock Nova code modernization synthesis (/api/modernize/synthesize) and health telemetry on demand.',
+        hood: 'Stateless Python 3.12 handler invoking Amazon Bedrock Converse API (us.amazon.nova-lite-v1:0) + AST verification.',
+        metric: 'Python 3.12 Serverless · 0 EC2 / 0 RDS'
+      },
+      'ast-indexer': {
+        plane: 'Plane ② · Context & Routing Plane',
+        title: 'AST Repo Knowledge Graph Indexer',
+        module: 'forge_runtime/ast_graph.py :: RepoKnowledgeGraph',
+        plain: 'Maps every module, class, and function in a codebase along with exact call, import, and inheritance relationships.',
+        hood: 'Indexes 6-module billing suite (56 nodes, 38 edges, 4,382 tok) and self-indexes ForgeRuntime (7 files, 133 nodes, 167 edges, 39,979 tok).',
+        metric: '56 Ref Nodes + 133 Self-Hosted Nodes'
+      },
+      'context-packer': {
+        plane: 'Plane ② · Context & Routing Plane',
+        title: '2-Hop Minimal Contract Context Packer',
+        module: 'forge_runtime/ast_graph.py :: pack_minimal_context(hop_budget=2)',
+        plain: 'Packs full source for the target method plus compact type/docstring contracts for 1–2 hop collaborators.',
+        hood: 'Compresses 4,382 full-repo tokens down to 733.7 mean tokens (5.97× / -83.2%) while preserving 100.0% neighborhood recall.',
+        metric: '5.97× Compression (-83.2%) · 100.0% Recall'
+      },
+      'model-router': {
+        plane: 'Plane ② · Context & Routing Plane',
+        title: 'Complexity-, Latency- & Budget-Aware Bedrock Router',
+        module: 'forge_runtime/model_router.py :: MultiModelSLARouter',
+        plain: 'Routes tasks across Nova Lite, Claude Sonnet 4, and Claude Opus while enforcing hard latency SLAs and USD ceilings.',
+        hood: 'Achieves 12/12 tier accuracy across benchmark workloads, cutting p50 latency by -59.71% and total cost by -35.89% ($0.6069 vs $0.9467).',
+        metric: '12/12 Accuracy · -59.71% p50 · -35.89% Cost'
+      },
+      'exec-pipeline': {
+        plane: 'Plane ③ · Deterministic Execution Pipeline',
+        title: '6-Stage Governed Agent Execution Pipeline',
+        module: 'forge_runtime/cli.py + adapters.py',
+        plain: 'Chains AST slicing, model routing, Cedar authorization, STS session minting, and sandbox/SQL execution in a deterministic order.',
+        hood: 'Verifies end-to-end invariants across all 5 runtime pillars in 1,203.72 ms total benchmark suite wall time.',
+        metric: '5 Runtime Pillars · 100.0% Gate Pass Rate'
+      },
+      'cedar-sts': {
+        plane: 'Plane ④ · Identity & Policy Boundary',
+        title: 'Cedar Policy Engine + AWS STS On-Behalf-Of Session Minter',
+        module: 'forge_runtime/cedar_sts_gate.py',
+        plain: 'Guarantees default-deny authorization where forbid rules always override permit rules, paired with tamper-evident human identity tags.',
+        hood: 'Zero-eval AST Cedar parser (5 policies, 4/4 invariants 100%) + HMAC-SHA256 signed STS TransitiveTagKeys detecting RiskRung tampering.',
+        metric: '100.0% Cedar Invariants · HMAC Tamper Guard'
+      },
+      'warm-sandbox': {
+        plane: 'Plane ⑤ · Isolated Execution & Data Governance',
+        title: 'Pre-Warmed Isolated Python Sandbox Pool',
+        module: 'forge_runtime/cedar_sts_gate.py :: WarmSandboxPool',
+        plain: 'Runs untrusted agent-generated Python inside pre-booted isolated workers so tests run 61.9× faster with zero shell/network escapes.',
+        hood: 'Persistent python3 -I worker pipes: 0.625 ms p50 / 1.077 ms p95 vs 38.694 ms cold spawn; 10/10 escape vectors blocked + watchdog respawn.',
+        metric: '0.625 ms p50 (61.9×) · 10/10 Escapes Blocked'
+      },
+      'iceberg-mcp': {
+        plane: 'Plane ⑤ · Isolated Execution & Data Governance',
+        title: '4-Gate Governed Apache Iceberg / SQLite MCP Server',
+        module: 'forge_runtime/governed_lake_mcp.py :: GovernedIcebergMCP',
+        plain: 'Prevents agents from running destructive SQL, reading unauthorized PII/PCI columns, crossing regional boundaries, or querying hallucinated columns.',
+        hood: 'Enforces read-only filter + SQLite C-engine set_authorizer column ACLs + regional RLS CTEs + EXPLAIN QUERY PLAN validation (8/8 cases 100%).',
+        metric: '8/8 SQL Governance Cases · 0 PII/PCI Leaks'
+      }
+    };
+
+    function escHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function selectArchNode(nodeId) {
+      const info = ARCH_NODE_DETAILS[nodeId] || ARCH_NODE_DETAILS['exec-pipeline'];
+      document.querySelectorAll('#forgeArchSvg .ex-node').forEach(el => {
+        el.classList.toggle('selected', el.getAttribute('data-arch-node') === nodeId);
+      });
+      document.querySelectorAll('#archNodePills [data-arch-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-arch-btn') === nodeId);
+      });
+      const detailBox = document.getElementById('archInspectorDetail');
+      if (detailBox) {
+        detailBox.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+            <div>
+              <span class="tag tag-lime" style="margin-bottom:0.35rem;">${escHtml(info.plane)}</span>
+              <h3 style="font-size:1.06rem; font-weight:800;">${escHtml(info.title)}</h3>
+            </div>
+            <span class="tag tag-pass">${escHtml(info.metric)}</span>
+          </div>
+          <div class="mono" style="font-size:0.73rem; color:var(--ink-muted); margin-bottom:0.55rem;">Module / Resource: <code>${escHtml(info.module)}</code></div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+            <div class="layer-plain"><strong>Plain English:</strong> ${escHtml(info.plain)}</div>
+            <div class="layer-hood"><strong>Under the Hood:</strong> ${escHtml(info.hood)}</div>
+          </div>
+        `;
+      }
+    }
+
+    document.querySelectorAll('#forgeArchSvg .ex-node').forEach(el => {
+      el.addEventListener('click', () => selectArchNode(el.getAttribute('data-arch-node')));
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectArchNode(el.getAttribute('data-arch-node'));
+        }
+      });
+    });
+    document.querySelectorAll('#archNodePills [data-arch-btn]').forEach(btn => {
+      btn.addEventListener('click', () => selectArchNode(btn.getAttribute('data-arch-btn')));
+    });
+
+    const archSvgEl = document.getElementById('forgeArchSvg');
+    const archViewportEl = document.getElementById('archViewport');
+    const zoom100Btn = document.getElementById('zoom100Btn');
+    const zoom125Btn = document.getElementById('zoom125Btn');
+    const zoomResetBtn = document.getElementById('zoomResetBtn');
+    const archZoomLabel = document.getElementById('archZoomLabel');
+
+    function setArchZoom(mode) {
+      if (!archSvgEl) return;
+      const is125 = mode === '125';
+      archSvgEl.classList.toggle('zoom-125', is125);
+      if (archZoomLabel) archZoomLabel.textContent = is125 ? 'Zoom: 125%' : 'Zoom: 100%';
+      if (zoom100Btn) zoom100Btn.className = is125 ? 'btn btn-secondary' : 'btn btn-lime';
+      if (zoom125Btn) zoom125Btn.className = is125 ? 'btn btn-lime' : 'btn btn-secondary';
+      if (mode === 'reset' && archViewportEl) {
+        archViewportEl.scrollTo({ left: 0, behavior: 'smooth' });
+        selectArchNode('exec-pipeline');
+      }
+    }
+    if (zoom100Btn) zoom100Btn.addEventListener('click', () => setArchZoom('100'));
+    if (zoom125Btn) zoom125Btn.addEventListener('click', () => setArchZoom('125'));
+    if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setArchZoom('reset'));
+
+    const dlArchBtn = document.getElementById('downloadArchSvgBtn');
+    if (dlArchBtn && archSvgEl) {
+      dlArchBtn.addEventListener('click', () => {
+        const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + archSvgEl.outerHTML;
+        const blob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'forgeruntime-system-architecture.svg';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+    }
+
+    const topHeaderEl = document.getElementById('topHeader');
+    const stickyTocEl = document.getElementById('stickyToc');
+    function syncTopbarHeight() {
+      if (!topHeaderEl) return;
+      document.documentElement.style.setProperty('--topbar-h', Math.ceil(topHeaderEl.getBoundingClientRect().height) + 'px');
+    }
+    syncTopbarHeight();
+    window.addEventListener('resize', syncTopbarHeight, { passive: true });
+    if (window.ResizeObserver && topHeaderEl) {
+      new ResizeObserver(syncTopbarHeight).observe(topHeaderEl);
+    }
+
+    const SPY_IDS = ['problem-statement', 'architecture', 'implementation', 'design-tradeoffs', 'interactive-studio', 'benchmarks'];
+    function updateTocOnScroll() {
+      const topH = topHeaderEl ? topHeaderEl.getBoundingClientRect().height : 58;
+      const tocH = stickyTocEl ? stickyTocEl.getBoundingClientRect().height : 44;
+      const trigger = topH + tocH + 56;
+      let cur = SPY_IDS[0];
+      for (const id of SPY_IDS) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= trigger) cur = id;
+      }
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24) {
+        cur = SPY_IDS[SPY_IDS.length - 1];
+      }
+      document.querySelectorAll('[data-toc-sec]').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-toc-sec') === cur);
+      });
+    }
+    window.addEventListener('scroll', updateTocOnScroll, { passive: true });
+
+    // =========================================================================
     // INITIALIZE ALL 4 SIMULATORS ON LOAD
     // =========================================================================
+    selectArchNode('exec-pipeline');
     parseHashState();
     applyTheme(activeTheme);
     switchTab(activeTab);
@@ -2730,6 +3874,7 @@ class CallerGovernanceContext:
     renderSandboxVectors();
     selectCatalogTable(1);
     runMcpSqlLive();
+    updateTocOnScroll();
     probeLiveBackend();
   </script>
 </body>
